@@ -58,7 +58,7 @@ gl_ResourceManager::gl_ResourceManager(int major_version, int minor_version)
 }
 
 
-EXTERN_C __declspec(dllexport) ResourceManager* createResourceManager(int major_version, int minor_version)
+EXTERN_C DLL_EXPORT ResourceManager* createResourceManager(int major_version, int minor_version)
 {
 	gl_ResourceManager* pResourceManager = new gl_ResourceManager(major_version, minor_version);;
 
