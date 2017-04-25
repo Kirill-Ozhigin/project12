@@ -3,6 +3,12 @@
 
 class window;
 
+struct AudioDevice
+{
+	const char* name;
+};
+
+
 class Sound
 {
 public:
@@ -11,8 +17,6 @@ public:
 	virtual void release(void) = 0;
 
 	virtual void play(long lStartPosition = 0, bool bLoop = 0) = 0;
-
-	virtual void play(bool bLoop = 0) = 0;
 
 	virtual void stop(void) = 0;
 

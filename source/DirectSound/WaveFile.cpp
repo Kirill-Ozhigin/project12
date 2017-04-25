@@ -43,6 +43,7 @@ public:
 private:
 	void* m_data;
 
+	unsigned char m_bIsLocked;
 };
 
 
@@ -60,6 +61,8 @@ w_WaveFile::w_WaveFile(unsigned uResourceID, HINSTANCE hInstance)
 	HGLOBAL hRes = ::LoadResource(hInstance, hResInfo);
 
 	m_data = ::LockResource(hRes);
+
+	m_bIsLocked = 1;
 }
 
 w_WaveFile::w_WaveFile(const char* const filename)
@@ -95,11 +98,16 @@ w_WaveFile::w_WaveFile(const char* const filename)
 	fclose(filePtr);
 
 	m_data = static_cast<void*>(waveData);
+
+	m_bIsLocked = 0;
 }
 
 void w_WaveFile::close(void)
 {
-	delete[] m_data;
-	m_data = nullptr;
+	if (m_data && !m_bIsLocked)
+	{
+		delete[] m_data;
+		m_data = nullptr;
+	}
 }
 

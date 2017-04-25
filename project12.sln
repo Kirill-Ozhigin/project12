@@ -29,6 +29,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "thirdparty", "thirdparty", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ALSound", "project12\ALSound.vcxproj", "{E28D2E57-D636-4BD2-8EC8-130BE226CE0D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenAL", "OpenAL", "{A09D70FD-A4BA-4096-ABAF-8EEBCA6EE44E}"
+	ProjectSection(SolutionItems) = preProject
+		thirdparty\include\al.h = thirdparty\include\al.h
+		thirdparty\include\alc.h = thirdparty\include\alc.h
+		thirdparty\include\efx-creative.h = thirdparty\include\efx-creative.h
+		thirdparty\include\EFX-Util.h = thirdparty\include\EFX-Util.h
+		thirdparty\include\efx.h = thirdparty\include\efx.h
+		thirdparty\include\xram.h = thirdparty\include\xram.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		project12\Application.vcxitems*{28aad097-d73b-4066-a7e4-49adcd478753}*SharedItemsImports = 9
@@ -41,6 +51,7 @@ Global
 		project12\WindowInput.vcxitems*{917be931-c948-4c60-9d8d-9be658978605}*SharedItemsImports = 4
 		project12\GLRender.vcxitems*{cb3ee23a-9843-4677-a2ba-3c7de1e7c59c}*SharedItemsImports = 9
 		project12\Sound.vcxitems*{dd559ddd-7eb0-4566-a32c-18176080c8e6}*SharedItemsImports = 4
+		project12\Sound.vcxitems*{e28d2e57-d636-4bd2-8ec8-130be226ce0d}*SharedItemsImports = 4
 		project12\Application.vcxitems*{e884bba1-f9ec-491e-944f-db9ae6de61a8}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,5 +112,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A09D70FD-A4BA-4096-ABAF-8EEBCA6EE44E} = {B90AB339-A2CE-43BC-97CB-3FF45BCB5E9C}
 	EndGlobalSection
 EndGlobal

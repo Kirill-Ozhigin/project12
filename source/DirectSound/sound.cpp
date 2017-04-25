@@ -26,8 +26,6 @@ public:
 
 	virtual void play(long lStartPosition = 0, bool bLoop = 0) override;
 
-	virtual void play(bool bLoop = 0) override;
-
 	virtual void stop(void) override;
 
 	virtual void pause(void) override;
@@ -81,10 +79,6 @@ void d_sound::release(void)
 }
 
 void d_sound::play(long lStartPosition, bool bLoop)
-{
-}
-
-void d_sound::play(bool bLoop)
 {
 }
 
