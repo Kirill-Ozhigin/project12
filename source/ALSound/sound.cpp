@@ -16,11 +16,11 @@ Sound::~Sound()
 {
 }
 
-class al_sound : public Sound
+class al_context : public Sound
 {
 public:
-	al_sound(const window& cwnd);
-	virtual ~al_sound() override { release(); }
+	al_context(const window& cwnd);
+	virtual ~al_context() override { release(); }
 
 	virtual void release(void) override;
 
@@ -42,17 +42,20 @@ private:
 
 	ALCdevice* m_pDevice;
 
+	ALCcontext* m_pContext;
+
 	vector<AudioDevice> m_vectorDevices;
 
 	AudioDevice m_ActiveDevice;
 
 };
 
-al_sound::al_sound(const window& cwnd)
+al_context::al_context(const window& cwnd)
 	: m_cwnd(cwnd)
 	, m_fVolume(1.f)
 	, m_bIsPaused(0)
 	, m_pDevice(nullptr)
+	, m_pContext(nullptr)
 {
 	{
 		const ALCchar* devices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
@@ -93,35 +96,58 @@ al_sound::al_sound(const window& cwnd)
 
 	m_pDevice = alcOpenDevice(m_ActiveDevice.name);
 
+	m_pContext = alcCreateContext(m_pDevice, nullptr);
 
-
+	alcMakeContextCurrent(m_pContext);
 }
 
-void al_sound::release(void)
+void al_context::release(void)
+{
+	if (m_pContext)
+	{
+		alcMakeContextCurrent(nullptr);
+		alcDestroyContext(m_pContext);
+		m_pContext = nullptr;
+	}
+	if (m_pDevice)
+	{
+		alcCloseDevice(m_pDevice);
+		m_pDevice = nullptr;
+	}
+}
+
+void al_context::play(long lStartPosition, bool bLoop)
 {
 }
 
-void al_sound::play(long lStartPosition, bool bLoop)
+void al_context::stop(void)
 {
 }
 
-void al_sound::stop(void)
+void al_context::pause(void)
 {
+	if (m_bIsPaused)
+	{
+		return;
+	}
+	m_bIsPaused = 1;
 }
 
-void al_sound::pause(void)
+void al_context::resume(void)
 {
-}
+	if (!m_bIsPaused)
+	{
+		return;
+	}
+	m_bIsPaused = 0;
 
-void al_sound::resume(void)
-{
 }
 
 
 
 EXTERN_C DLL_EXPORT Sound* const createSound(const window& cwnd)
 {
-	al_sound* sound = new al_sound(cwnd);
+	al_context* sound = new al_context(cwnd);
 
 	return static_cast<Sound*>(sound);
 }

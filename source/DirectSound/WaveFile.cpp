@@ -5,13 +5,13 @@
 #include <dsound.h>
 
 
-WaveFile::~WaveFile()
+WaveFileLoader::~WaveFileLoader()
 {
 }
 
 
 
-class w_WaveFile : public WaveFile
+class w_WaveFile : public WaveFileLoader
 {
 private:
 	struct WaveHeaderType

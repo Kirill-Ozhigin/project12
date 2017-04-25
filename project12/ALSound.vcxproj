@@ -140,6 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\source\ALSound\sound.cpp" />
+    <ClCompile Include="..\source\ALSound\sSound.cpp" />
+    <ClCompile Include="..\source\ALSound\WaveFile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

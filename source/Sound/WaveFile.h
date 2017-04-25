@@ -2,10 +2,10 @@
 #define __WaveFile_H 1
 
 
-class WaveFile
+class WaveFileLoader
 {
 public:
-	virtual ~WaveFile() = 0;
+	virtual ~WaveFileLoader() = 0;
 
 	virtual void close(void) = 0;
 
