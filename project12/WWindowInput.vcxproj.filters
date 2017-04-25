@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\source\WWindowInput\input.cpp" />
+    <ClCompile Include="..\source\WWindowInput\keyboard.cpp" />
+    <ClCompile Include="..\source\WWindowInput\mouse.cpp" />
+    <ClCompile Include="..\source\WWindowInput\window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{5ac9ab20-c28b-4038-bfa3-ce8763f8f50c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

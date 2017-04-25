@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{cb3ee23a-9843-4677-a2ba-3c7de1e7c59c}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\GLRender\Buffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\GLRender\GPUProgram.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\GLRender\IndexBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\GLRender\opengl.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\GLRender\ResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\GLRender\Textrure.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\GLRender\VertexBuffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\GLRender\Version.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\GLRender\opengl.h" />
+  </ItemGroup>
+</Project>

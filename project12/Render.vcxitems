@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{44ab0344-67a5-4a88-b389-0c6c30c67fd8}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\Buffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\context.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\GPUProgram.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\HardwareBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\IndexBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\ResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\scene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\Textrure.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Render\VertexBuffer.h" />
+  </ItemGroup>
+</Project>

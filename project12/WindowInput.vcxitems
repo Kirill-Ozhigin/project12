@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{7789feee-9a62-4d33-acef-30dc09fed9cc}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\input.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\keyboard.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\mouse.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\window.h" />
+  </ItemGroup>
+</Project>

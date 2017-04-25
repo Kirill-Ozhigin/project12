@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{28aad097-d73b-4066-a7e4-49adcd478753}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\GLRender.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\input.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\keyboard.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\main.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\mouse.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\RenderContext.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\window.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.h" />
+  </ItemGroup>
+</Project>
