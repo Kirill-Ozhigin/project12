@@ -11,7 +11,7 @@ WaveFile::~WaveFile()
 
 
 
-class _WaveFile : public WaveFile
+class w_WaveFile : public WaveFile
 {
 private:
 	struct WaveHeaderType
@@ -32,11 +32,11 @@ private:
 	};
 
 public:
-	_WaveFile(unsigned uResourceID, HINSTANCE hInstance = nullptr);
+	w_WaveFile(unsigned uResourceID, HINSTANCE hInstance = nullptr);
 
-	_WaveFile(const char* const filename);
+	w_WaveFile(const char* const filename);
 
-	virtual ~_WaveFile() override { close(); }
+	virtual ~w_WaveFile() override { close(); }
 
 	virtual void close(void) override;
 
@@ -46,7 +46,7 @@ private:
 };
 
 
-_WaveFile::_WaveFile(unsigned uResourceID, HINSTANCE hInstance)
+w_WaveFile::w_WaveFile(unsigned uResourceID, HINSTANCE hInstance)
 {
 	LPCTSTR pszResource = MAKEINTRESOURCE(uResourceID);
 
@@ -62,7 +62,7 @@ _WaveFile::_WaveFile(unsigned uResourceID, HINSTANCE hInstance)
 	m_data = ::LockResource(hRes);
 }
 
-_WaveFile::_WaveFile(const char* const filename)
+w_WaveFile::w_WaveFile(const char* const filename)
 {
 	FILE* filePtr = nullptr;
 
@@ -97,7 +97,7 @@ _WaveFile::_WaveFile(const char* const filename)
 	m_data = static_cast<void*>(waveData);
 }
 
-void _WaveFile::close(void)
+void w_WaveFile::close(void)
 {
 	delete[] m_data;
 	m_data = nullptr;
