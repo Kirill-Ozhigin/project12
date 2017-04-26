@@ -1,22 +1,33 @@
-#include "MainWindow.h"
-
-#include "..\include\PlatformDefines.h"
-#include "..\WindowInput\window.h"
-#include "..\WindowInput\keyboard.h"
-#include "..\include\windows.h"
-
 #include <thread>
 #include <chrono>
+
+#include "MainWindow.h"
+
+
+#include "..\include\PlatformDefines.h"
+#include "..\include\windows.h"
+
+#include "..\WindowInput\window.h"
+#include "..\WindowInput\keyboard.h"
+#include "..\WindowInput\mouse.h"
+
+#include "..\Sound\sound.h"
+#include "..\Sound\SoundSource.h"
+#include "..\Sound\WaveFileLoader.h"
 
 
 static volatile bool g_bLooping = false;
 
 //EXTERN_C extern void terminateApp(void);
 
-EXTERN_C DLL_EXPORT void terminateApp(void)
+EXTERN_C void terminateApp(void)
 {
 	g_bLooping = false;
 }
+
+EXTERN_C extern WaveFileData* loadWaveFromFile(const char* const filename);
+
+EXTERN_C extern Sound* const createSound(const window& cwnd);
 
 
 int main(const int argc, const char* const argv[])
@@ -29,6 +40,25 @@ int main(const int argc, const char* const argv[])
 		ShowWindow(w, 0);
 	}
 #endif // PLATFORM_WINDOWS & NDEBUG
+
+	Sound* mainSound = createSound(*mainWindow->getWnd());
+
+	SoundSource* source = nullptr;
+
+	if (mainSound)
+	{
+		WaveFileData* wave = loadWaveFromFile("..\\source\\WhereYouAre.wav");
+
+		source = mainSound->createSound(*wave);
+
+		delete wave;
+		wave = nullptr;
+	}
+
+	if (source)
+	{
+		source->play();
+	}
 
 	g_bLooping = mainWindow != nullptr;
 
@@ -43,6 +73,17 @@ int main(const int argc, const char* const argv[])
 		{
 			g_bLooping = false;
 			break;
+		}
+		else if (mainWindow->isKeyDown(K_ENTER))
+		{
+			if (source->getState() == SourceState::Playing)
+			{
+				source->play();
+			}
+			else
+			{
+				source->pause();
+			}
 		}
 
 		std::this_thread::sleep_for(std::chrono::nanoseconds(1));

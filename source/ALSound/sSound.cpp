@@ -1,4 +1,4 @@
-#include "..\Sound\sSound.h"
+#include "..\Sound\SoundSource.h"
 
 #include "..\Sound\WaveFileLoader.h"
 #include "..\include\PlatformDefines.h"
@@ -67,7 +67,10 @@ private:
 
 };
 
-al_source::al_source(WaveFileData& fileData, ALenum eXRAMBufferMode = 0)
+al_source::al_source(WaveFileData& fileData, ALenum eXRAMBufferMode)
+	: m_state(SourceState::Stopped)
+	, m_handle(0)
+	, m_uBufferID(0)
 {
 	// Generate an AL Buffer
 	alGenBuffers(1, &m_uBufferID);
@@ -138,7 +141,11 @@ al_source::al_source(WaveFileData& fileData, ALenum eXRAMBufferMode = 0)
 			eBufferFormat = alGetEnumValue("AL_FORMAT_71CHN16");
 		}
 
-		alBufferData(m_uBufferID, eBufferFormat, fileData.getData(), fileData.getSize(), fileData.getSamplesPerSecond());
+		alBufferData(m_uBufferID, 
+			eBufferFormat, 
+			static_cast<const void*>(fileData.getData()), 
+			static_cast<ALsizei>(fileData.getSize()), 
+			static_cast<ALsizei>(fileData.getSamplesPerSecond()));
 	}
 
 	// Generate a Source to playback the Buffer
@@ -166,6 +173,7 @@ void al_source::play(long lStartPosition, bool bLoop)
 
 		alSourcePlay(m_handle);
 	}
+	m_state = SourceState::Playing;
 }
 
 void al_source::stop(void)
@@ -175,6 +183,7 @@ void al_source::stop(void)
 		alSourceStop(m_handle);
 		alSourcef(m_handle, AL_SEC_OFFSET, 0.f);
 	}
+	m_state = SourceState::Stopped;
 }
 
 void al_source::pause(void)
@@ -183,6 +192,7 @@ void al_source::pause(void)
 	{
 		alSourcePause(m_handle);
 	}
+	m_state = SourceState::Paused;
 }
 
 void al_source::resume(void)
@@ -191,12 +201,13 @@ void al_source::resume(void)
 	{
 		alSourcePlay(m_handle);
 	}
+	m_state = SourceState::Playing;
 }
 
 
-EXTERN_C DLL_EXPORT SoundSource* const createSoundSource(void)
+EXTERN_C DLL_EXPORT SoundSource* const createSoundSource(WaveFileData& fileData)
 {
-	al_source* sound = new al_source();
+	al_source* sound = new al_source(fileData);
 
 	return static_cast<SoundSource*>(sound);
 }

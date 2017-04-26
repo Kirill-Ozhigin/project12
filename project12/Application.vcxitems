@@ -21,6 +21,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\mouse.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\RenderContext.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\Sound.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\window.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp" />
   </ItemGroup>

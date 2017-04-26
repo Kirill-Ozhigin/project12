@@ -1,3 +1,7 @@
+#if NDEBUG
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif // NDEBUG
+
 #include "..\Sound\WaveFileLoader.h"
 
 #include <stdio.h>
@@ -259,7 +263,9 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 	WaveData* result = nullptr;
 
 	WAVEFILETYPE wfType;
+
 	WAVEFORMATEXTENSIBLE wfEXT;
+	memset(&wfEXT, 0, sizeof(WAVEFORMATEXTENSIBLE));
 
 	unsigned char* pWaveData = nullptr;
 	size_t ulDataSize;

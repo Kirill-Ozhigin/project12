@@ -39,6 +39,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenAL", "OpenAL", "{A09D70
 		thirdparty\include\xram.h = thirdparty\include\xram.h
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4BFDC8D-D32D-4FB8-80AD-D27E79F3BE40}"
+	ProjectSection(SolutionItems) = preProject
+		source\icon.ico = source\icon.ico
+		source\WhereYouAre.wav = source\WhereYouAre.wav
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		project12\Application.vcxitems*{28aad097-d73b-4066-a7e4-49adcd478753}*SharedItemsImports = 9

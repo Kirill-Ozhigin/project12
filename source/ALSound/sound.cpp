@@ -1,6 +1,6 @@
 #include "..\Sound\sound.h"
 
-#include "..\Sound\sSound.h"
+#include "..\Sound\SoundSource.h"
 
 #include "..\include\PlatformDefines.h"
 #include "..\include\cpputils.h"
@@ -34,7 +34,7 @@ public:
 
 	virtual void resume(void) override;
 
-	virtual SoundSource* createSound(void) override;
+	virtual SoundSource* createSound(WaveFileData& fileData) override;
 
 
 private:
@@ -63,6 +63,7 @@ al_context::al_context(const window& cwnd)
 	, m_pDevice(nullptr)
 	, m_pContext(nullptr)
 {
+	if (false)
 	{
 		const ALCchar* devices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
 
@@ -175,11 +176,11 @@ void al_context::resume(void)
 	}
 }
 
-EXTERN_C extern SoundSource* const createSoundSource(void);
+EXTERN_C extern SoundSource* const createSoundSource(WaveFileData& fileData);
 
-SoundSource* al_context::createSound(void)
+SoundSource* al_context::createSound(WaveFileData& fileData)
 {
-	SoundSource* source = createSoundSource();
+	SoundSource* source = createSoundSource(fileData);
 
 	m_vectorSources.push_back(source);
 

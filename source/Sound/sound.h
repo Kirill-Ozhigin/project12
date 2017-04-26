@@ -2,6 +2,7 @@
 #define __Sound_H 1
 
 class window;
+class WaveFileData;
 
 struct AudioDevice
 {
@@ -25,8 +26,7 @@ public:
 
 	virtual void resume(void) = 0;
 
-	virtual SoundSource* createSound(void) = 0;
-
+	virtual SoundSource* createSound(WaveFileData& fileData) = 0;
 
 };
 

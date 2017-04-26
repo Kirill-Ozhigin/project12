@@ -66,7 +66,7 @@ inline const char* const registerWndClass(HINSTANCE hInstance, const char* const
 	wcex.hInstance = hInstance;
 	if (icon_path)
 	{
-		wcex.hIcon = (HICON)LoadImage(nullptr, icon_path, IMAGE_ICON, 256, 256, LR_LOADFROMFILE);
+		wcex.hIcon = (HICON)LoadImage(nullptr, icon_path, IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
 		wcex.hIconSm = (HICON)LoadImage(nullptr, icon_path, IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
 	}
 	wcex.hCursor = LoadCursorA(nullptr, MAKEINTRESOURCEA(32512));

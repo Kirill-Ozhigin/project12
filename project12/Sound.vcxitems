@@ -15,7 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\sound.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\sSound.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundSource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.h" />
   </ItemGroup>
 </Project>

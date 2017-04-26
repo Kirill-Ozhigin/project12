@@ -7,17 +7,37 @@
     <Filter Include="WindowInput">
       <UniqueIdentifier>{13b97dbe-f251-4379-b430-d0887a2c5be8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{b0e1795a-f2fa-473d-a3d1-36accca14485}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\main.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\GLRender.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\input.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\keyboard.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\mouse.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\RenderContext.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\window.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp" />
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\GLRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\RenderContext.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\input.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\keyboard.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\window.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\WindowInput.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\mouse.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\Sound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.h" />
