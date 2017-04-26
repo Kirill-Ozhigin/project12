@@ -1,5 +1,7 @@
 #include "..\Sound\sound.h"
 
+#include "..\Sound\sSound.h"
+
 #include "..\include\PlatformDefines.h"
 #include "..\include\cpputils.h"
 #include "..\include\vector.h"
@@ -32,6 +34,8 @@ public:
 
 	virtual void resume(void) override;
 
+	virtual SoundSource* createSound(void) override;
+
 
 private:
 	const window& m_cwnd;
@@ -47,6 +51,8 @@ private:
 	vector<AudioDevice> m_vectorDevices;
 
 	AudioDevice m_ActiveDevice;
+
+	vector<SoundSource*> m_vectorSources;
 
 };
 
@@ -103,6 +109,10 @@ al_context::al_context(const window& cwnd)
 
 void al_context::release(void)
 {
+	m_vectorDevices.clear();
+
+	m_vectorSources.clear();
+
 	if (m_pContext)
 	{
 		alcMakeContextCurrent(nullptr);
@@ -118,29 +128,62 @@ void al_context::release(void)
 
 void al_context::play(long lStartPosition, bool bLoop)
 {
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->play(lStartPosition, bLoop);
+		}
+	}
 }
 
 void al_context::stop(void)
 {
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->stop();
+		}
+	}
+
 }
 
 void al_context::pause(void)
 {
-	if (m_bIsPaused)
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
 	{
-		return;
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->pause();
+		}
 	}
-	m_bIsPaused = 1;
 }
 
 void al_context::resume(void)
 {
-	if (!m_bIsPaused)
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
 	{
-		return;
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->resume();
+		}
 	}
-	m_bIsPaused = 0;
+}
 
+EXTERN_C extern SoundSource* const createSoundSource(void);
+
+SoundSource* al_context::createSound(void)
+{
+	SoundSource* source = createSoundSource();
+
+	m_vectorSources.push_back(source);
+
+	return source;
 }
 
 

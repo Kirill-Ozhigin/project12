@@ -15,7 +15,7 @@ public:
 
 	virtual void release(void) = 0;
 
-	virtual void play(long lStartPosition = 0, bool bLoop = 0) = 0;
+	virtual void play(long lStartPosition = 0L, bool bLoop = false) = 0;
 
 	virtual void stop(void) = 0;
 

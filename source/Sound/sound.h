@@ -8,6 +8,7 @@ struct AudioDevice
 	const char* name;
 };
 
+class SoundSource;
 
 class Sound
 {
@@ -23,6 +24,8 @@ public:
 	virtual void pause(void) = 0;
 
 	virtual void resume(void) = 0;
+
+	virtual SoundSource* createSound(void) = 0;
 
 
 };

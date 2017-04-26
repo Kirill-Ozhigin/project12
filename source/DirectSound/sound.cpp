@@ -32,6 +32,8 @@ public:
 
 	virtual void resume(void) override;
 
+	virtual SoundSource* createSound(void) override;
+
 
 private:
 	const window& m_cwnd;
@@ -92,6 +94,11 @@ void d_sound::pause(void)
 
 void d_sound::resume(void)
 {
+}
+
+SoundSource* d_sound::createSound(void)
+{
+	return nullptr;
 }
 
 
