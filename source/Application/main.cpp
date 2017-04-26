@@ -76,9 +76,9 @@ int main(const int argc, const char* const argv[])
 		}
 		else if (mainWindow->isKeyDown(K_ENTER))
 		{
-			if (source->getState() == SourceState::Playing)
+			if (source->getState() == SourceState::Paused)
 			{
-				source->play();
+				source->resume();
 			}
 			else
 			{
