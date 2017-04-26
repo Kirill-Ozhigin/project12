@@ -1,115 +1,148 @@
-#include "..\Sound\WaveFile.h"
+#include "..\Sound\WaveFileLoader.h"
 
 #include <stdio.h>
 #include "..\include\windows.h"
 #include "..\include\vector.h"
 
-
-
-WaveFileLoader::~WaveFileLoader()
+WaveFileData::~WaveFileData()
 {
 }
 
-
+#ifndef GUID_DEFINED
+#define GUID_DEFINED 1
+#if defined(__midl)
+typedef struct {
+	unsigned long  Data1;
+	unsigned short Data2;
+	unsigned short Data3;
+	byte           Data4[8];
+} GUID;
+#else
+typedef struct _GUID {
+	unsigned long  Data1;
+	unsigned short Data2;
+	unsigned short Data3;
+	unsigned char  Data4[8];
+} GUID;
+#endif
+#endif
 
 #ifndef _WAVEFORMATEX_
-#define _WAVEFORMATEX_
+#define _WAVEFORMATEX_ 1
 typedef struct tWAVEFORMATEX
 {
-	WORD    wFormatTag;
-	WORD    nChannels;
-	DWORD   nSamplesPerSec;
-	DWORD   nAvgBytesPerSec;
-	WORD    nBlockAlign;
-	WORD    wBitsPerSample;
-	WORD    cbSize;
+	unsigned short wFormatTag;
+	unsigned short nChannels;
+	unsigned long nSamplesPerSec;
+	unsigned long nAvgBytesPerSec;
+	unsigned short nBlockAlign;
+	unsigned short wBitsPerSample;
+	unsigned short cbSize;
 } WAVEFORMATEX;
 #endif /* _WAVEFORMATEX_ */
 
 #ifndef _WAVEFORMATEXTENSIBLE_
-#define _WAVEFORMATEXTENSIBLE_
+#define _WAVEFORMATEXTENSIBLE_ 1
 typedef struct {
-	WAVEFORMATEX    Format;
+	WAVEFORMATEX Format;
 	union {
-		WORD wValidBitsPerSample;       /* bits of precision  */
-		WORD wSamplesPerBlock;          /* valid if wBitsPerSample==0 */
-		WORD wReserved;                 /* If neither applies, set to zero. */
+		unsigned short wValidBitsPerSample;       /* bits of precision  */
+		unsigned short wSamplesPerBlock;          /* valid if wBitsPerSample==0 */
+		unsigned short wReserved;                 /* If neither applies, set to zero. */
 	} Samples;
-	DWORD           dwChannelMask;      /* which channels are */
+	unsigned long dwChannelMask;      /* which channels are */
 										/* present in stream  */
-	GUID            SubFormat;
+	GUID SubFormat;
 } WAVEFORMATEXTENSIBLE, *PWAVEFORMATEXTENSIBLE;
 #endif // !_WAVEFORMATEXTENSIBLE_
 
+#ifndef _SPEAKER_POSITIONS_
+#define _SPEAKER_POSITIONS_ 1
+// Speaker Positions for dwChannelMask in WAVEFORMATEXTENSIBLE:
+#define SPEAKER_FRONT_LEFT              0x1
+#define SPEAKER_FRONT_RIGHT             0x2
+#define SPEAKER_FRONT_CENTER            0x4
+#define SPEAKER_LOW_FREQUENCY           0x8
+#define SPEAKER_BACK_LEFT               0x10
+#define SPEAKER_BACK_RIGHT              0x20
+#define SPEAKER_FRONT_LEFT_OF_CENTER    0x40
+#define SPEAKER_FRONT_RIGHT_OF_CENTER   0x80
+#define SPEAKER_BACK_CENTER             0x100
+#define SPEAKER_SIDE_LEFT               0x200
+#define SPEAKER_SIDE_RIGHT              0x400
+#define SPEAKER_TOP_CENTER              0x800
+#define SPEAKER_TOP_FRONT_LEFT          0x1000
+#define SPEAKER_TOP_FRONT_CENTER        0x2000
+#define SPEAKER_TOP_FRONT_RIGHT         0x4000
+#define SPEAKER_TOP_BACK_LEFT           0x8000
+#define SPEAKER_TOP_BACK_CENTER         0x10000
+#define SPEAKER_TOP_BACK_RIGHT          0x20000
 
-class al_waves : public WaveFileLoader
+// Bit mask locations reserved for future use
+#define SPEAKER_RESERVED                0x7FFC0000
+
+// Used to specify that any possible permutation of speaker configurations
+#define SPEAKER_ALL                     0x80000000
+#endif // _SPEAKER_POSITIONS_
+
+typedef struct
 {
-private:
-	typedef struct
-	{
-		char			szRIFF[4];
-		unsigned long	ulRIFFSize;
-		char			szWAVE[4];
-	} WAVEFILEHEADER;
+	char szRIFF[4];
+	unsigned long ulRIFFSize;
+	char szWAVE[4];
+} WAVEFILEHEADER;
 
-	typedef struct
-	{
-		char			szChunkName[4];
-		unsigned long	ulChunkSize;
-	} RIFFCHUNK;
+typedef struct
+{
+	char			szChunkName[4];
+	unsigned long	ulChunkSize;
+} RIFFCHUNK;
 
-	typedef struct
-	{
-		unsigned short	usFormatTag;
-		unsigned short	usChannels;
-		unsigned long	ulSamplesPerSec;
-		unsigned long	ulAvgBytesPerSec;
-		unsigned short	usBlockAlign;
-		unsigned short	usBitsPerSample;
-		unsigned short	usSize;
-		unsigned short  usReserved;
-		unsigned long	ulChannelMask;
-		GUID            guidSubFormat;
-	} WAVEFMT;
+typedef struct
+{
+	unsigned short	usFormatTag;
+	unsigned short	usChannels;
+	unsigned long	ulSamplesPerSec;
+	unsigned long	ulAvgBytesPerSec;
+	unsigned short	usBlockAlign;
+	unsigned short	usBitsPerSample;
+	unsigned short	usSize;
+	unsigned short  usReserved;
+	unsigned long	ulChannelMask;
+	GUID            guidSubFormat;
+} WAVEFMT;
 
+
+
+class WaveData : public WaveFileData
+{
 public:
-	al_waves();
-	virtual ~al_waves() override { close(); }
+	WaveData(WAVEFORMATEXTENSIBLE wfExt, unsigned char* data, size_t size);
 
-	virtual void close(void) override;
+	virtual ~WaveData() override { release(); }
 
-	virtual size_t loadWaveFromFile(const char* const filename) final;
+	virtual void release(void) override;
 
-	virtual void deleteWave(size_t id) final;
+	virtual unsigned char* getData(void) override { return m_data; }
 
-	virtual void* getWaveData(size_t id) final;
+	virtual size_t getSize(void) override { return m_size; }
 
-	virtual size_t getWaveSize(size_t id) final;
+	virtual unsigned short getNumChannels(void) override { return m_wfEXT.Format.nChannels; }
+
+	virtual unsigned long getSamplesPerSecond(void) override { return m_wfEXT.Format.nSamplesPerSec; }
+
+	virtual unsigned short getBitsPerSample(void) override { return m_wfEXT.Format.wBitsPerSample; }
+
+	virtual unsigned long getChannelMask(void) override { return m_wfEXT.dwChannelMask; };
 
 private:
-	vector<unsigned char*> m_vectorWaveDatas;
-	vector<size_t> m_vectorWaveSizes;
+	WAVEFORMATEXTENSIBLE m_wfEXT;
+
+	unsigned char* m_data;
+
+	size_t m_size;
 
 };
-
-al_waves::al_waves()
-{
-}
-
-void al_waves::close(void)
-{
-	for (auto i = m_vectorWaveDatas.begin; i != m_vectorWaveDatas.end(); ++i)
-	{
-		unsigned char* pData = *i;
-		if (pData)
-		{
-			delete[] pData;
-			pData = nullptr;
-		}
-	}
-	m_vectorWaveDatas.clear();
-	m_vectorWaveDatas.clear();
-}
 
 enum WAVEFILETYPE
 {
@@ -117,12 +150,119 @@ enum WAVEFILETYPE
 	WF_EXT = 2
 };
 
-size_t al_waves::loadWaveFromFile(const char* const filename)
+WaveData::WaveData(WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t size)
+	: m_wfEXT(wfExt)
+	, m_data(pWaveData)
+	, m_size(size)
 {
-	WAVEFILETYPE wfType;
-	WAVEFORMATEXTENSIBLE wfEXT;		// For non-WAVEFORMATEXTENSIBLE wavefiles, the header is stored in the Format member of wfEXT
+}
+
+void WaveData::release(void)
+{
+	memset(&m_wfEXT, 0, sizeof(WAVEFORMATEXTENSIBLE));
+	if (m_data)
+	{
+		delete[] m_data;
+		m_data = nullptr;
+	}
+	m_size = 0;
+}
+
+EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, void* hInstance = nullptr)
+{
+	WaveData* result = nullptr;
+
+#if PLATFORM_WINAPI
+	LPCTSTR pszResource = MAKEINTRESOURCE(uResourceID);
+
+	HINSTANCE hIns;
+
+	if (hInstance)
+	{
+		hIns = static_cast<HINSTANCE>(hInstance);
+	}
+	else
+	{
+		hIns = GetModuleHandle(nullptr);
+	}
+
+	HRSRC hResInfo = ::FindResource(hIns, pszResource, TEXT("WAVE"));
+	if (!hResInfo)
+	{
+		return nullptr;
+	}
+
+	HGLOBAL hRes = ::LoadResource(hIns, hResInfo);
+	if (!hRes)
+	{
+		return nullptr;
+	}
+
+	void* pTheSound = ::LockResource(hRes);
+	if (!pTheSound)
+	{
+		return nullptr;
+	}
+
+	WAVEFORMATEXTENSIBLE wfEXT;
+
 	unsigned char* pWaveData = nullptr;
-	unsigned long ulDataSize;
+	size_t ulDataSize;
+
+	unsigned long* pdw = static_cast<unsigned long*>(pTheSound);
+
+	unsigned long ulRiff = *pdw++;
+	unsigned long ulLength = *pdw++;
+	unsigned long ulType = *pdw++;
+
+
+	if (_strnicmp(reinterpret_cast<char*>(ulRiff), "RIFF", 4))
+	{
+		return nullptr;
+	}
+
+	if (_strnicmp(reinterpret_cast<char*>(ulRiff), "WAVE", 4))
+	{
+		return nullptr;
+	}
+
+	void* pEnd = static_cast<void*>(static_cast<unsigned char*>(static_cast<void*>(pdw)) + ulLength - 4);
+
+	while (pdw < pEnd)
+	{
+		ulType = *pdw++;
+		ulLength = *pdw++;
+
+		char* tmp = reinterpret_cast<char*>(ulType);
+
+		if (!_strnicmp(tmp, "fmt ", 4))
+		{
+			if (ulLength <= sizeof(WAVEFMT))
+			{
+			}
+		}
+		else if (!_strnicmp(tmp, "data", 4))
+		{
+		}
+
+		pdw = static_cast<unsigned long*>(static_cast<void*>(static_cast<unsigned char*>(static_cast<void*>(pdw)) + ((ulLength + 1)&~1)));
+	}
+
+#endif // PLATFORM_WINAPI
+
+
+	return result;
+}
+
+EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
+{
+	WaveData* result = nullptr;
+
+	WAVEFILETYPE wfType;
+	WAVEFORMATEXTENSIBLE wfEXT;
+
+	unsigned char* pWaveData = nullptr;
+	size_t ulDataSize;
 	FILE* filePtr;
 	unsigned long ulDataOffset;
 
@@ -134,7 +274,7 @@ size_t al_waves::loadWaveFromFile(const char* const filename)
 #if NDEBUG
 	filePtr = fopen(filename, "rb");
 #else
-	fopen_s(&filePtr, filename, "rb");
+	int error = fopen_s(&filePtr, filename, "rb");
 #endif // NDEBUG
 
 	// Read Wave file header
@@ -186,8 +326,6 @@ size_t al_waves::loadWaveFromFile(const char* const filename)
 		}
 	}
 
-	size_t result = ~0;
-
 	if (ulDataSize && ulDataOffset && ((wfType == WF_EX) || (wfType == WF_EXT)))
 	{
 		// Allocate memory for sample data
@@ -199,11 +337,7 @@ size_t al_waves::loadWaveFromFile(const char* const filename)
 		// Read Sample Data
 		if (fread(pWaveData, 1, ulDataSize, filePtr) == ulDataSize)
 		{
-			result = m_vectorWaveDatas.size();
-
-			m_vectorWaveDatas[result] = pWaveData;
-
-			m_vectorWaveSizes[result] = ulDataSize;
+			result = new WaveData(wfEXT, pWaveData, ulDataSize);
 		}
 		else
 		{
@@ -214,28 +348,6 @@ size_t al_waves::loadWaveFromFile(const char* const filename)
 
 	fclose(filePtr);
 
-	return result;
-}
-
-void al_waves::deleteWave(size_t id)
-{
-	unsigned char* pData = m_vectorWaveDatas[id];
-	if (pData)
-	{
-		delete[] pData;
-		pData = nullptr;
-
-		m_vectorWaveSizes[id] = 0;
-	}
-}
-
-void* al_waves::getWaveData(size_t id)
-{
-	return static_cast<void*>(m_vectorWaveDatas[id]);
-}
-
-size_t al_waves::getWaveSize(size_t id)
-{
-	return m_vectorWaveSizes[id];
+	return static_cast<WaveFileData*>(result);
 }
 
