@@ -68,6 +68,7 @@ Global
 		project12\include.vcxitems*{673d945f-8c7f-47ab-a2ac-ed3f4c87561b}*SharedItemsImports = 9
 		project12\WindowInput.vcxitems*{7789feee-9a62-4d33-acef-30dc09fed9cc}*SharedItemsImports = 9
 		project12\WindowInput.vcxitems*{917be931-c948-4c60-9d8d-9be658978605}*SharedItemsImports = 4
+		project12\WindowInput.vcxitems*{c9ed1f36-46f0-4abe-a0fa-8a171b13503c}*SharedItemsImports = 4
 		project12\GLRender.vcxitems*{cb3ee23a-9843-4677-a2ba-3c7de1e7c59c}*SharedItemsImports = 9
 		project12\Sound.vcxitems*{dd559ddd-7eb0-4566-a32c-18176080c8e6}*SharedItemsImports = 4
 		project12\ALSound.vcxitems*{e28d2e57-d636-4bd2-8ec8-130be226ce0d}*SharedItemsImports = 9
