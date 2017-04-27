@@ -83,6 +83,7 @@ al_context::al_context(const window& cwnd)
 				m_vectorDevices.push_back(device);
 
 				devices++;
+				n = 0;
 			}
 			else
 			{
