@@ -47,7 +47,7 @@ int main(const int argc, const char* const argv[])
 
 	if (mainSound)
 	{
-		WaveFileData* wave = loadWaveFromFile("..//source//WhereYouAre.wav");
+		WaveFileData* wave = loadWaveFromFile("../source/WhereYouAre.wav");
 
 		source = mainSound->createSound(*wave);
 

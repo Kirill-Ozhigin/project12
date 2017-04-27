@@ -109,7 +109,7 @@ void MainWindow::mProc()
 	const long cx = 640;
 	const long cy = 480;
 
-	m_pWindow = ::createWindow("test", cx, cy, "..//source//icon.ico");
+	m_pWindow = ::createWindow("test", cx, cy, "../source/icon.ico");
 
 	if (m_pWindow == nullptr)
 	{
