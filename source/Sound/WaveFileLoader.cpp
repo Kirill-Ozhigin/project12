@@ -2,13 +2,13 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif // NDEBUG
 
-#include "..\Sound\WaveFileLoader.h"
+#include "../Sound/WaveFileLoader.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "..\include\windows.h"
-#include "..\include\vector.h"
+#include "../include/windows.h"
+#include "../include/vector.h"
 
 WaveFileData::~WaveFileData()
 {
@@ -223,10 +223,12 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 */
 int _strnicmp(const char* s1, const char* s2, size_t len)
 {
-	unsigned char c1, c2;
+	unsigned char c1 = 0, c2 = 0;
 
 	if (!len)
+	{
 		return 0;
+	}
 
 	while (len--)
 	{

@@ -1,6 +1,6 @@
-#include "..\Render\Buffer.h"
+#include "../Render/Buffer.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 Buffer::~Buffer()

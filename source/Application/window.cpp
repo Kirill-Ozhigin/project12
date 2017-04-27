@@ -2,8 +2,8 @@
 
 // extern the function to create a window from WindowInput lib 
 
-#include "..\WindowInput\window.h"
-#include "..\include\library.h"
+#include "../WindowInput/window.h"
+#include "../include/library.h"
 
 extern void* WindowInput;
 EXTERN_C extern bool openWindowInput(void);

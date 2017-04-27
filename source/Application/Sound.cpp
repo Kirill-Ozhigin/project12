@@ -1,8 +1,8 @@
-#include "..\Sound\sound.h"
-#include "..\Sound\SoundSource.h"
-#include "..\Sound\WaveFileLoader.h"
+#include "../Sound/sound.h"
+#include "../Sound/SoundSource.h"
+#include "../Sound/WaveFileLoader.h"
 
-#include "..\include\library.h"
+#include "../include/library.h"
 
 // pointer to Sound lib
 void* libSound = nullptr;

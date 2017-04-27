@@ -2,8 +2,8 @@
 
 // extern the function to get a keyboard by the input from WindowInput lib 
 
-#include "..\WindowInput\keyboard.h"
-#include "..\include\library.h"
+#include "../WindowInput/keyboard.h"
+#include "../include/library.h"
 
 
 extern void* WindowInput;

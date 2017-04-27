@@ -1,8 +1,8 @@
 #ifndef	__opengl_H
 #define	__opengl_H
 
-#include "..\include\windows.h"
-#include "..\include\library.h"
+#include "../include/windows.h"
+#include "../include/library.h"
 
 #if defined(OPENGL_ES_2)
 
@@ -54,7 +54,7 @@ provides it, then this doesn't do any harm.
 */
 typedef char GLchar;
 
-#include "glext\gles2ext.h"
+#include "glext/gles2ext.h"
 
 #endif // PLATFORM_APPLE
 
@@ -62,14 +62,14 @@ typedef char GLchar;
 
 #if defined(PLATFORM_APPLE)
 
-#include <OpenGL\gl.h>
+#include <OpenGL/gl.h>
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_7
 #define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
-#include <OpenGL\gl3.h>
+#include <OpenGL/gl3.h>
 #endif
 
-#include <OpenGL\glext.h>
+#include <OpenGL/glext.h>
 
 #define glGetProcAddress(procName) glXGetProcAddress((GLubyte*)procName)
 
@@ -77,20 +77,20 @@ typedef char GLchar;
 
 #define GL_GLEXT_PROTOTYPES
 #define GL_GLEXT_LEGACY // Prevents GL/gl.h from #including system glext.h
-#include <GL\gl.h> 
-#include "glext\glext.h"
+#include <GL/gl.h> 
+#include "glext/glext.h"
 
 #if defined(PLATFORM_WINAPI)
 
 //#define WGL_WGLEXT_PROTOTYPES
-#include "glext\wglext.h"
+#include "glext/wglext.h"
 
 #define glGetProcAddress(procName) static_cast<void*>( wglGetProcAddress(procName) )
 
 #elif defined(PLATFORM_POSIX)
 
 //#define GLX_GLXEXT_PROTOTYPES
-#include "glext\glxext.h"
+#include "glext/glxext.h"
 
 #define gl_GetProcAddress(procName) static_cast<void*>( glXGetProcAddress( static_cast<GLubyte*>(procName) ) )
 

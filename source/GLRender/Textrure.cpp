@@ -1,6 +1,6 @@
-#include "..\Render\Textrure.h"
+#include "../Render/Textrure.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 Textrure::~Textrure()

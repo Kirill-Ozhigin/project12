@@ -1,7 +1,7 @@
-#include "..\Render\IndexBuffer.h"
+#include "../Render/IndexBuffer.h"
 
 #include <stdlib.h>
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 IndexBuffer::~IndexBuffer()
 {

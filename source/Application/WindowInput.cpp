@@ -2,7 +2,7 @@
 
 // WindowInput lib
 
-#include "..\include\library.h"
+#include "../include/library.h"
 
 // pointer to WindowInput lib
 void* WindowInput = nullptr;

@@ -1,7 +1,7 @@
-#include "..\Render\VertexBuffer.h"
+#include "../Render/VertexBuffer.h"
 
 #include <stdlib.h>
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 VertexBuffer::~VertexBuffer()

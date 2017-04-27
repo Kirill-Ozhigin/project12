@@ -1,4 +1,4 @@
-#include "..\include\Library.h"
+#include "../include/library.h"
 #include "opengl.h"
 
 

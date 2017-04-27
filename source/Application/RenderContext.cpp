@@ -2,8 +2,8 @@
 
 // extern the function to create a render context from GLRender lib
 
-#include "..\Render\context.h"
-#include "..\include\library.h"
+#include "../Render/context.h"
+#include "../include/library.h"
 
 extern void* GLRender;
 EXTERN_C extern bool openGLRender(void);

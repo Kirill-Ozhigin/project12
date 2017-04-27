@@ -1,8 +1,8 @@
-#include "..\WindowInput\mouse.h"
-#include "..\WindowInput\window.h"
-#include "..\include\windows.h"
-#include "..\include\cpputils.h"
-#include "..\include\map.h"
+#include "../WindowInput/mouse.h"
+#include "../WindowInput/window.h"
+#include "../include/windows.h"
+#include "../include/cpputils.h"
+#include "../include/map.h"
 
 
 static HHOOK g_hHook = nullptr;

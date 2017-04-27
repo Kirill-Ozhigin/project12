@@ -2,8 +2,8 @@
 
 // extern the function to get a input by the window from WindowInput lib 
 
-#include "..\WindowInput\input.h"
-#include "..\include\library.h"
+#include "../WindowInput/input.h"
+#include "../include/library.h"
 
 extern void* WindowInput;
 EXTERN_C extern bool openWindowInput(void);

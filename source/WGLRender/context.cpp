@@ -1,12 +1,12 @@
-#include "..\Render\context.h"
+#include "../Render/context.h"
 
-#include "..\WindowInput\window.h"
+#include "../WindowInput/window.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
-#include "..\include\windows.h"
-#include "..\include\cpputils.h"
-#include "..\include\map.h"
+#include "../include/windows.h"
+#include "../include/cpputils.h"
+#include "../include/map.h"
 
 
 RenderContext::~RenderContext()

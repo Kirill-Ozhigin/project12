@@ -1,8 +1,8 @@
-#include "..\Render\GPUProgram.h"
+#include "../Render/GPUProgram.h"
 
-#include "..\include\vector.h"
+#include "../include/vector.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 

@@ -1,11 +1,11 @@
-#include "..\Sound\sound.h"
+#include "../Sound/sound.h"
 
 #include <stdio.h>
-#include "..\include\windows.h"
+#include "../include/windows.h"
 #include <dsound.h>
 #include <mmsystem.h>
 
-#include "..\WindowInput\window.h"
+#include "../WindowInput/window.h"
 
 #pragma comment ( lib, "dsound.lib" )
 #pragma comment ( lib, "dxguid.lib" )

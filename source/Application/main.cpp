@@ -4,16 +4,16 @@
 #include "MainWindow.h"
 
 
-#include "..\include\PlatformDefines.h"
-#include "..\include\windows.h"
+#include "../include/PlatformDefines.h"
+#include "../include/windows.h"
 
-#include "..\WindowInput\window.h"
-#include "..\WindowInput\keyboard.h"
-#include "..\WindowInput\mouse.h"
+#include "../WindowInput/window.h"
+#include "../WindowInput/keyboard.h"
+#include "../WindowInput/mouse.h"
 
-#include "..\Sound\sound.h"
-#include "..\Sound\SoundSource.h"
-#include "..\Sound\WaveFileLoader.h"
+#include "../Sound/sound.h"
+#include "../Sound/SoundSource.h"
+#include "../Sound/WaveFileLoader.h"
 
 
 static volatile bool g_bLooping = false;
@@ -47,7 +47,7 @@ int main(const int argc, const char* const argv[])
 
 	if (mainSound)
 	{
-		WaveFileData* wave = loadWaveFromFile("..\\source\\WhereYouAre.wav");
+		WaveFileData* wave = loadWaveFromFile("..//source//WhereYouAre.wav");
 
 		source = mainSound->createSound(*wave);
 

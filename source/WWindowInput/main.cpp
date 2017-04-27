@@ -1,10 +1,10 @@
 #if 0
 
 #include <stdio.h>
-#include "..\WindowInput\window.h"
-#include "..\WindowInput\input.h"
-#include "..\WindowInput\keyboard.h"
-#include "..\include\windows.h"
+#include "../WindowInput/window.h"
+#include "../WindowInput/input.h"
+#include "../WindowInput/keyboard.h"
+#include "../include/windows.h"
 #include <thread>
 
 

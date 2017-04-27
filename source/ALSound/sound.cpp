@@ -1,10 +1,10 @@
-#include "..\Sound\sound.h"
+#include "../Sound/sound.h"
 
-#include "..\Sound\SoundSource.h"
+#include "../Sound/SoundSource.h"
 
-#include "..\include\PlatformDefines.h"
-#include "..\include\cpputils.h"
-#include "..\include\vector.h"
+#include "../include/PlatformDefines.h"
+#include "../include/cpputils.h"
+#include "../include/vector.h"
 #include <stdio.h>
 
 #include <alc.h>

@@ -1,6 +1,6 @@
-#include "..\Render\ResourceManager.h"
+#include "../Render/ResourceManager.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 ResourceManager::~ResourceManager()

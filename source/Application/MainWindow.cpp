@@ -1,12 +1,12 @@
 #include "MainWindow.h"
 
-#include "..\include\PlatformDefines.h"
+#include "../include/PlatformDefines.h"
 
-#include "..\WindowInput\window.h"
-#include "..\WindowInput\keyboard.h"
-#include "..\WindowInput\mouse.h"
+#include "../WindowInput/window.h"
+#include "../WindowInput/keyboard.h"
+#include "../WindowInput/mouse.h"
 
-#include "..\Render\context.h"
+#include "../Render/context.h"
 
 #include <thread>
 #include <chrono>
@@ -109,12 +109,12 @@ void MainWindow::mProc()
 	const long cx = 640;
 	const long cy = 480;
 
-	m_pWindow = ::createWindow("test", cx, cy, "..\\source\\icon.ico");
+	m_pWindow = ::createWindow("test", cx, cy, "..//source//icon.ico");
 
 	if (m_pWindow == nullptr)
 	{
-#if _DEBUG || 1
-		printf_s("error creating window (MainWindow.cpp : m_pWindow == nullptr)\n");
+#if _DEBUG
+		printf("error creating window (MainWindow.cpp : m_pWindow == nullptr)\n");
 #endif // _DEBUG
 		return;
 	}

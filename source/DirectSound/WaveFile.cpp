@@ -1,7 +1,7 @@
-#include "..\Sound\WaveFileLoader.h"
+#include "../Sound/WaveFileLoader.h"
 
 #include <stdio.h>
-#include "..\include\windows.h"
+#include "../include/windows.h"
 #include <dsound.h>
 
 

@@ -1,7 +1,7 @@
-#include "..\Sound\SoundSource.h"
+#include "../Sound/SoundSource.h"
 
-#include "..\Sound\WaveFileLoader.h"
-#include "..\include\PlatformDefines.h"
+#include "../Sound/WaveFileLoader.h"
+#include "../include/PlatformDefines.h"
 
 #include <alc.h>
 #include <al.h>

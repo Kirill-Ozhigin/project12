@@ -1,6 +1,6 @@
-#include "..\WindowInput\window.h"
-#include "..\include\windows.h"
-#include "..\include\cpputils.h"
+#include "../WindowInput/window.h"
+#include "../include/windows.h"
+#include "../include/cpputils.h"
 
 
 window::~window() {}

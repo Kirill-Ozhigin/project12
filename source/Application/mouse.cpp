@@ -2,8 +2,8 @@
 
 // extern the function to get a mouse by the input from WindowInput lib 
 
-#include "..\WindowInput\mouse.h"
-#include "..\include\library.h"
+#include "../WindowInput/mouse.h"
+#include "../include/library.h"
 
 
 extern void* WindowInput;
