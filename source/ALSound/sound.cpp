@@ -67,7 +67,6 @@ al_context::al_context(const window& cwnd)
 	{
 		const ALCchar* devices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
 
-		char deviceName[2048];
 		int n = 0;
 		while (n < 2048)
 		{
@@ -79,11 +78,7 @@ al_context::al_context(const window& cwnd)
 				}
 
 				AudioDevice device;
-				device.name = new char[n];
-				while (n--)
-				{
-					unconst(device.name)[n] = deviceName[n];
-				}
+				device.name = static_cast<const char*>(devices - n);
 
 				m_vectorDevices.push_back(device);
 
@@ -91,10 +86,8 @@ al_context::al_context(const window& cwnd)
 			}
 			else
 			{
-				deviceName[n] = *devices;
 				n++;
 				devices++;
-
 			}
 		} // end while (n < 2048) 
 	}
