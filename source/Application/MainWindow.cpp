@@ -27,9 +27,9 @@ EXTERN_C extern window* createWindow(
 // get a input by the window
 EXTERN_C extern input* getInput(const window& cwnd);
 // get a keyboard by the input
-EXTERN_C extern keyboard* getKeyboard(const input& cinput);
+EXTERN_C extern keyboard* const getKeyboard(const input& cinput);
 // get a mouse by the input
-EXTERN_C extern mouse* getMouse(const input& cinput);
+EXTERN_C extern mouse* const getMouse(const input& cinput);
 
 // create a render context
 EXTERN_C extern RenderContext* createRenderContextVer(const window& cwnd, int major_version, int minor_version);
@@ -46,7 +46,7 @@ MainWindow::MainWindow()
 {
 	m_thread = std::thread(&MainWindow::mProc, this);
 
-	while (!m_pWindow)
+	if (!m_pWindow)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}

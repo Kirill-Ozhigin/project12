@@ -76,13 +76,44 @@ int main(const int argc, const char* const argv[])
 		}
 		else if (mainWindow->isKeyDown(K_ENTER))
 		{
-			if (source->getState() == SourceState::Paused)
+			if (source)
 			{
-				source->resume();
+				if (source->getState() == SourceState::Paused)
+				{
+					source->resume();
+				}
+				else
+				{
+					source->pause();
+				}
 			}
-			else
+		}
+		else if (mainWindow->isKeyDown(K_S))
+		{
+			if (source)
 			{
-				source->pause();
+				source->stop();
+			}
+		}
+		else if (mainWindow->isKeyDown(K_P))
+		{
+			if (source)
+			{
+				source->play();
+			}
+		}
+		else if (mainWindow->getMouse()->isButtonDown(mouse1))
+		{
+			if (source)
+			{
+				if (source->getState() == SourceState::Paused)
+				{
+					source->resume();
+				}
+				else
+				{
+					source->pause();
+				}
 			}
 		}
 

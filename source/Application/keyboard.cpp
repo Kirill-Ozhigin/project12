@@ -12,7 +12,7 @@ EXTERN_C extern bool openWindowInput(void);
 // pointer to getKeyboard function
 static PFNGETKEYBOARDPROC getKeyboardProc = nullptr;
 
-EXTERN_C keyboard* getKeyboard(const input& cinput)
+EXTERN_C keyboard* const getKeyboard(const input& cinput)
 {
 	if (getKeyboardProc == nullptr)
 	{

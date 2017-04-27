@@ -25,7 +25,7 @@ public:
 
 };
 
-typedef mouse* (*PFNGETMOUSEPROC)(const input& cinput);
+typedef mouse* const (*PFNGETMOUSEPROC)(const input& cinput);
 
 
 #endif // !__mouse_H

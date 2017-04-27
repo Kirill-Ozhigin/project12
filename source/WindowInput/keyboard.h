@@ -55,7 +55,7 @@ public:
 };
 
 
-typedef keyboard* (*PFNGETKEYBOARDPROC)(const input& cinput);
+typedef keyboard* const (*PFNGETKEYBOARDPROC)(const input& cinput);
 
 
 #endif // !__keyboard_H

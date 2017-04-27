@@ -12,7 +12,7 @@ EXTERN_C extern bool openWindowInput(void);
 // pointer to getMouse function
 static PFNGETMOUSEPROC getMouseProc = nullptr;
 
-EXTERN_C mouse* getMouse(const input& cinput)
+EXTERN_C mouse* const getMouse(const input& cinput)
 {
 	if (getMouseProc == nullptr)
 	{
