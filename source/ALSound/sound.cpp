@@ -63,6 +63,7 @@ al_context::al_context(const window& cwnd)
 	, m_pDevice(nullptr)
 	, m_pContext(nullptr)
 {
+	if (false)
 	{
 		const ALCchar* devices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
 
