@@ -5,6 +5,8 @@
 #include "..\Sound\WaveFileLoader.h"
 
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 #include "..\include\windows.h"
 #include "..\include\vector.h"
 
@@ -208,54 +210,45 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 		return nullptr;
 	}
 
-	WAVEFORMATEXTENSIBLE wfEXT;
-
-	unsigned char* pWaveData = nullptr;
-	size_t ulDataSize;
-
-	unsigned long* pdw = static_cast<unsigned long*>(pTheSound);
-
-	unsigned long ulRiff = *pdw++;
-	unsigned long ulLength = *pdw++;
-	unsigned long ulType = *pdw++;
-
-
-	if (_strnicmp(reinterpret_cast<char*>(ulRiff), "RIFF", 4))
-	{
-		return nullptr;
-	}
-
-	if (_strnicmp(reinterpret_cast<char*>(ulRiff), "WAVE", 4))
-	{
-		return nullptr;
-	}
-
-	void* pEnd = static_cast<void*>(static_cast<unsigned char*>(static_cast<void*>(pdw)) + ulLength - 4);
-
-	while (pdw < pEnd)
-	{
-		ulType = *pdw++;
-		ulLength = *pdw++;
-
-		char* tmp = reinterpret_cast<char*>(ulType);
-
-		if (!_strnicmp(tmp, "fmt ", 4))
-		{
-			if (ulLength <= sizeof(WAVEFMT))
-			{
-			}
-		}
-		else if (!_strnicmp(tmp, "data", 4))
-		{
-		}
-
-		pdw = static_cast<unsigned long*>(static_cast<void*>(static_cast<unsigned char*>(static_cast<void*>(pdw)) + ((ulLength + 1)&~1)));
-	}
-
 #endif // PLATFORM_WINAPI
 
-
 	return result;
+}
+
+/**
+* strnicmp - Case insensitive, length-limited string comparison
+* @s1: One string
+* @s2: The other string
+* @len: the maximum number of characters to compare
+*/
+int _strnicmp(const char* s1, const char* s2, size_t len)
+{
+	unsigned char c1, c2;
+
+	if (!len)
+		return 0;
+
+	while (len--)
+	{
+		c1 = *s1++;
+		c2 = *s2++;
+		if (!c1 || !c2)
+		{
+			break;
+		}
+		if (c1 == c2)
+		{
+			continue;
+		}
+		c1 = tolower(c1);
+		c2 = tolower(c2);
+		if (c1 != c2)
+		{
+			break;
+		}
+	}
+
+	return static_cast<int>(c1) - static_cast<int>(c2);
 }
 
 EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
@@ -286,6 +279,7 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 	// Read Wave file header
 	fread(&waveFileHeader, 1, sizeof(WAVEFILEHEADER), filePtr);
 
+
 	if (!_strnicmp(waveFileHeader.szRIFF, "RIFF", 4) && !_strnicmp(waveFileHeader.szWAVE, "WAVE", 4))
 	{
 		while (fread(&riffChunk, 1, sizeof(RIFFCHUNK), filePtr) == sizeof(RIFFCHUNK))
@@ -300,7 +294,7 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 					if (waveFmt.usFormatTag == 1)
 					{
 						wfType = WF_EX;
-						memcpy(&wfEXT.Format, &waveFmt, sizeof(PCMWAVEFORMAT));
+						memcpy(&wfEXT.Format, &waveFmt, sizeof(WAVEFORMATEX) - 2);
 					}
 					else if (waveFmt.usFormatTag == 2)
 					{
