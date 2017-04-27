@@ -14,30 +14,14 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\main.cpp" />
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\GLRender.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\RenderContext.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\input.cpp">
-      <Filter>WindowInput</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\keyboard.cpp">
-      <Filter>WindowInput</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\window.cpp">
-      <Filter>WindowInput</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\WindowInput.cpp">
-      <Filter>WindowInput</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\mouse.cpp">
-      <Filter>WindowInput</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Documents\Visual Studio 2017\Projects\project12\project12\..\source\Application\Sound.cpp">
-      <Filter>Sound</Filter>
-    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\GLRender.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\input.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\keyboard.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\mouse.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\RenderContext.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\Sound.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\window.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.h" />

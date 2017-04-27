@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <ItemsProjectGuid>{2b47c459-abd5-4282-adb5-a614d044520b}</ItemsProjectGuid>
+    <ItemsProjectGuid>{E28D2E57-D636-4BD2-8EC8-130BE226CE0D}</ItemsProjectGuid>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -14,11 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\sound.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundSource.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\ALSound\sound.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\ALSound\sSound.cpp" />
   </ItemGroup>
 </Project>

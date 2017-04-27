@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{E28D2E57-D636-4BD2-8EC8-130BE226CE0D}</ProjectGuid>
-    <RootNamespace>ALSound</RootNamespace>
+    <ProjectGuid>{1E1FFAD3-9C6C-4C15-808C-FE916EEDDBBD}</ProjectGuid>
+    <RootNamespace>WSound</RootNamespace>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -56,6 +56,7 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="Sound.vcxitems" Label="Shared" />
+    <Import Project="ALSound.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -142,11 +143,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\source\ALSound\sound.cpp" />
-    <ClCompile Include="..\source\ALSound\sSound.cpp" />
-    <ClCompile Include="..\source\ALSound\WaveFile.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
