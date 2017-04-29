@@ -15,7 +15,6 @@
 #include "../Sound/SoundSource.h"
 #include "../Sound/WaveFileLoader.h"
 
-
 static volatile bool g_bLooping = false;
 
 //EXTERN_C extern void terminateApp(void);
@@ -32,7 +31,7 @@ EXTERN_C Sound* const createSound(void);
 
 int main(const int argc, const char* const argv[])
 {
-	const MainWindow* const mainWindow = new MainWindow();
+	const MainWindow* mainWindow = new MainWindow();
 
 #if PLATFORM_WINDOWS & NDEBUG
 	{
@@ -49,10 +48,13 @@ int main(const int argc, const char* const argv[])
 	{
 		WaveFileData* wave = loadWaveFromFile("../source/WhereYouAre.wav");
 
-		source = mainSound->createSound(*wave);
+		if (wave)
+		{
+			source = mainSound->createSound(*wave);
 
-		delete wave;
-		wave = nullptr;
+			delete wave;
+			wave = nullptr;
+		}
 	}
 
 	if (source)
@@ -133,8 +135,11 @@ int main(const int argc, const char* const argv[])
 		std::this_thread::sleep_for(std::chrono::nanoseconds(1));
 	}
 
-
-	delete mainWindow;
+	if (mainWindow)
+	{
+		delete mainWindow;
+		mainWindow = nullptr;
+	}
 
 	return 0;
 }

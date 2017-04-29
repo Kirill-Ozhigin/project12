@@ -3,6 +3,10 @@
 #include "../include/PlatformDefines.h"
 #include "../include/cpputils.h"
 
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xresource.h>
+
 #include <string.h>
 
 
@@ -16,7 +20,7 @@ public:
 
 	virtual ~x_window() override { destroy(); }
 
-	virtual size_t getHandle(void) const override { return 0; }
+	virtual size_t getHandle(void) const override { return m_wnd; }
 
 	virtual void destroy(void) const override;
 
@@ -41,6 +45,10 @@ public:
 	virtual bool update(void) const override;
 
 private:
+	Display*     m_pDisplay;
+
+	Window       m_wnd;
+
 	// is visible (false/true or 0/1)
 	unsigned char m_visible;
 	// is active (false/true or 0/1)
@@ -53,16 +61,100 @@ x_window::x_window(const char* const title, const long width, const long height,
 	: m_visible(false)
 	, m_active(false)
 {
+	m_pDisplay = XOpenDisplay(nullptr);
+
+	int screen = DefaultScreen(m_pDisplay);
+
+	Window wndParent;
+	if (parent)
+	{
+		wndParent = parent->getHandle();
+	}
+	else
+	{
+		wndParent = RootWindow(m_pDisplay, pVisualInfo->screen);
+	}
+
+	Visual* pVisual = DefaultVisual(mDisplay, screen);
+
+	int iDepth = DefaultDepth(mDisplay, screen);
+
+	Colormap colormap = XCreateColormap(m_pDisplay, wndParent, pVisual, AllocNone);
+
+	XSetWindowAttributes attributes;
+	unsigned long attributeMask = CWColormap | CWBorderPixel;
+
+	attributes.colormap = colormap;
+	attributes.border_pixel = 0;
+
+	m_wnd = XCreateWindow(m_pDisplay, 
+		wndParent,
+		0, 0, width, height, 0, iDepth,
+		InputOutput, 
+		pVisual,
+		attributeMask, 
+		&attributes);
+
+	XFreeColormap(m_pDisplay, colormap);
+
+	XFlush(m_pDisplay);
 }
 
 x_window::x_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)
 	: m_visible(false)
 	, m_active(false)
 {
+	m_pDisplay = XOpenDisplay(nullptr);
+
+	int screen = DefaultScreen(m_pDisplay);
+
+	Window wndParent;
+	if (parent)
+	{
+		wndParent = parent->getHandle();
+	}
+	else
+	{
+		wndParent = RootWindow(m_pDisplay, pVisualInfo->screen);
+	}
+
+	Visual* pVisual = DefaultVisual(mDisplay, screen);
+
+	int iDepth = DefaultDepth(mDisplay, screen);
+
+	Colormap colormap = XCreateColormap(m_pDisplay, wndParent, pVisual, AllocNone);
+
+	XSetWindowAttributes attributes;
+	unsigned long attributeMask = CWColormap | CWBorderPixel;
+
+	attributes.colormap = colormap;
+	attributes.border_pixel = 0;
+
+	m_wnd = XCreateWindow(m_pDisplay,
+		wndParent,
+		0, 0, width, height, 0, iDepth,
+		InputOutput,
+		pVisual,
+		attributeMask,
+		&attributes);
+
+	XFreeColormap(m_pDisplay, colormap);
+
+	XFlush(m_pDisplay);
 }
 
 void x_window::destroy(void) const
 {
+	if (m_wnd)
+	{
+		XDestroyWindow(m_pDisplay, m_wnd);
+		unconst(m_wnd) = 0;
+	}
+	if (m_pDisplay)
+	{
+		XCloseDisplay(m_pDisplay);
+		unconst(m_pDisplay) = nullptr;
+	}
 }
 
 void x_window::close(void) const
@@ -71,7 +163,7 @@ void x_window::close(void) const
 
 bool x_window::isVisible(void) const
 {
-	if (1)
+	if (m_wnd)
 	{
 		return m_visible;
 	}
@@ -80,12 +172,12 @@ bool x_window::isVisible(void) const
 
 bool x_window::isHide(void) const
 {
-	return false;
+	return !isVisible();
 }
 
 bool x_window::isActive(void) const
 {
-	if (1)
+	if (m_wnd)
 	{
 		return m_active;
 	}
@@ -100,6 +192,10 @@ void x_window::getClientAreaSize(long& width, long& height) const
 
 void x_window::show(void) const
 {
+	if (m_wnd)
+	{
+		XMapWindow(m_pDisplay, m_wnd);
+	}
 }
 
 void x_window::minimize(void) const
@@ -108,6 +204,11 @@ void x_window::minimize(void) const
 
 void x_window::hide(void) const
 {
+	if (m_wnd)
+	{
+		XUnmapWindow(m_pDisplay, m_wnd);
+		XFlush(mDisplay);
+	}
 }
 
 void x_window::setTitle(const char* const newTitle) const
