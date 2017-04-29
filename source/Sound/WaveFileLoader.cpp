@@ -346,10 +346,10 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 	size_t sizeDataLength = pRiffChunk->ulChunkSize;
 	size_t sizeDataOffset = reinterpret_cast<size_t>(static_cast<const void*>(&pRiffChunk[1]));
 
-	unsigned char* pWaveData;
+	unsigned char* pWaveData = nullptr;
 	memcpy(pWaveData, reinterpret_cast<unsigned char*>(sizeDataOffset), sizeDataLength);
 	
-	if (pWaveData + sizeDataLength == pTheEnd)
+	if (1 || pWaveData + sizeDataLength == pTheEnd)
 	{
 		result = new WaveData(wfType, wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
 	}

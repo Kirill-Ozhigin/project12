@@ -5,6 +5,15 @@
 
 #include <alc.h>
 #include <al.h>
+#include <xram.h>
+
+enum XRAMBufferMode
+{
+	AL_STORAGE_AUTOMATIC = 1,
+	AL_STORAGE_HARDWARE,
+	AL_STORAGE_ACCESSIBLE
+};
+
 
 #ifndef _SPEAKER_POSITIONS_
 #define _SPEAKER_POSITIONS_ 1
@@ -43,7 +52,7 @@ SoundSource::~SoundSource()
 class al_source : public SoundSource
 {
 public:
-	al_source(WaveFileData& fileData, ALenum eXRAMBufferMode = 0);
+	al_source(WaveFileData& fileData, int eXRAMBufferMode = 0);
 	virtual ~al_source() override { release(); }
 
 	virtual void release(void) override;
@@ -67,7 +76,7 @@ private:
 
 };
 
-al_source::al_source(WaveFileData& fileData, ALenum eXRAMBufferMode)
+al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 	: m_state(SourceState::Stopped)
 	, m_handle(0)
 	, m_uBufferID(0)
@@ -83,7 +92,23 @@ al_source::al_source(WaveFileData& fileData, ALenum eXRAMBufferMode)
 		// Set XRAM Mode (if application)
 		if (eXRAMBufferMode && eaxSetBufferMode)
 		{
-			eaxSetBufferMode(1, &m_uBufferID, eXRAMBufferMode);
+			ALenum eXRAMmode;
+			switch (eXRAMBufferMode)
+			{
+			case AL_STORAGE_AUTOMATIC:
+				eXRAMmode = alGetEnumValue("AL_STORAGE_AUTOMATIC");
+				break;
+			case AL_STORAGE_HARDWARE:
+				eXRAMmode = alGetEnumValue("AL_STORAGE_HARDWARE");
+				break;
+			case AL_STORAGE_ACCESSIBLE:
+				eXRAMmode = alGetEnumValue("AL_STORAGE_ACCESSIBLE");
+				break;
+			default:
+				eXRAMmode = 0;
+				break;
+			}
+			eaxSetBufferMode(1, &m_uBufferID, eXRAMmode);
 		}
 #endif // 0
 
@@ -205,9 +230,9 @@ void al_source::resume(void)
 }
 
 
-EXTERN_C DLL_EXPORT SoundSource* const createSoundSource(WaveFileData& fileData)
+EXTERN_C DLL_EXPORT SoundSource* const createSoundSource(WaveFileData& fileData, int eXRAMBufferMode = 0)
 {
-	al_source* sound = new al_source(fileData);
+	al_source* sound = new al_source(fileData, eXRAMBufferMode);
 
 	return static_cast<SoundSource*>(sound);
 }
