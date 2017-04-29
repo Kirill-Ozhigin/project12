@@ -82,6 +82,12 @@ inline const char* const registerWndClass(HINSTANCE hInstance, const char* const
 }
 
 
+#else // if !PLATFORM_WINAPI
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #endif // PLATFORM_WINAPI
 
 #endif // !__Windows_H

@@ -8,11 +8,18 @@
 #include <string.h>
 #include <ctype.h>
 #include "../include/windows.h"
-#include "../include/vector.h"
+
+
+enum WAVEFILETYPE
+{
+	WF_EX = 1,
+	WF_EXT = 2
+};
 
 WaveFileData::~WaveFileData()
 {
 }
+
 
 #ifndef GUID_DEFINED
 #define GUID_DEFINED 1
@@ -123,7 +130,7 @@ typedef struct
 class WaveData : public WaveFileData
 {
 public:
-	WaveData(WAVEFORMATEXTENSIBLE wfExt, unsigned char* data, size_t size);
+	WaveData(WAVEFILETYPE wfType, WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t sizeDataLength, size_t sizeDataOffset);
 
 	virtual ~WaveData() override { release(); }
 
@@ -131,7 +138,7 @@ public:
 
 	virtual unsigned char* getData(void) override { return m_data; }
 
-	virtual size_t getSize(void) override { return m_size; }
+	virtual size_t getSize(void) override { return m_sizeDataLength; }
 
 	virtual unsigned short getNumChannels(void) override { return m_wfEXT.Format.nChannels; }
 
@@ -142,24 +149,33 @@ public:
 	virtual unsigned long getChannelMask(void) override { return m_wfEXT.dwChannelMask; };
 
 private:
+#if 0
+	WAVEFILETYPE m_wfType;
+#endif // 0
+
 	WAVEFORMATEXTENSIBLE m_wfEXT;
 
 	unsigned char* m_data;
 
-	size_t m_size;
+	size_t m_sizeDataLength;
+
+#if 0
+	size_t m_sizeDataOffset;
+#endif // 0
 
 };
 
-enum WAVEFILETYPE
-{
-	WF_EX = 1,
-	WF_EXT = 2
-};
-
-WaveData::WaveData(WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t size)
-	: m_wfEXT(wfExt)
+WaveData::WaveData(WAVEFILETYPE wfType, WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t sizeDataLength, size_t sizeDataOffset)
+	: WaveFileData()
+#if 0
+	, m_wfType(wfType)
+#endif // 0
+	, m_wfEXT(wfExt)
 	, m_data(pWaveData)
-	, m_size(size)
+	, m_sizeDataLength(sizeDataLength)
+#if 0
+	, m_sizeDataOffset(sizeDataOffset)
+#endif // 0
 {
 }
 
@@ -171,7 +187,7 @@ void WaveData::release(void)
 		delete[] m_data;
 		m_data = nullptr;
 	}
-	m_size = 0;
+	m_sizeDataLength = 0;
 }
 
 EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, void* hInstance = nullptr)
@@ -216,7 +232,7 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 }
 
 /**
-* strnicmp - Case insensitive, length-limited string comparison
+* strnicmp - Case insensitive, D-limited string comparison
 * @s1: One string
 * @s2: The other string
 * @len: the maximum number of characters to compare
@@ -263,9 +279,10 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 	memset(&wfEXT, 0, sizeof(WAVEFORMATEXTENSIBLE));
 
 	unsigned char* pWaveData = nullptr;
-	size_t ulDataSize;
+	size_t sizeDataLength;
+	size_t sizeDataOffset;
+
 	FILE* filePtr;
-	unsigned long ulDataOffset;
 
 	WAVEFILEHEADER	waveFileHeader;
 	RIFFCHUNK		riffChunk;
@@ -311,8 +328,8 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 			}
 			else if (!_strnicmp(riffChunk.szChunkName, "data", 4))
 			{
-				ulDataSize = riffChunk.ulChunkSize;
-				ulDataOffset = ftell(filePtr);
+				sizeDataLength = riffChunk.ulChunkSize;
+				sizeDataOffset = ftell(filePtr);
 				fseek(filePtr, riffChunk.ulChunkSize, SEEK_CUR);
 			}
 			else
@@ -328,18 +345,18 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 		}
 	}
 
-	if (ulDataSize && ulDataOffset && ((wfType == WF_EX) || (wfType == WF_EXT)))
+	if (sizeDataLength && sizeDataOffset && ((wfType == WF_EX) || (wfType == WF_EXT)))
 	{
 		// Allocate memory for sample data
-		pWaveData = new unsigned char[ulDataSize];
+		pWaveData = new unsigned char[sizeDataLength];
 
 		// Seek to start of audio data
-		fseek(filePtr, ulDataOffset, SEEK_SET);
+		fseek(filePtr, sizeDataOffset, SEEK_SET);
 
 		// Read Sample Data
-		if (fread(pWaveData, 1, ulDataSize, filePtr) == ulDataSize)
+		if (fread(pWaveData, 1, sizeDataLength, filePtr) == sizeDataLength)
 		{
-			result = new WaveData(wfEXT, pWaveData, ulDataSize);
+			result = new WaveData(wfType, wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
 		}
 		else
 		{

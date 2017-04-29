@@ -105,6 +105,16 @@ void al_context::release(void)
 {
 	m_vectorDevices.clear();
 
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->release();
+			delete source;
+			source = nullptr;
+		}
+	}
 	m_vectorSources.clear();
 
 	if (m_pContext)
