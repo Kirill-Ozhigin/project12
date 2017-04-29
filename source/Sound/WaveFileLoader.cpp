@@ -296,6 +296,14 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 		return nullptr;
 	}
 
+	DWORD dwSize = ::SizeofResource(hIns, hResInfo);
+	if (!dwSize)
+	{
+		return nullptr;
+	}
+
+	void* pTheEnd = static_cast<unsigned char*>(pTheSound) + dwSize;
+
 	const WAVEFILEHEADER* pWaveFileHeader = static_cast<const WAVEFILEHEADER*>(pTheSound);
 
 	if (_strnicmp(pWaveFileHeader->szRIFF, "RIFF", 4) || _strnicmp(pWaveFileHeader->szRIFF, "WAVE", 4))
@@ -338,9 +346,18 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 	size_t sizeDataLength = pRiffChunk->ulChunkSize;
 	size_t sizeDataOffset = reinterpret_cast<size_t>(static_cast<const void*>(&pRiffChunk[1]));
 
-	unsigned char* pWaveData = reinterpret_cast<unsigned char*>(sizeDataOffset);
-
-	result = new WaveData(wfType, wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
+	unsigned char* pWaveData;
+	memcpy(pWaveData, reinterpret_cast<unsigned char*>(sizeDataOffset), sizeDataLength);
+	
+	if (pWaveData + sizeDataLength == pTheEnd)
+	{
+		result = new WaveData(wfType, wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
+	}
+	else
+	{
+		delete[] pWaveData;
+		pWaveData = nullptr;
+	}
 
 #endif // PLATFORM_WINAPI
 
@@ -422,7 +439,7 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 		}
 	}
 
-	if (sizeDataLength && sizeDataOffset && ((wfType == WF_PCM) || (wfType == WF_EXT)))
+	if (sizeDataLength && sizeDataOffset)
 	{
 		// Allocate memory for sample data
 		pWaveData = new unsigned char[sizeDataLength];
