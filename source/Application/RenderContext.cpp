@@ -6,7 +6,7 @@
 #include "../include/library.h"
 
 extern void* GLRender;
-EXTERN_C extern bool openGLRender(void);
+EXTERN_C bool openGLRender(void);
 
 // pointer to createRenderContext function 
 static PFNCREATERENDERCONTEXTPROC createRCProc = nullptr;

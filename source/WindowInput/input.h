@@ -1,6 +1,8 @@
 #ifndef __input_H
 #define __input_H 1
 
+#include <stdlib.h>
+
 class window;
 
 class input

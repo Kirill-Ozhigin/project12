@@ -6,7 +6,7 @@
 #include "../include/library.h"
 
 extern void* WindowInput;
-EXTERN_C extern bool openWindowInput(void);
+EXTERN_C bool openWindowInput(void);
 
 // pointer to getInput function 
 static PFNGETINPUTPROC getInputProc = nullptr;

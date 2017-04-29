@@ -25,9 +25,9 @@ EXTERN_C void terminateApp(void)
 	g_bLooping = false;
 }
 
-EXTERN_C extern WaveFileData* loadWaveFromFile(const char* const filename);
+EXTERN_C WaveFileData* loadWaveFromFile(const char* const filename);
 
-EXTERN_C extern Sound* const createSound(const window& cwnd);
+EXTERN_C Sound* const createSound(const window& cwnd);
 
 
 int main(const int argc, const char* const argv[])

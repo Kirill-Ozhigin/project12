@@ -7,7 +7,7 @@
 
 
 extern void* WindowInput;
-EXTERN_C extern bool openWindowInput(void);
+EXTERN_C bool openWindowInput(void);
 
 // pointer to getMouse function
 static PFNGETMOUSEPROC getMouseProc = nullptr;

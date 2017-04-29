@@ -9,6 +9,8 @@ typedef char TCHAR;
 #define TEXT(quote) quote
 #endif // UNICODE
 
+#include <stdlib.h>
+
 class window
 {
 public:

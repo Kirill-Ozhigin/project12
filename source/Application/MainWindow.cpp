@@ -12,27 +12,27 @@
 #include <chrono>
 
 // close WindowInput lib
-EXTERN_C extern void closeWindowInput(void);
+EXTERN_C void closeWindowInput(void);
 // close GLRender lib
-EXTERN_C extern void closeGLRender(void);
+EXTERN_C void closeGLRender(void);
 
 
 // create a window
-EXTERN_C extern window* createWindow(
+EXTERN_C window* createWindow(
 	const TCHAR* const title = nullptr, 
 	const long width = 640L, const long height = 480L, 
 	const TCHAR* const icon_path = nullptr,
 	const window* const parent = nullptr
 );
 // get a input by the window
-EXTERN_C extern input* getInput(const window& cwnd);
+EXTERN_C input* getInput(const window& cwnd);
 // get a keyboard by the input
-EXTERN_C extern keyboard* const getKeyboard(const input& cinput);
+EXTERN_C keyboard* const getKeyboard(const input& cinput);
 // get a mouse by the input
-EXTERN_C extern mouse* const getMouse(const input& cinput);
+EXTERN_C mouse* const getMouse(const input& cinput);
 
 // create a render context
-EXTERN_C extern RenderContext* createRenderContextVer(const window& cwnd, int major_version, int minor_version);
+EXTERN_C RenderContext* createRenderContextVer(const window& cwnd, int major_version, int minor_version);
 
 
 MainWindow::MainWindow()
