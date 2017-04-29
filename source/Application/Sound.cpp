@@ -37,7 +37,7 @@ EXTERN_C WaveFileData* loadWaveFromFile(const char* const filename)
 		if (openSound())
 		{
 			// get address loadWaveFromFileProc function
-			loadWaveFromFileProc = static_cast<PFNLOADWAVEFROMRILEPROC>(GetProcAddress(libSound, "loadWaveFromFile"));
+			loadWaveFromFileProc = reinterpret_cast<PFNLOADWAVEFROMRILEPROC>(GetProcAddress(libSound, "loadWaveFromFile"));
 		}
 	}
 	if (loadWaveFromFileProc)
