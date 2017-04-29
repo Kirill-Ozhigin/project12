@@ -5,7 +5,11 @@
 
 #include <alc.h>
 #include <al.h>
+
+#if PLATFORM_WINAPI
 #include <xram.h>
+#endif // 0
+
 
 enum XRAMBufferMode
 {

@@ -179,7 +179,7 @@ void al_context::resume(void)
 	}
 }
 
-EXTERN_C extern SoundSource* const createSoundSource(WaveFileData& fileData);
+EXTERN_C SoundSource* const createSoundSource(WaveFileData& fileData);
 
 SoundSource* al_context::createSound(WaveFileData& fileData)
 {
