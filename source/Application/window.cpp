@@ -27,7 +27,7 @@ EXTERN_C window* createWindow(
 		if (openWindowInput())
 		{
 			// get address createWindow function
-			createWindowProc = static_cast<PFNCREATEWINDOWPROC>(GetProcAddress(WindowInput, "createWindow"));
+			createWindowProc = reinterpret_cast<PFNCREATEWINDOWPROC>(GetProcAddress(WindowInput, "createWindow"));
 		}
 	}
 	if (createWindowProc != nullptr)

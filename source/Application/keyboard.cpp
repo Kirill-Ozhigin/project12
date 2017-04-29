@@ -19,7 +19,7 @@ EXTERN_C keyboard* const getKeyboard(const input& cinput)
 		if (openWindowInput())
 		{
 			// get address getKeyboard function
-			getKeyboardProc = static_cast<PFNGETKEYBOARDPROC>(GetProcAddress(WindowInput, "getKeyboard"));
+			getKeyboardProc = reinterpret_cast<PFNGETKEYBOARDPROC>(GetProcAddress(WindowInput, "getKeyboard"));
 		}
 	}
 	if (getKeyboardProc != nullptr)

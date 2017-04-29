@@ -18,7 +18,7 @@ EXTERN_C input* getInput(const window& wnd)
 		if (openWindowInput())
 		{
 			// get address getInput function
-			getInputProc = static_cast<PFNGETINPUTPROC>(GetProcAddress(WindowInput, "getInput"));
+			getInputProc = reinterpret_cast<PFNGETINPUTPROC>(GetProcAddress(WindowInput, "getInput"));
 		}
 	}
 	if (getInputProc)

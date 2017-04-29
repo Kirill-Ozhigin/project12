@@ -40,8 +40,6 @@ MainWindow::MainWindow()
 	, m_pInput(nullptr)
 	, m_pKeyboard(nullptr)
 	, m_pMouse(nullptr)
-	, m_mouseX(0)
-	, m_mouseY(0)
 	, m_pRC(nullptr)
 {
 	m_thread = std::thread(&MainWindow::mProc, this);
@@ -62,21 +60,6 @@ MainWindow::~MainWindow()
 	{
 		m_thread.join();
 	}
-}
-
-bool MainWindow::isKeyDown(keys key) const
-{
-	if (m_pKeyboard)
-	{
-		return m_pKeyboard->isKeyDown(key);
-	}
-	return false;
-}
-
-void MainWindow::getMousePos(long& x, long& y) const
-{
-	x = m_mouseX;
-	y = m_mouseY;
 }
 
 const window* const MainWindow::getWnd(void) const

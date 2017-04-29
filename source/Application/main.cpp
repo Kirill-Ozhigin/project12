@@ -69,50 +69,63 @@ int main(const int argc, const char* const argv[])
 			g_bLooping = false;
 			break;
 		}
-		else if (mainWindow->isKeyDown(K_Q))
+		else
 		{
-			g_bLooping = false;
-			break;
-		}
-		else if (mainWindow->isKeyDown(K_ENTER))
-		{
-			if (source)
+			if (mainWindow->getKeyboard())
 			{
-				if (source->getState() == SourceState::Paused)
+				if (mainWindow->getKeyboard()->isKeyDown(K_Q))
 				{
-					source->resume();
+					g_bLooping = false;
+					break;
 				}
-				else
+				else if (mainWindow->getKeyboard()->isKeyDown(K_ENTER))
 				{
-					source->pause();
+					if (source)
+					{
+						if (source->getState() == SourceState::Paused)
+						{
+							source->resume();
+						}
+						else
+						{
+							source->pause();
+						}
+						std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					}
+				}
+				else if (mainWindow->getKeyboard()->isKeyDown(K_S))
+				{
+					if (source)
+					{
+						source->stop();
+					}
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				}
+				else if (mainWindow->getKeyboard()->isKeyDown(K_P))
+				{
+					if (source)
+					{
+						source->play();
+					}
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
-		}
-		else if (mainWindow->isKeyDown(K_S))
-		{
-			if (source)
+			if (mainWindow->getMouse())
 			{
-				source->stop();
-			}
-		}
-		else if (mainWindow->isKeyDown(K_P))
-		{
-			if (source)
-			{
-				source->play();
-			}
-		}
-		else if (mainWindow->getMouse()->isButtonDown(mouse1))
-		{
-			if (source)
-			{
-				if (source->getState() == SourceState::Paused)
+				if (mainWindow->getMouse()->isButtonDown(mouse1))
 				{
-					source->resume();
-				}
-				else
-				{
-					source->pause();
+					if (source)
+					{
+						if (source->getState() == SourceState::Paused)
+						{
+							source->resume();
+						}
+						else
+						{
+							source->pause();
+						}
+					}
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
 		}

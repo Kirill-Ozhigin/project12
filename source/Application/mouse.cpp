@@ -19,7 +19,7 @@ EXTERN_C mouse* const getMouse(const input& cinput)
 		if (openWindowInput())
 		{
 			// get address getMouse function
-			getMouseProc = static_cast<PFNGETMOUSEPROC>(GetProcAddress(WindowInput, "getMouse"));
+			getMouseProc = reinterpret_cast<PFNGETMOUSEPROC>(GetProcAddress(WindowInput, "getMouse"));
 		}
 	}
 	if (getMouseProc != nullptr)

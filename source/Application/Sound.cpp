@@ -56,7 +56,7 @@ EXTERN_C Sound* const createSound(const window& cwnd)
 		if (openSound())
 		{
 			// get address createSound function
-			createSoundProc = static_cast<PFNCREATESOUNDPROC>(GetProcAddress(libSound, "createSound"));
+			createSoundProc = reinterpret_cast<PFNCREATESOUNDPROC>(GetProcAddress(libSound, "createSound"));
 		}
 	}
 	if (createSoundProc)
