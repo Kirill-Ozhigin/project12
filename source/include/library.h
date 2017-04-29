@@ -45,7 +45,7 @@ static HMODULE OpenLibrary(const char* libName, bool bLazy = false, bool bInModu
 {
 	if (bInModulePath)
 	{
-		char path[_MAX_PATH];
+		char path[2048];
 		const char* modulePath = GetModulePath();
 		sprintf(path, "%s/%s", modulePath ? modulePath : ".", libName);
 		libName = path;
