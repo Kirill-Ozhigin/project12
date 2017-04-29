@@ -12,7 +12,7 @@
 
 enum WAVEFILETYPE
 {
-	WF_EX = 1,
+	WF_PCM = 1,
 	WF_EXT = 2
 };
 
@@ -39,6 +39,28 @@ typedef struct _GUID {
 } GUID;
 #endif
 #endif
+
+#ifndef WAVE_FORMAT_PCM
+
+/* OLD general waveform format structure (information common to all formats) */
+typedef struct waveformat_tag {
+	unsigned short wFormatTag; /* format type */
+	unsigned short nChannels; /* number of channels (i.e. mono, stereo, etc.) */
+	unsigned long nSamplesPerSec; /* sample rate */
+	unsigned long nAvgBytesPerSec; /* for buffer estimation */
+	unsigned short nBlockAlign; /* block size of data */
+} WAVEFORMAT, *PWAVEFORMAT;
+
+/* flags for wFormatTag field of WAVEFORMAT */
+#define WAVE_FORMAT_PCM 1
+
+
+/* specific waveform format structure for PCM data */
+typedef struct pcmwaveformat_tag {
+	WAVEFORMAT  wf;
+	unsigned short wBitsPerSample;
+} PCMWAVEFORMAT, *PPCMWAVEFORMAT;
+#endif /* WAVE_FORMAT_PCM */
 
 #ifndef _WAVEFORMATEX_
 #define _WAVEFORMATEX_ 1
@@ -190,47 +212,6 @@ void WaveData::release(void)
 	m_sizeDataLength = 0;
 }
 
-EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, void* hInstance = nullptr)
-{
-	WaveData* result = nullptr;
-
-#if PLATFORM_WINAPI
-	LPCTSTR pszResource = MAKEINTRESOURCE(uResourceID);
-
-	HINSTANCE hIns;
-
-	if (hInstance)
-	{
-		hIns = static_cast<HINSTANCE>(hInstance);
-	}
-	else
-	{
-		hIns = GetModuleHandle(nullptr);
-	}
-
-	HRSRC hResInfo = ::FindResource(hIns, pszResource, TEXT("WAVE"));
-	if (!hResInfo)
-	{
-		return nullptr;
-	}
-
-	HGLOBAL hRes = ::LoadResource(hIns, hResInfo);
-	if (!hRes)
-	{
-		return nullptr;
-	}
-
-	void* pTheSound = ::LockResource(hRes);
-	if (!pTheSound)
-	{
-		return nullptr;
-	}
-
-#endif // PLATFORM_WINAPI
-
-	return result;
-}
-
 /**
 * strnicmp - Case insensitive, D-limited string comparison
 * @s1: One string
@@ -267,6 +248,103 @@ int _strnicmp(const char* s1, const char* s2, size_t len)
 	}
 
 	return static_cast<int>(c1) - static_cast<int>(c2);
+}
+
+#define FORMAT_PCM 0x0001
+#define FORMAT_FLOAT 0x0003
+#define FORMAT_EXT 0xFFFE
+#define FORMAT_ADPCM_MS 0x0002
+#define FORMAT_ADPCM_IMA 0x0011
+#define FORMAT_ALAW 0x0006
+#define FORMAT_MULAW 0x0007
+
+
+
+EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, void* hInstance = nullptr)
+{
+	WaveData* result = nullptr;
+
+#if PLATFORM_WINAPI
+	LPCTSTR pszResource = MAKEINTRESOURCE(uResourceID);
+
+	HINSTANCE hIns;
+
+	if (hInstance)
+	{
+		hIns = static_cast<HINSTANCE>(hInstance);
+	}
+	else
+	{
+		hIns = GetModuleHandle(nullptr);
+	}
+
+	HRSRC hResInfo = ::FindResource(hIns, pszResource, TEXT("WAVE"));
+	if (!hResInfo)
+	{
+		return nullptr;
+	}
+
+	HGLOBAL hRes = ::LoadResource(hIns, hResInfo);
+	if (!hRes)
+	{
+		return nullptr;
+	}
+
+	void* pTheSound = ::LockResource(hRes);
+	if (!pTheSound)
+	{
+		return nullptr;
+	}
+
+	const WAVEFILEHEADER* pWaveFileHeader = static_cast<const WAVEFILEHEADER*>(pTheSound);
+
+	if (_strnicmp(pWaveFileHeader->szRIFF, "RIFF", 4) || _strnicmp(pWaveFileHeader->szRIFF, "WAVE", 4))
+	{
+		return nullptr;
+	}
+
+	const RIFFCHUNK* pRiffChunk = static_cast<const RIFFCHUNK*>(static_cast<const void*>(&pWaveFileHeader[1]));
+
+	if (_strnicmp(pRiffChunk->szChunkName, "fmt ", 4))
+	{
+		return nullptr;
+	}
+
+	const WAVEFMT* pWaveFmt = static_cast<const WAVEFMT*>(static_cast<const void*>(&pRiffChunk[1]));
+
+	WAVEFILETYPE wfType;
+	WAVEFORMATEXTENSIBLE wfEXT;
+
+	memset(&wfEXT, 0, sizeof(WAVEFORMATEXTENSIBLE));
+
+	if (pWaveFmt->usFormatTag == FORMAT_PCM)
+	{
+		wfType = WF_PCM;
+		memcpy(&wfEXT.Format, pWaveFmt, sizeof(PCMWAVEFORMAT));
+	}
+	else if (pWaveFmt->usFormatTag == FORMAT_EXT)
+	{
+		wfType = WF_EXT;
+		memcpy(&wfEXT, pWaveFmt, sizeof(WAVEFORMATEXTENSIBLE));
+	}
+
+	pRiffChunk = static_cast<const RIFFCHUNK*>(static_cast<const void*>(static_cast<const unsigned char*>(static_cast<const void*>(pWaveFmt)) + pRiffChunk->ulChunkSize));
+
+	if (_strnicmp(pRiffChunk->szChunkName, "data", 4))
+	{
+		return nullptr;
+	}
+
+	size_t sizeDataLength = pRiffChunk->ulChunkSize;
+	size_t sizeDataOffset = reinterpret_cast<size_t>(static_cast<const void*>(&pRiffChunk[1]));
+
+	unsigned char* pWaveData = reinterpret_cast<unsigned char*>(sizeDataOffset);
+
+	result = new WaveData(wfType, wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
+
+#endif // PLATFORM_WINAPI
+
+	return result;
 }
 
 EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
@@ -309,13 +387,12 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 				{
 					fread(&waveFmt, 1, riffChunk.ulChunkSize, filePtr);
 
-					// Determine if this is a WAVEFORMATEX or WAVEFORMATEXTENSIBLE wave file
-					if (waveFmt.usFormatTag == 1)
+					if (waveFmt.usFormatTag == FORMAT_PCM)
 					{
-						wfType = WF_EX;
-						memcpy(&wfEXT.Format, &waveFmt, sizeof(WAVEFORMATEX) - 2);
+						wfType = WF_PCM;
+						memcpy(&wfEXT.Format, &waveFmt, sizeof(PCMWAVEFORMAT));
 					}
-					else if (waveFmt.usFormatTag == 2)
+					else if (waveFmt.usFormatTag == FORMAT_EXT)
 					{
 						wfType = WF_EXT;
 						memcpy(&wfEXT, &waveFmt, sizeof(WAVEFORMATEXTENSIBLE));
@@ -345,7 +422,7 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 		}
 	}
 
-	if (sizeDataLength && sizeDataOffset && ((wfType == WF_EX) || (wfType == WF_EXT)))
+	if (sizeDataLength && sizeDataOffset && ((wfType == WF_PCM) || (wfType == WF_EXT)))
 	{
 		// Allocate memory for sample data
 		pWaveData = new unsigned char[sizeDataLength];
