@@ -49,7 +49,7 @@ EXTERN_C WaveFileData* loadWaveFromFile(const char* const filename)
 
 static PFNCREATESOUNDPROC createSoundProc = nullptr;
 
-EXTERN_C Sound* const createSound(const window& cwnd)
+EXTERN_C Sound* const createSound(void)
 {
 	if (createSoundProc == nullptr)
 	{
@@ -61,7 +61,7 @@ EXTERN_C Sound* const createSound(const window& cwnd)
 	}
 	if (createSoundProc)
 	{
-		return createSoundProc(cwnd);
+		return createSoundProc();
 	}
 	return nullptr;
 }

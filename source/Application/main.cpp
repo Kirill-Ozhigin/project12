@@ -27,7 +27,7 @@ EXTERN_C void terminateApp(void)
 
 EXTERN_C WaveFileData* loadWaveFromFile(const char* const filename);
 
-EXTERN_C Sound* const createSound(const window& cwnd);
+EXTERN_C Sound* const createSound(void);
 
 
 int main(const int argc, const char* const argv[])
@@ -41,7 +41,7 @@ int main(const int argc, const char* const argv[])
 	}
 #endif // PLATFORM_WINDOWS & NDEBUG
 
-	Sound* mainSound = createSound(*mainWindow->getWnd());
+	Sound* mainSound = createSound();
 
 	SoundSource* source = nullptr;
 

@@ -30,7 +30,8 @@ public:
 
 };
 
-typedef Sound* (*PFNCREATESOUNDPROC)(const window& cwnd);
+typedef Sound* (*PFNCREATESOUNDPROC_C)(const window& cwnd);
+typedef Sound* (*PFNCREATESOUNDPROC)(void);
 
 #endif // !__Sound_H
 

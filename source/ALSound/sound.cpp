@@ -1,9 +1,8 @@
 #include "../Sound/sound.h"
-
 #include "../Sound/SoundSource.h"
+#include "../WindowInput/window.h"
 
 #include "../include/PlatformDefines.h"
-#include "../include/cpputils.h"
 #include "../include/vector.h"
 #include <stdio.h>
 
@@ -21,7 +20,8 @@ Sound::~Sound()
 class al_context : public Sound
 {
 public:
-	al_context(const window& cwnd);
+	al_context(size_t hWindow);
+
 	virtual ~al_context() override { release(); }
 
 	virtual void release(void) override;
@@ -38,8 +38,6 @@ public:
 
 
 private:
-	const window& m_cwnd;
-
 	float m_fVolume;
 
 	unsigned char m_bIsPaused;
@@ -56,8 +54,8 @@ private:
 
 };
 
-al_context::al_context(const window& cwnd)
-	: m_cwnd(cwnd)
+al_context::al_context(size_t hWindow)
+	: Sound()
 	, m_fVolume(1.f)
 	, m_bIsPaused(0)
 	, m_pDevice(nullptr)
@@ -192,9 +190,16 @@ SoundSource* al_context::createSound(WaveFileData& fileData)
 
 
 
-EXTERN_C DLL_EXPORT Sound* const createSound(const window& cwnd)
+EXTERN_C DLL_EXPORT Sound* const createSoundC(const window& cwnd)
 {
-	al_context* sound = new al_context(cwnd);
+	al_context* sound = new al_context(cwnd.getHandle());
+
+	return static_cast<Sound*>(sound);
+}
+
+EXTERN_C DLL_EXPORT Sound* const createSound(void)
+{
+	al_context* sound = new al_context(0);
 
 	return static_cast<Sound*>(sound);
 }
