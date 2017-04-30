@@ -8,6 +8,7 @@
 
 #include <alc.h>
 #include <al.h>
+#include <alext.h>
 
 #if PLATFORM_WINAPI
 #include <xram.h>
@@ -129,13 +130,13 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 			switch (fileData.getBitsPerSample())
 			{
 			case 4:
-				eBufferFormat = alGetEnumValue("AL_FORMAT_MONO_IMA4");
+				eBufferFormat = AL_FORMAT_MONO_IMA4; // alGetEnumValue("AL_FORMAT_MONO_IMA4");
 				break;
 			case 8:
-				eBufferFormat = alGetEnumValue("AL_FORMAT_MONO8");
+				eBufferFormat = AL_FORMAT_MONO8; // alGetEnumValue("AL_FORMAT_MONO8");
 				break;
 			case 16:
-				eBufferFormat = alGetEnumValue("AL_FORMAT_MONO16");
+				eBufferFormat = AL_FORMAT_MONO16; // alGetEnumValue("AL_FORMAT_MONO16");
 				break;
 			}
 		}
@@ -144,38 +145,38 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 			switch (fileData.getBitsPerSample())
 			{
 			case 4:
-				eBufferFormat = alGetEnumValue("AL_FORMAT_STEREO_IMA4");
+				eBufferFormat = AL_FORMAT_STEREO_IMA4; // alGetEnumValue("AL_FORMAT_STEREO_IMA4");
 				break;
 			case 8:
-				eBufferFormat = alGetEnumValue("AL_FORMAT_STEREO8");
+				eBufferFormat = AL_FORMAT_STEREO8; // alGetEnumValue("AL_FORMAT_STEREO8");
 				break;
 			case 16:
 				if (fileData.getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
 				{
-					eBufferFormat = alGetEnumValue("AL_FORMAT_REAR16");
+					eBufferFormat = AL_FORMAT_REAR16; // alGetEnumValue("AL_FORMAT_REAR16");
 				}
 				else
 				{
-					eBufferFormat = alGetEnumValue("AL_FORMAT_STEREO16");
+					eBufferFormat = AL_FORMAT_STEREO16; // alGetEnumValue("AL_FORMAT_STEREO16");
 				}
 				break;
 			}
 		}
 		else if ((fileData.getNumChannels() == 4) && (fileData.getBitsPerSample() == 16))
 		{
-			eBufferFormat = alGetEnumValue("AL_FORMAT_QUAD16");
+			eBufferFormat = AL_FORMAT_QUAD16; // alGetEnumValue("AL_FORMAT_QUAD16");
 		}
 		else if ((fileData.getNumChannels() == 6) && (fileData.getBitsPerSample() == 16))
 		{
-			eBufferFormat = alGetEnumValue("AL_FORMAT_51CHN16");
+			eBufferFormat = AL_FORMAT_51CHN16; // alGetEnumValue("AL_FORMAT_51CHN16");
 		}
 		else if ((fileData.getNumChannels() == 7) && (fileData.getBitsPerSample() == 16))
 		{
-			eBufferFormat = alGetEnumValue("AL_FORMAT_61CHN16");
+			eBufferFormat = AL_FORMAT_61CHN16; // alGetEnumValue("AL_FORMAT_61CHN16");
 		}
 		else if ((fileData.getNumChannels() == 8) && (fileData.getBitsPerSample() == 16))
 		{
-			eBufferFormat = alGetEnumValue("AL_FORMAT_71CHN16");
+			eBufferFormat = AL_FORMAT_71CHN16; // alGetEnumValue("AL_FORMAT_71CHN16");
 		}
 
 		alBufferData(m_uBufferID, 
