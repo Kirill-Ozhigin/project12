@@ -15,17 +15,19 @@ class SoundSource
 public:
 	virtual ~SoundSource() = 0;
 
-	virtual void release(void) = 0;
+	virtual void release(void) const = 0;
 
-	virtual void play(long lStartPosition = 0L, bool bLoop = false) = 0;
+	virtual void play(long lStartPosition = 0L, bool bLoop = false) const = 0;
 
-	virtual void stop(void) = 0;
+	virtual void stop(void) const = 0;
 
-	virtual void pause(void) = 0;
+	virtual void pause(void) const = 0;
 
-	virtual void resume(void) = 0;
+	virtual void resume(void) const = 0;
 
-	virtual SourceState getState(void) = 0;
+	virtual SourceState getState(void) const = 0;
+
+	virtual bool update(void) = 0;
 
 };
 

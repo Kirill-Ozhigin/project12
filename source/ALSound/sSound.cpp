@@ -1,14 +1,17 @@
 #include "../Sound/SoundSource.h"
 
 #include "../Sound/WaveFileLoader.h"
+
+#include <stdio.h>
 #include "../include/PlatformDefines.h"
+#include "../include/cpputils.h"
 
 #include <alc.h>
 #include <al.h>
 
 #if PLATFORM_WINAPI
 #include <xram.h>
-#endif // 0
+#endif // PLATFORM_WINAPI
 
 
 enum XRAMBufferMode
@@ -59,17 +62,19 @@ public:
 	al_source(WaveFileData& fileData, int eXRAMBufferMode = 0);
 	virtual ~al_source() override { release(); }
 
-	virtual void release(void) override;
+	virtual void release(void) const override;
 
-	virtual void play(long lStartPosition = 0L, bool bLoop = false) override;
+	virtual void play(long lStartPosition = 0L, bool bLoop = false) const override;
 
-	virtual void stop(void) override;
+	virtual void stop(void) const override;
 
-	virtual void pause(void) override;
+	virtual void pause(void) const override;
 
-	virtual void resume(void) override;
+	virtual void resume(void) const override;
 
-	virtual SourceState getState(void) override { return m_state; }
+	virtual SourceState getState(void) const override { return m_state; }
+
+	virtual bool update(void) override;
 
 private:
 	SourceState m_state;
@@ -184,53 +189,109 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 	alSourcei(m_handle, AL_BUFFER, m_uBufferID);
 }
 
-void al_source::release(void)
+void al_source::release(void) const 
 {
 	if (m_handle)
 	{
 		alDeleteSources(1, &m_handle);
-		m_handle = 0U;
+		unconst(m_handle) = 0U;
 	}
 }
 
-void al_source::play(long lStartPosition, bool bLoop)
+void al_source::play(long lStartPosition, bool bLoop) const
 {
 	if (m_handle)
 	{
 		alSourcef(m_handle, AL_SEC_OFFSET, static_cast<float>(lStartPosition));
-		alSourcef(m_handle, AL_LOOPING, static_cast<float>(bLoop));
+		alSourcei(m_handle, AL_LOOPING, static_cast<ALboolean>(bLoop));
 
 		alSourcePlay(m_handle);
 	}
-	m_state = SourceState::Playing;
 }
 
-void al_source::stop(void)
+void al_source::stop(void) const
 {
 	if (m_handle)
 	{
 		alSourceStop(m_handle);
 		alSourcef(m_handle, AL_SEC_OFFSET, 0.f);
 	}
-	m_state = SourceState::Stopped;
 }
 
-void al_source::pause(void)
+void al_source::pause(void) const
 {
 	if (m_handle)
 	{
 		alSourcePause(m_handle);
 	}
-	m_state = SourceState::Paused;
 }
 
-void al_source::resume(void)
+void al_source::resume(void) const
 {
 	if (m_handle)
 	{
 		alSourcePlay(m_handle);
 	}
-	m_state = SourceState::Playing;
+}
+
+bool al_source::update(void)
+{
+	if (m_handle)
+	{
+		ALenum temp;
+
+		alGetSourcei(m_handle, AL_SOURCE_STATE, &temp);
+		
+		switch (temp)
+		{
+		case AL_PLAYING:
+			m_state = SourceState::Playing;
+			break;
+
+		case AL_PAUSED:
+			m_state = SourceState::Paused;
+			break;
+
+		case AL_STOPPED:
+		case AL_INITIAL:
+		default:
+			m_state = SourceState::Stopped;
+			break;
+		}
+
+#if _DEBUG
+		temp = alGetError();
+
+		if (temp)
+		{
+			switch (temp)
+			{
+			case AL_INVALID_NAME:
+				printf("AL_INVALID_NAME");
+				return false;
+
+			case AL_INVALID_ENUM:
+				printf("AL_INVALID_ENUM");
+				return false;
+
+			case AL_INVALID_VALUE:
+				printf("AL_INVALID_VALUE");
+				return false;
+
+			case AL_INVALID_OPERATION:
+				printf("AL_INVALID_OPERATION");
+				return false;
+
+			case AL_OUT_OF_MEMORY:
+				printf("AL_OUT_OF_MEMORY");
+				return false;
+			};
+		}
+#endif // _DEBUG
+
+		return true;
+	}
+	return false;
 }
 
 

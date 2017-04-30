@@ -17,7 +17,7 @@
 
 static volatile bool g_bLooping = false;
 
-//EXTERN_C extern void terminateApp(void);
+EXTERN_C void terminateApp(void);
 
 EXTERN_C void terminateApp(void)
 {
@@ -66,6 +66,11 @@ int main(const int argc, const char* const argv[])
 
 	while (g_bLooping)
 	{
+		if (source)
+		{
+			source->update();
+		}
+
 		if (!mainWindow->getWnd())
 		{
 			g_bLooping = false;

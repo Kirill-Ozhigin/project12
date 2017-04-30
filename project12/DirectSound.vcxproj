@@ -71,23 +71,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>Sound</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>DSound</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>Sound</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IntDir>$(SolutionDir)inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
+    <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>DSound</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -99,27 +99,33 @@ static LRESULT WINAPI ProcMouseLL(int nCode, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case WM_LBUTTONDOWN:
-			g_mouseState[0] = 0x80;
+			g_mouseState[0] &= 0x01;
+			g_mouseState[0] ^= 0x01;
+			g_mouseState[0] |= 0x80;
 			break;
 
 		case WM_LBUTTONUP:
-			g_mouseState[0] = 0;
+			g_mouseState[0] &= 0x01;
 			break;
 
 		case WM_RBUTTONDOWN:
-			g_mouseState[1] = 0x80;
+			g_mouseState[1] &= 0x01;
+			g_mouseState[1] ^= 0x01;
+			g_mouseState[1] |= 0x80;
 			break;
 
 		case WM_RBUTTONUP:
-			g_mouseState[1] = 0;
+			g_mouseState[1] &= 0x01;
 			break;
 
 		case WM_MBUTTONDOWN:
-			g_mouseState[2] = 0x80;
+			g_mouseState[2] &= 0x01;
+			g_mouseState[2] ^= 0x01;
+			g_mouseState[2] |= 0x80;
 			break;
 
 		case WM_MBUTTONUP:
-			g_mouseState[2] = 0;
+			g_mouseState[2] &= 0x01;
 			break;
 
 		case 0x020A: // WM_MOUSEWHEEL 
@@ -133,16 +139,18 @@ static LRESULT WINAPI ProcMouseLL(int nCode, WPARAM wParam, LPARAM lParam)
 		case 0x020B: //WM_XBUTTONDOWN 
 			if (true)
 			{
-				unsigned short d = HIWORD(g_msStruct.mouseData);
-				g_mouseState[2 + d] = 0x80;
+				unsigned short d = HIWORD(g_msStruct.mouseData) + 2;
+				g_mouseState[d] &= 0x01;
+				g_mouseState[d] ^= 0x01;
+				g_mouseState[d] |= 0x80;
 			}
 			break;
 
 		case 0x020C: //WM_XBUTTONUP 
 			if (true)
 			{
-				unsigned short d = HIWORD(g_msStruct.mouseData);
-				g_mouseState[2 + d] = 0;
+				unsigned short d = HIWORD(g_msStruct.mouseData) + 2;
+				g_mouseState[d] &= 0x01;
 			}
 			break;
 
