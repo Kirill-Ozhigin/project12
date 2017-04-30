@@ -125,31 +125,43 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 		}
 #endif // 0
 
-		if (fileData.getNumChannels() == 1)
+		switch (fileData.getNumChannels())
 		{
+		case 1:
 			switch (fileData.getBitsPerSample())
 			{
 			case 4:
 				eBufferFormat = AL_FORMAT_MONO_IMA4; // alGetEnumValue("AL_FORMAT_MONO_IMA4");
 				break;
+
 			case 8:
 				eBufferFormat = AL_FORMAT_MONO8; // alGetEnumValue("AL_FORMAT_MONO8");
 				break;
+
 			case 16:
 				eBufferFormat = AL_FORMAT_MONO16; // alGetEnumValue("AL_FORMAT_MONO16");
 				break;
 			}
-		}
-		else if (fileData.getNumChannels() == 2)
-		{
+			break;
+
+		case 2:
 			switch (fileData.getBitsPerSample())
 			{
 			case 4:
 				eBufferFormat = AL_FORMAT_STEREO_IMA4; // alGetEnumValue("AL_FORMAT_STEREO_IMA4");
 				break;
+
 			case 8:
-				eBufferFormat = AL_FORMAT_STEREO8; // alGetEnumValue("AL_FORMAT_STEREO8");
+				if (fileData.getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
+				{
+					eBufferFormat = AL_FORMAT_REAR8; // alGetEnumValue("AL_FORMAT_REAR16");
+				}
+				else
+				{
+					eBufferFormat = AL_FORMAT_STEREO8; // alGetEnumValue("AL_FORMAT_STEREO8");
+				}
 				break;
+
 			case 16:
 				if (fileData.getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
 				{
@@ -160,23 +172,89 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 					eBufferFormat = AL_FORMAT_STEREO16; // alGetEnumValue("AL_FORMAT_STEREO16");
 				}
 				break;
+
+			case 32:
+				if (fileData.getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
+				{
+					eBufferFormat = AL_FORMAT_REAR32; // alGetEnumValue("AL_FORMAT_REAR32");
+				}
+				break;
+
 			}
-		}
-		else if ((fileData.getNumChannels() == 4) && (fileData.getBitsPerSample() == 16))
-		{
-			eBufferFormat = AL_FORMAT_QUAD16; // alGetEnumValue("AL_FORMAT_QUAD16");
-		}
-		else if ((fileData.getNumChannels() == 6) && (fileData.getBitsPerSample() == 16))
-		{
-			eBufferFormat = AL_FORMAT_51CHN16; // alGetEnumValue("AL_FORMAT_51CHN16");
-		}
-		else if ((fileData.getNumChannels() == 7) && (fileData.getBitsPerSample() == 16))
-		{
-			eBufferFormat = AL_FORMAT_61CHN16; // alGetEnumValue("AL_FORMAT_61CHN16");
-		}
-		else if ((fileData.getNumChannels() == 8) && (fileData.getBitsPerSample() == 16))
-		{
-			eBufferFormat = AL_FORMAT_71CHN16; // alGetEnumValue("AL_FORMAT_71CHN16");
+			break;
+
+		case 4:
+			switch (fileData.getBitsPerSample())
+			{
+			case 8:
+				eBufferFormat = AL_FORMAT_QUAD8; // alGetEnumValue("AL_FORMAT_QUAD8");
+				break;
+
+			case 16:
+				eBufferFormat = AL_FORMAT_QUAD16; // alGetEnumValue("AL_FORMAT_QUAD16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_QUAD32; // alGetEnumValue("AL_FORMAT_QUAD32");
+				break;
+
+			}
+			break;
+
+		case 6:
+			switch (fileData.getBitsPerSample())
+			{
+			case 8:
+				eBufferFormat = AL_FORMAT_51CHN8; // alGetEnumValue("AL_FORMAT_51CHN8");
+				break;
+
+			case 16:
+				eBufferFormat = AL_FORMAT_51CHN16; // alGetEnumValue("AL_FORMAT_51CHN16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_51CHN32; // alGetEnumValue("AL_FORMAT_51CHN32");
+				break;
+
+			}
+			break;
+
+		case 7:
+			switch (fileData.getBitsPerSample())
+			{
+			case 8:
+				eBufferFormat = AL_FORMAT_61CHN8; // alGetEnumValue("AL_FORMAT_61CHN8");
+				break;
+
+			case 16:
+				eBufferFormat = AL_FORMAT_61CHN16; // alGetEnumValue("AL_FORMAT_61CHN16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_61CHN32; // alGetEnumValue("AL_FORMAT_61CHN32");
+				break;
+
+			}
+			break;
+
+		case 8:
+			switch (fileData.getBitsPerSample())
+			{
+			case 8:
+				eBufferFormat = AL_FORMAT_QUAD8; // alGetEnumValue("AL_FORMAT_QUAD8");
+				break;
+
+			case 16:
+				eBufferFormat = AL_FORMAT_71CHN16; // alGetEnumValue("AL_FORMAT_71CHN16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_QUAD32; // alGetEnumValue("AL_FORMAT_QUAD32");
+				break;
+
+			}
+			break;
+
 		}
 
 		alBufferData(m_uBufferID, 
