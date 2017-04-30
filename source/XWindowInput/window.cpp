@@ -49,6 +49,8 @@ private:
 
 	Window       m_wnd;
 
+	void init(void);
+
 	// is visible (false/true or 0/1)
 	unsigned char m_visible;
 	// is active (false/true or 0/1)
@@ -56,71 +58,26 @@ private:
 
 };
 
-
-x_window::x_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)
-	: m_visible(false)
-	, m_active(false)
+void x_window::init(void)
 {
 	m_pDisplay = XOpenDisplay(nullptr);
 
-	int screen = DefaultScreen(m_pDisplay);
-
 	Window wndParent;
+
 	if (parent)
 	{
 		wndParent = parent->getHandle();
 	}
 	else
 	{
-		wndParent = RootWindow(m_pDisplay, pVisualInfo->screen);
+		wndParent = RootWindow(m_pDisplay, iScreen);
 	}
 
-	Visual* pVisual = DefaultVisual(mDisplay, screen);
+	int iScreen = DefaultScreen(m_pDisplay);
 
-	int iDepth = DefaultDepth(mDisplay, screen);
+	Visual* pVisual = DefaultVisual(m_pDisplay, screen);
 
-	Colormap colormap = XCreateColormap(m_pDisplay, wndParent, pVisual, AllocNone);
-
-	XSetWindowAttributes attributes;
-	unsigned long attributeMask = CWColormap | CWBorderPixel;
-
-	attributes.colormap = colormap;
-	attributes.border_pixel = 0;
-
-	m_wnd = XCreateWindow(m_pDisplay, 
-		wndParent,
-		0, 0, width, height, 0, iDepth,
-		InputOutput, 
-		pVisual,
-		attributeMask, 
-		&attributes);
-
-	XFreeColormap(m_pDisplay, colormap);
-
-	XFlush(m_pDisplay);
-}
-
-x_window::x_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)
-	: m_visible(false)
-	, m_active(false)
-{
-	m_pDisplay = XOpenDisplay(nullptr);
-
-	int screen = DefaultScreen(m_pDisplay);
-
-	Window wndParent;
-	if (parent)
-	{
-		wndParent = parent->getHandle();
-	}
-	else
-	{
-		wndParent = RootWindow(m_pDisplay, pVisualInfo->screen);
-	}
-
-	Visual* pVisual = DefaultVisual(mDisplay, screen);
-
-	int iDepth = DefaultDepth(mDisplay, screen);
+	int iDepth = DefaultDepth(m_pDisplay, screen);
 
 	Colormap colormap = XCreateColormap(m_pDisplay, wndParent, pVisual, AllocNone);
 
@@ -141,6 +98,35 @@ x_window::x_window(const wchar_t* const title, const long width, const long heig
 	XFreeColormap(m_pDisplay, colormap);
 
 	XFlush(m_pDisplay);
+}
+
+x_window::x_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)
+	: m_pDisplay(nullptr)
+	, m_wnd(0)
+	, m_visible(false)
+	, m_active(false)
+{
+	init();
+
+	if (title)
+	{
+		XStoreName(m_pDisplay, m_wnd, title);
+		XSetIconName(m_pDisplay, m_wnd, title);
+	}
+
+	if (icon_dir)
+	{
+	}
+
+}
+
+x_window::x_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)
+	: m_pDisplay(nullptr)
+	, m_wnd(0)
+	, m_visible(false)
+	, m_active(false)
+{
+	init();
 }
 
 void x_window::destroy(void) const
@@ -200,6 +186,10 @@ void x_window::show(void) const
 
 void x_window::minimize(void) const
 {
+	if (m_wnd)
+	{
+		XIconifyWindow(m_pDisplay, m_wnd, DefaultScreen(m_pDisplay));
+	}
 }
 
 void x_window::hide(void) const
@@ -207,12 +197,17 @@ void x_window::hide(void) const
 	if (m_wnd)
 	{
 		XUnmapWindow(m_pDisplay, m_wnd);
-		XFlush(mDisplay);
+		XFlush(m_pDisplay);
 	}
 }
 
 void x_window::setTitle(const char* const newTitle) const
 {
+	if (m_wnd)
+	{
+		XStoreName(m_pDisplay, m_wnd, newTitle);
+		XSetIconName(m_pDisplay, m_wnd, newTitle);
+	}
 }
 
 void x_window::setTitle(const wchar_t* const newTitle) const
@@ -230,10 +225,12 @@ void x_window::setParent(const window& newParent) const
 
 bool x_window::update(void) const
 {
-	bool result = false;
+	bool result = m_wnd != 0;
 
 	if (result)
 	{
+		XEvent ev;
+		XNextEvent(m_pDisplay, &ev);
 	}
 
 	return result;
