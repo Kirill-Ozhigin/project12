@@ -141,6 +141,7 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 			case 16:
 				eBufferFormat = AL_FORMAT_MONO16; // alGetEnumValue("AL_FORMAT_MONO16");
 				break;
+
 			}
 			break;
 
@@ -241,7 +242,7 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 			switch (fileData.getBitsPerSample())
 			{
 			case 8:
-				eBufferFormat = AL_FORMAT_QUAD8; // alGetEnumValue("AL_FORMAT_QUAD8");
+				eBufferFormat = AL_FORMAT_71CHN8; // alGetEnumValue("AL_FORMAT_71CHN8");
 				break;
 
 			case 16:
@@ -249,7 +250,7 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 				break;
 
 			case 32:
-				eBufferFormat = AL_FORMAT_QUAD32; // alGetEnumValue("AL_FORMAT_QUAD32");
+				eBufferFormat = AL_FORMAT_71CHN32; // alGetEnumValue("AL_FORMAT_71CHN32");
 				break;
 
 			}
