@@ -49,7 +49,7 @@ private:
 
 	Window       m_wnd;
 
-	void init(void);
+	void init(const long width, const long height, const window* const parent);
 
 	// is visible (false/true or 0/1)
 	unsigned char m_visible;
@@ -58,7 +58,7 @@ private:
 
 };
 
-void x_window::init(void)
+void x_window::init(const long width, const long height, const window* const parent)
 {
 	m_pDisplay = XOpenDisplay(nullptr);
 
@@ -106,7 +106,7 @@ x_window::x_window(const char* const title, const long width, const long height,
 	, m_visible(false)
 	, m_active(false)
 {
-	init();
+	init(width, width, parent);
 
 	if (title)
 	{
@@ -126,7 +126,7 @@ x_window::x_window(const wchar_t* const title, const long width, const long heig
 	, m_visible(false)
 	, m_active(false)
 {
-	init();
+	init(width, width, parent);
 }
 
 void x_window::destroy(void) const
@@ -172,8 +172,10 @@ bool x_window::isActive(void) const
 
 void x_window::getClientAreaSize(long& width, long& height) const
 {
-	width = 0;
-	height = 0;
+	Window root;
+	int x, y;
+	unsigned int border, depth;
+	XGetGeometry(m_pDisplay, m_wnd, &root, &x, &y, &width, &height, &border, &depth);
 }
 
 void x_window::show(void) const
@@ -181,6 +183,7 @@ void x_window::show(void) const
 	if (m_wnd)
 	{
 		XMapWindow(m_pDisplay, m_wnd);
+		XFlush(m_pDisplay);
 	}
 }
 
@@ -189,6 +192,7 @@ void x_window::minimize(void) const
 	if (m_wnd)
 	{
 		XIconifyWindow(m_pDisplay, m_wnd, DefaultScreen(m_pDisplay));
+		XFlush(m_pDisplay);
 	}
 }
 
