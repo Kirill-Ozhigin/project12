@@ -62,6 +62,8 @@ void x_window::init(const long width, const long height, const window* const par
 {
 	m_pDisplay = XOpenDisplay(nullptr);
 
+	int iScreen = DefaultScreen(m_pDisplay);
+
 	Window wndParent;
 
 	if (parent)
@@ -73,11 +75,9 @@ void x_window::init(const long width, const long height, const window* const par
 		wndParent = RootWindow(m_pDisplay, iScreen);
 	}
 
-	int iScreen = DefaultScreen(m_pDisplay);
+	Visual* pVisual = DefaultVisual(m_pDisplay, iScreen);
 
-	Visual* pVisual = DefaultVisual(m_pDisplay, screen);
-
-	int iDepth = DefaultDepth(m_pDisplay, screen);
+	int iDepth = DefaultDepth(m_pDisplay, iScreen);
 
 	Colormap colormap = XCreateColormap(m_pDisplay, wndParent, pVisual, AllocNone);
 
