@@ -1,0 +1,1 @@
+g++ ../source/Application/* -o ../bin/Application -D "NDEBUG" -std=c++11 -ldl -lpthread 

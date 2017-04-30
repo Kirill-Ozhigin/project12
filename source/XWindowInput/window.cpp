@@ -117,7 +117,6 @@ x_window::x_window(const char* const title, const long width, const long height,
 	if (icon_dir)
 	{
 	}
-
 }
 
 x_window::x_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)

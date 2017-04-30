@@ -1,0 +1,1 @@
+g++ ../source/Sound/* ../source/ALSound/* -o ../bin/libSound.so -D "NDEBUG" -I "../thridparty/include/" -std=c++11 -lopenal -shared -fPIC 
