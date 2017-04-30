@@ -117,7 +117,10 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 				eXRAMmode = 0;
 				break;
 			}
-			eaxSetBufferMode(1, &m_uBufferID, eXRAMmode);
+			if (eXRAMmode)
+			{
+				eaxSetBufferMode(1, &m_uBufferID, eXRAMmode);
+			}
 		}
 #endif // 0
 
@@ -202,7 +205,7 @@ void al_source::play(long lStartPosition, bool bLoop) const
 {
 	if (m_handle)
 	{
-		alSourcef(m_handle, AL_SEC_OFFSET, static_cast<float>(lStartPosition));
+		alSourcef(m_handle, AL_SEC_OFFSET, static_cast<ALfloat>(lStartPosition));
 		alSourcei(m_handle, AL_LOOPING, static_cast<ALboolean>(bLoop));
 
 		alSourcePlay(m_handle);
@@ -267,23 +270,23 @@ bool al_source::update(void)
 			switch (temp)
 			{
 			case AL_INVALID_NAME:
-				printf("AL_INVALID_NAME");
+				printf("AL_INVALID_NAME\t");
 				return false;
 
 			case AL_INVALID_ENUM:
-				printf("AL_INVALID_ENUM");
+				printf("AL_INVALID_ENUM\t");
 				return false;
 
 			case AL_INVALID_VALUE:
-				printf("AL_INVALID_VALUE");
+				printf("AL_INVALID_VALUE\t");
 				return false;
 
 			case AL_INVALID_OPERATION:
-				printf("AL_INVALID_OPERATION");
+				printf("AL_INVALID_OPERATION\t");
 				return false;
 
 			case AL_OUT_OF_MEMORY:
-				printf("AL_OUT_OF_MEMORY");
+				printf("AL_OUT_OF_MEMORY\t");
 				return false;
 			};
 		}

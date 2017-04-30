@@ -1,0 +1,1 @@
+g++ ../source/Application/* -o ../debug/Application -D "_DEBUG" -std=c++11 -ldl -lpthread 

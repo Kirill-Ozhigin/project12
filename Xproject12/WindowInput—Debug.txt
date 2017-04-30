@@ -1,0 +1,1 @@
+g++ ../source/WindowInput/* ../source/XWindowInput/* -o ../debug/libWindowInput.so -D "_DEBUG" -std=c++11 -lX11 -shared -fPIC 
