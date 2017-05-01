@@ -24,11 +24,11 @@ public:
 
 };
 
-//virtual size_t loadWaveFromResource(unsigned uResourceID, void* hInstance = nullptr) = 0;
 typedef WaveFileData* (*PFNLOADWAVEFROMRESOURCEPROC)(unsigned uResourceID, void* hInstance);
 
-//virtual size_t loadWaveFromFile(const char* const filename) = 0;
 typedef WaveFileData* (*PFNLOADWAVEFROMRILEPROC)(const char* const filename);
+
+typedef int (*PFNWRITEFILEFROMWAVEPROC)(WaveFileData& wave, const char* filename /*= nullptr*/);
 
 
 

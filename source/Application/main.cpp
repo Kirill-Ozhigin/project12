@@ -24,6 +24,7 @@ EXTERN_C void terminateApp(void)
 	g_bLooping = false;
 }
 
+EXTERN_C int writeFileFromWave(WaveFileData& wave, const char* filename = nullptr);
 EXTERN_C WaveFileData* loadWaveFromFile(const char* const filename);
 
 EXTERN_C Sound* const createSound(void);
@@ -44,17 +45,11 @@ int main(const int argc, const char* const argv[])
 
 	SoundSource* source = nullptr;
 
-	if (mainSound)
+	WaveFileData* wave = loadWaveFromFile("../source/WhereYouAre.wav");
+
+	if (mainSound && wave)
 	{
-		WaveFileData* wave = loadWaveFromFile("../source/WhereYouAre.wav");
-
-		if (wave)
-		{
-			source = mainSound->createSound(*wave);
-
-			delete wave;
-			wave = nullptr;
-		}
+		source = mainSound->createSound(*wave);
 	}
 
 	if (source)
@@ -144,6 +139,14 @@ int main(const int argc, const char* const argv[])
 	{
 		delete mainWindow;
 		mainWindow = nullptr;
+	}
+
+	if (wave)
+	{
+		writeFileFromWave(*wave);
+
+		delete wave;
+		wave = nullptr;
 	}
 
 	return 0;

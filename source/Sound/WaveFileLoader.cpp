@@ -10,16 +10,9 @@
 #include "../include/windows.h"
 
 
-enum WAVEFILETYPE
-{
-	WF_PCM = 1,
-	WF_EXT = 2
-};
-
 WaveFileData::~WaveFileData()
 {
 }
-
 
 #ifndef GUID_DEFINED
 #define GUID_DEFINED 1
@@ -129,8 +122,8 @@ typedef struct
 
 typedef struct
 {
-	char			szChunkName[4];
-	unsigned long	ulChunkSize;
+	char szChunkName[4];
+	unsigned long ulChunkSize;
 } RIFFCHUNK;
 
 typedef struct
@@ -152,7 +145,7 @@ typedef struct
 class WaveData : public WaveFileData
 {
 public:
-	WaveData(WAVEFILETYPE wfType, WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t sizeDataLength, size_t sizeDataOffset);
+	WaveData(WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t sizeDataLength, size_t sizeDataOffset);
 
 	virtual ~WaveData() override { release(); }
 
@@ -170,11 +163,9 @@ public:
 
 	virtual unsigned long getChannelMask(void) override { return m_wfEXT.dwChannelMask; };
 
-private:
-#if 0
-	WAVEFILETYPE m_wfType;
-#endif // 0
+	WAVEFORMATEXTENSIBLE& _getWFEXT(void) { return m_wfEXT; }
 
+private:
 	WAVEFORMATEXTENSIBLE m_wfEXT;
 
 	unsigned char* m_data;
@@ -185,13 +176,12 @@ private:
 	size_t m_sizeDataOffset;
 #endif // 0
 
+	//friend int writeFileFromWave(WaveFileData& wave, const char* filename = nullptr);
+
 };
 
-WaveData::WaveData(WAVEFILETYPE wfType, WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t sizeDataLength, size_t sizeDataOffset)
+WaveData::WaveData(WAVEFORMATEXTENSIBLE wfExt, unsigned char* pWaveData, size_t sizeDataLength, size_t sizeDataOffset)
 	: WaveFileData()
-#if 0
-	, m_wfType(wfType)
-#endif // 0
 	, m_wfEXT(wfExt)
 	, m_data(pWaveData)
 	, m_sizeDataLength(sizeDataLength)
@@ -320,19 +310,16 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 
 	const WAVEFMT* pWaveFmt = static_cast<const WAVEFMT*>(static_cast<const void*>(&pRiffChunk[1]));
 
-	WAVEFILETYPE wfType;
 	WAVEFORMATEXTENSIBLE wfEXT;
 
 	memset(&wfEXT, 0, sizeof(WAVEFORMATEXTENSIBLE));
 
 	if (pWaveFmt->usFormatTag == FORMAT_PCM)
 	{
-		wfType = WF_PCM;
 		memcpy(&wfEXT.Format, pWaveFmt, sizeof(PCMWAVEFORMAT));
 	}
 	else if (pWaveFmt->usFormatTag == FORMAT_EXT)
 	{
-		wfType = WF_EXT;
 		memcpy(&wfEXT, pWaveFmt, sizeof(WAVEFORMATEXTENSIBLE));
 	}
 
@@ -351,7 +338,7 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 	
 	if (1 || pWaveData + sizeDataLength == pTheEnd)
 	{
-		result = new WaveData(wfType, wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
+		result = new WaveData(wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
 	}
 	else
 	{
@@ -367,8 +354,6 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromResource(unsigned uResourceID, voi
 EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 {
 	WaveData* result = nullptr;
-
-	WAVEFILETYPE wfType;
 
 	WAVEFORMATEXTENSIBLE wfEXT;
 	memset(&wfEXT, 0, sizeof(WAVEFORMATEXTENSIBLE));
@@ -390,9 +375,13 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 	int error = fopen_s(&filePtr, filename, "rb");
 #endif // NDEBUG
 
+	if (!filePtr)
+	{
+		return nullptr;
+	}
+
 	// Read Wave file header
 	fread(&waveFileHeader, 1, sizeof(WAVEFILEHEADER), filePtr);
-
 
 	if (!_strnicmp(waveFileHeader.szRIFF, "RIFF", 4) && !_strnicmp(waveFileHeader.szWAVE, "WAVE", 4))
 	{
@@ -404,16 +393,21 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 				{
 					fread(&waveFmt, 1, riffChunk.ulChunkSize, filePtr);
 
-					if (waveFmt.usFormatTag == FORMAT_PCM)
+					switch (waveFmt.usFormatTag)
 					{
-						wfType = WF_PCM;
+					case FORMAT_PCM:
 						memcpy(&wfEXT.Format, &waveFmt, sizeof(PCMWAVEFORMAT));
-					}
-					else if (waveFmt.usFormatTag == FORMAT_EXT)
-					{
-						wfType = WF_EXT;
+						break;
+
+					case FORMAT_EXT:
 						memcpy(&wfEXT, &waveFmt, sizeof(WAVEFORMATEXTENSIBLE));
-					}
+						break;
+
+					default:
+						memcpy(&wfEXT, &waveFmt, riffChunk.ulChunkSize);
+						break;
+
+					};
 				}
 				else
 				{
@@ -450,7 +444,7 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 		// Read Sample Data
 		if (fread(pWaveData, 1, sizeDataLength, filePtr) == sizeDataLength)
 		{
-			result = new WaveData(wfType, wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
+			result = new WaveData(wfEXT, pWaveData, sizeDataLength, sizeDataOffset);
 		}
 		else
 		{
@@ -464,3 +458,94 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 	return static_cast<WaveFileData*>(result);
 }
 
+
+
+EXTERN_C DLL_EXPORT int writeFileFromWave(WaveFileData& wave, const char* filename = nullptr)
+{
+	WaveData* pWaveData = dynamic_cast<WaveData*>(&wave);
+	const char* sName = nullptr;
+	FILE* filePtr = nullptr;
+
+	if (filename)
+	{
+		if (*filename)
+		{
+#if NDEBUG
+			filePtr = fopen(filename, "rb");
+#else
+			int error = fopen_s(&filePtr, filename, "rb");
+#endif // NDEBUG
+			if (!filePtr)
+			{
+				sName = filename;
+			}
+			else
+			{
+				fclose(filePtr);
+			}
+		}
+	}
+
+	if (!sName)
+	{
+		char name[16];
+#if NDEBUG
+		sprintf(name, "./%p.wav", &wave);
+#else
+		sprintf_s(name, "./%p.wav", &wave);
+#endif // NDEBUG
+		sName = name;
+	}
+
+#if NDEBUG
+	filePtr = fopen(sName, "wb");
+#else
+	int error = fopen_s(&filePtr, sName, "wb");
+#endif // NDEBUG
+
+	fseek(filePtr, 0, SEEK_SET);
+
+	// WAVEFILEHEADER
+	{
+		unsigned long ulZero = 0;
+		fwrite("RIFF", 4, 1, filePtr);
+		fwrite(&ulZero, 4, 1, filePtr);
+		fwrite("WAVE", 4, 1, filePtr);
+	}
+
+	// RIFFCHUNK [fmt ] 
+	{
+		unsigned long ulChunkSize;
+
+		switch (pWaveData->_getWFEXT().Format.wFormatTag)
+		{
+		case FORMAT_PCM:
+			ulChunkSize = sizeof(PCMWAVEFORMAT);
+			break;
+
+		case FORMAT_EXT:
+			ulChunkSize = sizeof(WAVEFORMATEXTENSIBLE);
+			break;
+
+		default:
+			ulChunkSize = sizeof(WAVEFORMATEX);
+			break;
+
+		};
+		fwrite("fmt ", 4, 1, filePtr);
+		fwrite(&ulChunkSize, 4, 1, filePtr);
+		// WAVEFMT 
+		fwrite(&pWaveData->_getWFEXT(), 1, ulChunkSize, filePtr);
+	}
+
+	// RIFFCHUNK [data] 
+	{
+		fwrite("data", 4, 1, filePtr);
+		// data 
+		fwrite(pWaveData->getData(), 1, pWaveData->getSize(), filePtr);
+	}
+
+	fclose(filePtr);
+
+	return 0;
+}

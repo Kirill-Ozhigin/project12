@@ -10,6 +10,7 @@ enum SourceState
 	Stopped // Source is currently stopped (play will resume from start) 
 };
 
+// SoundSource buffer
 class SoundSource
 {
 public:
