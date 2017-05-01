@@ -14,14 +14,30 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\main.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\GLRender.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\input.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\keyboard.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\mouse.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\RenderContext.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\Sound.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\window.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\Sound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\GLRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\RenderContext.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\input.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\keyboard.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\mouse.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\window.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.h" />
