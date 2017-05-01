@@ -171,10 +171,13 @@ bool x_window::isActive(void) const
 
 void x_window::getClientAreaSize(long& width, long& height) const
 {
-	Window root;
-	int x, y;
-	unsigned int border, depth;
-	XGetGeometry(m_pDisplay, m_wnd, &root, &x, &y, &width, &height, &border, &depth);
+	Window _root;
+	int _x, _y;
+	unsigned int _width, _height, _border, _depth;
+	XGetGeometry(m_pDisplay, m_wnd, &_root, &_x, &_y, &_width, &_height, &_border, &_depth);
+
+	width = _width;
+	height = _height;
 }
 
 void x_window::show(void) const

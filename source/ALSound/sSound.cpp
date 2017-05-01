@@ -9,10 +9,7 @@
 #include <alc.h>
 #include <al.h>
 #include <alext.h>
-
-#if PLATFORM_WINAPI
 #include <xram.h>
-#endif // PLATFORM_WINAPI
 
 
 enum XRAMBufferMode
