@@ -14,11 +14,20 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\MP3FileLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\include\minimp3\minimp3.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\src\frame.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\src\header.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\src\id3v2lib.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\src\types.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\sound.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundSource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\minimp3\libc.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\minimp3\minimp3.h" />
   </ItemGroup>
 </Project>

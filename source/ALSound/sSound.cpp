@@ -139,6 +139,10 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 				eBufferFormat = AL_FORMAT_MONO16; // alGetEnumValue("AL_FORMAT_MONO16");
 				break;
 
+			case 32:
+				eBufferFormat = AL_FORMAT_MONO_FLOAT32; // alGetEnumValue("AL_FORMAT_MONO_FLOAT32");
+				break;
+
 			}
 			break;
 
@@ -175,6 +179,10 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 				if (fileData.getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
 				{
 					eBufferFormat = AL_FORMAT_REAR32; // alGetEnumValue("AL_FORMAT_REAR32");
+				}
+				else
+				{
+					eBufferFormat = AL_FORMAT_STEREO_FLOAT32; // alGetEnumValue("AL_FORMAT_STEREO_FLOAT32");
 				}
 				break;
 

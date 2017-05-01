@@ -75,28 +75,28 @@
     <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>Sound</TargetName>
     <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;..\thirdparty\scr\;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86);$(ProjectDir)..\thirdparty\lib\;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>Sound</TargetName>
     <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;..\thirdparty\scr\;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86);$(ProjectDir)..\thirdparty\lib\;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>Sound</TargetName>
     <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;..\thirdparty\scr\;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSdk_71A_LibraryPath_x64);$(ProjectDir)..\thirdparty\lib64\;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(ProjectDir)..\inrermediate\$(Configuration)_$(PlatformTarget)\$(ProjectName)\</IntDir>
     <TargetName>Sound</TargetName>
     <OutDir>$(ProjectDir)..\$(Configuration)_$(PlatformTarget)\</OutDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)..\thirdparty\include\;..\thirdparty\scr\;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSdk_71A_LibraryPath_x64);$(ProjectDir)..\thirdparty\lib64\;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
