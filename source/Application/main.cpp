@@ -46,7 +46,8 @@ int main(const int argc, const char* const argv[])
 
 	SoundSource* source = nullptr;
 
-	WaveFileData* wave = loadMP3WaveFromFile("../source/NeverAlone.mp3");
+	//WaveFileData* wave = loadMP3WaveFromFile("../source/NeverAlone.mp3");
+	WaveFileData* wave = loadWaveFromFile("../source/WhereYouAre.wav");
 
 	if (mainSound && wave)
 	{

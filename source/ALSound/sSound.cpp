@@ -80,6 +80,8 @@ public:
 
 	void _preBuffers(void);
 
+	void _unqueueBuffers(void);
+
 private:
 	WaveFileData* m_pWave;
 
@@ -137,7 +139,7 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 				}
 				if (eXRAMmode)
 				{
-					eaxSetBufferMode(1, &m_uBufferID, eXRAMmode);
+					eaxSetBufferMode(1, m_uBufferID, eXRAMmode);
 				}
 			}
 #endif // 0
@@ -178,6 +180,9 @@ void al_source::stop(void) const
 	{
 		alSourceStop(m_handle);
 		alSourcef(m_handle, AL_SEC_OFFSET, 0.f);
+
+		unconst(this)->_unqueueBuffers();
+		unconst(this)->m_pWave->seek();
 	}
 }
 
@@ -476,13 +481,7 @@ void al_source::_preBuffers(void)
 	{
 		if (getState() != Paused)
 		{
-			int iNumQueued;
-			alGetSourcei(m_handle, AL_BUFFERS_QUEUED, &iNumQueued);
-
-			if (iNumQueued > 0)
-			{
-				alSourceUnqueueBuffers(m_handle, iNumQueued, m_uBufferID);
-			}
+			_unqueueBuffers();
 
 			int iBuffersToQueue = m_iBufferCount;
 
@@ -507,6 +506,18 @@ void al_source::_preBuffers(void)
 			alSourceQueueBuffers(m_handle, iBuffersToQueue, m_uBufferID);
 		}
 	}
+}
+
+void al_source::_unqueueBuffers(void)
+{
+	int iNumQueued;
+	alGetSourcei(m_handle, AL_BUFFERS_QUEUED, &iNumQueued);
+
+	if (iNumQueued > 0)
+	{
+		alSourceUnqueueBuffers(m_handle, iNumQueued, m_uBufferID);
+	}
+
 }
 
 
