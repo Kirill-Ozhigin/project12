@@ -165,10 +165,10 @@ void al_source::play(long lStartPosition, bool bLoop) const
 {
 	if (m_handle)
 	{
-		unconst(this)->_preBuffers();
-
 		alSourcef(m_handle, AL_SEC_OFFSET, static_cast<ALfloat>(lStartPosition));
 		alSourcei(m_handle, AL_LOOPING, static_cast<ALboolean>(bLoop));
+
+		unconst(this)->_preBuffers();
 
 		alSourcePlay(m_handle);
 	}
