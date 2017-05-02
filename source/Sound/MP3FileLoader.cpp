@@ -8,6 +8,7 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "../include/PlatformDefines.h"
 #include "../include/vector.h"
 
 #ifdef __cplusplus
@@ -139,9 +140,10 @@ void mp3Data::seek(void)
 	m_sizeStreamPos = 0;
 	m_bIsEndOfStream = false;
 
+#if 1
 	ID3v2_header* ID3TagHeader = get_tag_header_with_buffer(
-		reinterpret_cast<const char*>(m_pEncodedData + m_sizeStreamPos),
-		static_cast<int>(m_sizeEncodedDataLength - m_sizeStreamPos)
+		reinterpret_cast<const char*>(m_pEncodedData),
+		static_cast<int>(m_sizeEncodedDataLength)
 	);
 
 	if (ID3TagHeader)
@@ -150,6 +152,7 @@ void mp3Data::seek(void)
 		delete_header(ID3TagHeader);
 		ID3TagHeader = nullptr;
 	}
+#endif // 1
 
 	int iByteCount = mp3_decode(
 		static_cast<mp3_decoder_t*>(m_MP3Decoder),
@@ -186,4 +189,61 @@ int mp3Data::_decodeFromFile(size_t sizeBytesRead)
 
 	return m_MP3Info.audio_bytes;
 }
+
+EXTERN_C DLL_EXPORT WaveFileData* loadMP3WaveFromEncodedData(void* pData, size_t sizeInBytes)
+{
+	mp3Data* result = new mp3Data(static_cast<unsigned char*>(pData), sizeInBytes);
+
+	return static_cast<WaveFileData*>(result);
+}
+
+
+EXTERN_C DLL_EXPORT WaveFileData* loadMP3WaveFromFile(const char* const filename)
+{
+	mp3Data* result = nullptr;
+
+	FILE* filePtr;
+	size_t sizeLength;
+	unsigned char* buffer;
+
+#if NDEBUG
+	filePtr = fopen(filename, "rb");
+#else
+	int error = fopen_s(&filePtr, filename, "rb");
+#endif // NDEBUG
+
+	if (!filePtr)
+	{
+#if _DEBUG
+		printf_s("!filePtr : %d\n", error);
+#endif // _DEBUG
+		return nullptr;
+	}
+
+	fseek(filePtr, 0L, SEEK_END);
+	sizeLength = ftell(filePtr);
+	rewind(filePtr);
+
+	if (sizeLength)
+	{
+		/* allocate memory for entire content */
+		buffer = new unsigned char[sizeLength];
+
+		/* copy the file into the buffer */
+		if (fread(buffer, 1, sizeLength, filePtr) == sizeLength)
+		{
+			result = new mp3Data(buffer, sizeLength);
+		}
+		else
+		{
+			delete[] buffer;
+			buffer = nullptr;
+		}
+	}
+
+	fclose(filePtr);
+
+	return static_cast<WaveFileData*>(result);
+}
+
 

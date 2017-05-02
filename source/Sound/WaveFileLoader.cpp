@@ -34,7 +34,6 @@ typedef struct _GUID {
 #endif
 
 #ifndef WAVE_FORMAT_PCM
-
 /* OLD general waveform format structure (information common to all formats) */
 typedef struct waveformat_tag {
 	unsigned short wFormatTag; /* format type */
@@ -46,7 +45,6 @@ typedef struct waveformat_tag {
 
 /* flags for wFormatTag field of WAVEFORMAT */
 #define WAVE_FORMAT_PCM 1
-
 
 /* specific waveform format structure for PCM data */
 typedef struct pcmwaveformat_tag {
@@ -302,18 +300,23 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromData(void* pData, size_t sizeInByt
 	size_t sizeDataLength = 0;
 	size_t sizeDataOffset = 0;
 
-	do  {
+	{
+		const unsigned char* pCurPos = static_cast<const unsigned char*>(static_cast<const void*>(pWaveFmt)) + pRiffChunk->ulChunkSize;
 
-		pRiffChunk = static_cast<const RIFFCHUNK*>(static_cast<const void*>(static_cast<const unsigned char*>(static_cast<const void*>(pWaveFmt)) + pRiffChunk->ulChunkSize));
+		do {
+			const RIFFCHUNK* pRiffChunk = static_cast<const RIFFCHUNK*>(static_cast<const void*>(pCurPos));
 
-		if (!_strnicmp(pRiffChunk->szChunkName, "data", 4))
-		{
-			sizeDataLength = pRiffChunk->ulChunkSize;
-			sizeDataOffset = reinterpret_cast<size_t>(static_cast<const void*>(&pRiffChunk[1]));
-			break;
-		}
+			if (!_strnicmp(pRiffChunk->szChunkName, "data", 4))
+			{
+				sizeDataLength = pRiffChunk->ulChunkSize;
+				sizeDataOffset = reinterpret_cast<size_t>(static_cast<const void*>(&pRiffChunk[1]));
+				break;
+			}
 
-	} while (pRiffChunk < pTheEnd);
+			pCurPos = static_cast<const unsigned char*>(static_cast<const void*>(&pRiffChunk[1])) + pRiffChunk->ulChunkSize;
+
+		} while (pCurPos < pTheEnd);
+	}
 
 	if (sizeDataLength && sizeDataOffset)
 	{
@@ -409,6 +412,9 @@ EXTERN_C DLL_EXPORT WaveFileData* loadWaveFromFile(const char* const filename)
 
 	if (!filePtr)
 	{
+#if _DEBUG
+		printf_s("!filePtr : %d\n", error);
+#endif // _DEBUG
 		return nullptr;
 	}
 

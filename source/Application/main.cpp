@@ -3,7 +3,6 @@
 
 #include "MainWindow.h"
 
-
 #include "../include/PlatformDefines.h"
 #include "../include/windows.h"
 
