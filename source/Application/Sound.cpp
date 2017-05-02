@@ -28,25 +28,6 @@ EXTERN_C void closeSound(void)
 	}
 }
 
-static PFNLOADWAVEFROMRILEPROC loadWaveFromFileProc = nullptr;
-
-EXTERN_C WaveFileData* loadWaveFromFile(const char* const filename)
-{
-	if (loadWaveFromFileProc == nullptr)
-	{
-		if (openSound())
-		{
-			// get address loadWaveFromFileProc function
-			loadWaveFromFileProc = reinterpret_cast<PFNLOADWAVEFROMRILEPROC>(GetProcAddress(libSound, "loadWaveFromFile"));
-		}
-	}
-	if (loadWaveFromFileProc)
-	{
-		return loadWaveFromFileProc(filename);
-	}
-	return nullptr;
-}
-
 static PFNCREATESOUNDPROC createSoundProc = nullptr;
 
 EXTERN_C Sound* const createSound(void)
@@ -65,23 +46,3 @@ EXTERN_C Sound* const createSound(void)
 	}
 	return nullptr;
 }
-
-static PFNWRITEFILEFROMWAVEPROC writeFileFromWaveProc = nullptr;
-
-EXTERN_C int writeFileFromWave(WaveFileData& wave, const char* filename = nullptr)
-{
-	if (writeFileFromWaveProc == nullptr)
-	{
-		if (openSound())
-		{
-			// get address loadWaveFromFileProc function
-			writeFileFromWaveProc = reinterpret_cast<PFNWRITEFILEFROMWAVEPROC>(GetProcAddress(libSound, "writeFileFromWave"));
-		}
-	}
-	if (writeFileFromWaveProc)
-	{
-		return writeFileFromWaveProc(wave, filename);
-	}
-	return ~0;
-}
-

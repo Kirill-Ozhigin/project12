@@ -26,6 +26,8 @@ EXTERN_C void terminateApp(void)
 EXTERN_C int writeFileFromWave(WaveFileData& wave, const char* filename = nullptr);
 EXTERN_C WaveFileData* loadWaveFromFile(const char* const filename);
 
+EXTERN_C WaveFileData* loadMP3WaveFromFile(const char* const filename);
+
 EXTERN_C Sound* const createSound(void);
 
 
@@ -44,11 +46,14 @@ int main(const int argc, const char* const argv[])
 
 	SoundSource* source = nullptr;
 
-	WaveFileData* wave = loadWaveFromFile("../source/WhereYouAre.wav");
+	WaveFileData* wave = loadMP3WaveFromFile("../source/NeverAlone.mp3");
 
 	if (mainSound && wave)
 	{
 		source = mainSound->createSound(*wave);
+
+		delete wave;
+		wave = nullptr;
 	}
 
 	if (source)
