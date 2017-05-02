@@ -10,9 +10,19 @@
 
 #include "../include/vector.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <minimp3/minimp3.h>
 
+#ifdef __cplusplus
+}
+#endif
+
 #include <id3v2lib.h>
+
+
 
 class mp3Data : public WaveFileData
 {
@@ -65,7 +75,7 @@ private:
 mp3Data::mp3Data(unsigned char* pEncodedData, size_t size)
 	: m_MP3Decoder(nullptr)
 	//, m_pDecodedData(new unsigned char[MP3_MAX_SAMPLES_PER_FRAME * 16])
-	//, m_sizeDataLength(0)
+	//, m_sizeDataLength(MP3_MAX_SAMPLES_PER_FRAME * 16)
 	, m_vectorDecodedData(MP3_MAX_SAMPLES_PER_FRAME * 16)
 	, m_pEncodedData(pEncodedData)
 	, m_sizeEncodedDataLength(size)
@@ -145,7 +155,7 @@ void mp3Data::seek(void)
 		static_cast<mp3_decoder_t*>(m_MP3Decoder),
 		const_cast<unsigned char*>(m_pEncodedData + m_sizeStreamPos),
 		static_cast<int>(m_sizeEncodedDataLength - m_sizeStreamPos),
-		static_cast<signed short*>(static_cast<void*>(m_pEncodedData)),
+		static_cast<signed short*>(static_cast<void*>(m_vectorDecodedData.data())),
 		&m_MP3Info
 	);
 
@@ -163,7 +173,7 @@ int mp3Data::_decodeFromFile(size_t sizeBytesRead)
 		static_cast<mp3_decoder_t*>(m_MP3Decoder),
 		const_cast<unsigned char*>(m_pEncodedData + m_sizeStreamPos),
 		static_cast<int>(m_sizeEncodedDataLength - m_sizeStreamPos),
-		static_cast<signed short*>(static_cast<void*>(m_pEncodedData + sizeBytesRead)),
+		static_cast<signed short*>(static_cast<void*>(m_vectorDecodedData.data() + sizeBytesRead)),
 		&m_MP3Info
 	);
 

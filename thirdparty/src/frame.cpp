@@ -7,13 +7,12 @@
  * file that was distributed with this source code.
  */
 
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include "frame.h"
-#include "util.h"
-#include "constants.h"
+#include <id3v2lib.h>
 
 ID3v2_frame* parse_frame(char* bytes, int offset, int version)
 {

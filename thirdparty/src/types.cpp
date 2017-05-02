@@ -7,11 +7,12 @@
  * file that was distributed with this source code.
  */
 
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include "types.h"
+#include <id3v2lib.h>
 
 ID3v2_tag* new_tag()
 {

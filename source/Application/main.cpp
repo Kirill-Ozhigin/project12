@@ -143,7 +143,7 @@ int main(const int argc, const char* const argv[])
 
 	if (wave)
 	{
-		writeFileFromWave(*wave);
+		//writeFileFromWave(*wave);
 
 		delete wave;
 		wave = nullptr;
