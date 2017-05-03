@@ -73,7 +73,7 @@ ID3v2_tag* load_tag_with_buffer(const char *bytes, int length)
     tag->tag_header = tag_header;
 
     tag->raw = (char*) malloc(tag->tag_header->tag_size * sizeof(char));
-    memcpy(tag->raw, bytes, length);
+    memcpy(tag->raw, bytes, tag->tag_header->tag_size);
 
     int offset = 0;
     while(offset < tag->tag_header->tag_size)

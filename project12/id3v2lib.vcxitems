@@ -20,4 +20,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\types.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\util.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\constants.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\frame.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\header.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\types.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\util.h" />
+  </ItemGroup>
 </Project>

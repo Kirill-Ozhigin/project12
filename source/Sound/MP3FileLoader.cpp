@@ -28,7 +28,7 @@ extern "C" {
 class mp3Data : public WaveFileData
 {
 public:
-	mp3Data(unsigned char* pEncodedData, size_t size);
+	mp3Data(ID3v2_tag* pTag, unsigned char* pEncodedData, size_t size);
 
 	virtual ~mp3Data() override { release(); }
 
@@ -76,15 +76,16 @@ private:
 
 };
 
-mp3Data::mp3Data(unsigned char* pEncodedData, size_t size)
+mp3Data::mp3Data(ID3v2_tag* pTag, unsigned char* pEncodedData, size_t size)
 	: m_MP3Decoder(nullptr)
 	//, m_pDecodedData(new unsigned char[MP3_MAX_SAMPLES_PER_FRAME * 16])
 	//, m_sizeDataLength(MP3_MAX_SAMPLES_PER_FRAME * 16)
 	, m_vectorDecodedData(MP3_MAX_SAMPLES_PER_FRAME * 16)
 	, m_pEncodedData(pEncodedData)
 	, m_sizeEncodedDataLength(size)
-	, m_sizeStreamPos(0)
+	, m_sizeStreamPos(pTag->tag_header->tag_size)
 	, m_bIsEndOfStream(false)
+	, m_pID3v2_tag(pTag)
 {
 }
 
@@ -139,22 +140,8 @@ bool mp3Data::seek(void)
 
 	m_MP3Decoder = mp3_create();
 
-	m_sizeStreamPos = 0;
+	m_sizeStreamPos = m_pID3v2_tag->tag_header->tag_size;
 	m_bIsEndOfStream = false;
-
-#if 0
-	ID3v2_header* ID3TagHeader = get_tag_header_with_buffer(
-		reinterpret_cast<const char*>(m_pEncodedData),
-		static_cast<int>(m_sizeEncodedDataLength)
-	);
-
-	if (ID3TagHeader)
-	{
-		m_sizeStreamPos += ID3TagHeader->tag_size;
-		delete_header(ID3TagHeader);
-		ID3TagHeader = nullptr;
-	}
-#endif // 1
 
 	int iByteCount = mp3_decode(
 		static_cast<mp3_decoder_t*>(m_MP3Decoder),
@@ -196,12 +183,35 @@ int mp3Data::_decodeFromFile(size_t sizeBytesRead)
 
 EXTERN_C DLL_EXPORT WaveFileData* loadMP3WaveFromEncodedData(void* pData, size_t sizeInBytes)
 {
-	mp3Data* result = new mp3Data(static_cast<unsigned char*>(pData), sizeInBytes);
+	mp3Data* result = nullptr;
 
-	if (!result->seek())
+#if 0
+	ID3v2_header* ID3TagHeader = get_tag_header_with_buffer(
+		reinterpret_cast<const char*>(m_pEncodedData),
+		static_cast<int>(m_sizeEncodedDataLength)
+	);
+
+	if (ID3TagHeader)
 	{
-		delete result;
-		result = nullptr;
+		m_sizeStreamPos += ID3TagHeader->tag_size;
+		delete_header(ID3TagHeader);
+		ID3TagHeader = nullptr;
+	}
+#endif // 1
+
+	const char* tmpBuffer = static_cast<const char*>(const_cast<const void*>(pData));
+
+	ID3v2_tag* ptag = ::load_tag_with_buffer(tmpBuffer, sizeInBytes);
+
+	if (ptag)
+	{
+		result = new mp3Data(ptag, static_cast<unsigned char*>(pData), sizeInBytes);
+
+		if (!result->seek())
+		{
+			delete result;
+			result = nullptr;
+		}
 	}
 
 	return static_cast<WaveFileData*>(result);
@@ -242,14 +252,23 @@ EXTERN_C DLL_EXPORT WaveFileData* loadMP3WaveFromFile(const char* const filename
 		/* copy the file into the buffer */
 		if (fread(buffer, 1, sizeLength, filePtr) == sizeLength)
 		{
-			result = new mp3Data(buffer, sizeLength);
-			if (!result->seek())
+			const char* tmpBuffer = static_cast<const char*>(const_cast<const void*>(static_cast<void*>(buffer)));
+
+			ID3v2_tag* ptag = ::load_tag_with_buffer(tmpBuffer, sizeLength);
+
+			if (ptag)
 			{
-				delete result;
-				result = nullptr;
+				result = new mp3Data(ptag, buffer, sizeLength);
+
+				if (!result->seek())
+				{
+					delete result;
+					result = nullptr;
+				}
 			}
 		}
-		else
+
+		if (!result)
 		{
 			delete[] buffer;
 			buffer = nullptr;
