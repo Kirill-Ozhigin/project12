@@ -140,7 +140,7 @@ void mp3Data::seek(void)
 	m_sizeStreamPos = 0;
 	m_bIsEndOfStream = false;
 
-#if 1
+#if 0
 	ID3v2_header* ID3TagHeader = get_tag_header_with_buffer(
 		reinterpret_cast<const char*>(m_pEncodedData),
 		static_cast<int>(m_sizeEncodedDataLength)

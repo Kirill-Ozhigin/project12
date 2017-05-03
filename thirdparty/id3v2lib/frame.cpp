@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <id3v2lib.h>
+#include "../include/id3v2lib.h"
 
 ID3v2_frame* parse_frame(char* bytes, int offset, int version)
 {

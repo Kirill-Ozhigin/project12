@@ -47,6 +47,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		source\WhereYouAre.wav = source\WhereYouAre.wav
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "id3v2lib", "project12\id3v2lib.vcxitems", "{332AE7D7-7122-4B76-88A9-6D928766E095}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minimp3", "project12\minimp3.vcxitems", "{4B538513-23FF-4246-B779-B0A3E276826C}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XSound", "project12\XSound.vcxproj", "{1C3A4853-DE8B-4A2D-B7A9-E0609503805B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XWindowInput", "project12\XWindowInput.vcxproj", "{C9ED1F36-46F0-4ABE-A0FA-8A171B13503C}"
@@ -56,6 +60,8 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		project12\ALSound.vcxitems*{1c3a4853-de8b-4a2d-b7a9-e0609503805b}*SharedItemsImports = 4
+		project12\id3v2lib.vcxitems*{1c3a4853-de8b-4a2d-b7a9-e0609503805b}*SharedItemsImports = 4
+		project12\minimp3.vcxitems*{1c3a4853-de8b-4a2d-b7a9-e0609503805b}*SharedItemsImports = 4
 		project12\Sound.vcxitems*{1c3a4853-de8b-4a2d-b7a9-e0609503805b}*SharedItemsImports = 4
 		project12\ALSound.vcxitems*{1e1ffad3-9c6c-4c15-808c-fe916eeddbbd}*SharedItemsImports = 4
 		project12\Sound.vcxitems*{1e1ffad3-9c6c-4c15-808c-fe916eeddbbd}*SharedItemsImports = 4
@@ -195,5 +201,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A09D70FD-A4BA-4096-ABAF-8EEBCA6EE44E} = {B90AB339-A2CE-43BC-97CB-3FF45BCB5E9C}
+		{332AE7D7-7122-4B76-88A9-6D928766E095} = {B90AB339-A2CE-43BC-97CB-3FF45BCB5E9C}
+		{4B538513-23FF-4246-B779-B0A3E276826C} = {B90AB339-A2CE-43BC-97CB-3FF45BCB5E9C}
 	EndGlobalSection
 EndGlobal

@@ -14,28 +14,16 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\main.cpp" />
-	
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\Sound.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WaveFileLoader.cpp">
-      <Filter>Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MP3FileLoader.cpp">
-      <Filter>Sound</Filter>
-    </ClCompile>
-	
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\GLRender.cpp">
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\RenderContext.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-	
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\input.cpp">
-      <Filter>WindowInput</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp">
       <Filter>WindowInput</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\keyboard.cpp">
@@ -47,8 +35,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\window.cpp">
       <Filter>WindowInput</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\MP3FileLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WaveFileLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MemoryMappedFile.h" />
   </ItemGroup>
 </Project>

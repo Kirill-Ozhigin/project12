@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <id3v2lib.h>
+#include "../include/id3v2lib.h"
 
 unsigned int btoi(const char* bytes, int size, int offset)
 {

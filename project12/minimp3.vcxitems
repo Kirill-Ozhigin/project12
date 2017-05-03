@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <ItemsProjectGuid>{2b47c459-abd5-4282-adb5-a614d044520b}</ItemsProjectGuid>
+    <ItemsProjectGuid>{4B538513-23FF-4246-B779-B0A3E276826C}</ItemsProjectGuid>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -14,12 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\MP3FileLoader.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\minimp3\minimp3.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\sound.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundSource.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\minimp3\libc.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\minimp3\minimp3.h" />
   </ItemGroup>
 </Project>

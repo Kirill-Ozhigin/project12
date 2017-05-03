@@ -12,8 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <id3v2lib.h>
-
+#include "../include/id3v2lib.h"
 
 ID3v2_tag* load_tag(const char* file_name)
 {

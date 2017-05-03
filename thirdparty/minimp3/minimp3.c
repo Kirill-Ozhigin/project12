@@ -22,7 +22,7 @@
  */
 
 #include "libc.h"
-#include "minimp3.h"
+#include "../include/minimp3/minimp3.h"
 
 #define MP3_FRAME_SIZE 1152
 #define MP3_MAX_CODED_FRAME_SIZE 1792
@@ -53,7 +53,7 @@
 #define FRAC_RND(a) (((a) + (FRAC_ONE/2)) >> FRAC_BITS)
 #define FIXHR(a) ((int)((a) * (1LL<<32) + 0.5))
 
-#if !defined(_MSC_VER) || _DEBUG
+#if !defined(_MSC_VER) || 1
     #define MULL(a,b) (((int64_t)(a) * (int64_t)(b)) >> FRAC_BITS)
     #define MULH(a,b) (((int64_t)(a) * (int64_t)(b)) >> 32)
 #else

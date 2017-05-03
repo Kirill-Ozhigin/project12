@@ -166,7 +166,7 @@ void al_source::play(long lStartPosition, bool bLoop) const
 	if (m_handle)
 	{
 		alSourcef(m_handle, AL_SEC_OFFSET, static_cast<ALfloat>(lStartPosition));
-		alSourcei(m_handle, AL_LOOPING, static_cast<ALboolean>(bLoop));
+		alSourcei(m_handle, AL_LOOPING, static_cast<ALint>(bLoop));
 
 		unconst(this)->_preBuffers();
 
@@ -265,15 +265,23 @@ bool al_source::update(void)
 			// iTemp = NumProcessed
 			alGetSourcei(m_handle, AL_BUFFERS_PROCESSED, &iTemp);
 
+
 			switch (iTemp)
 			{
+			case 0:
+				return true;
+
 			case 1:
 				if (true)
 				{
+					//alSourcePause(m_handle);
+
 					this->_enqueueBuffer();
+
+					//alSourcePlay(m_handle);
 				}
 				return true;
-
+				
 			case 2:
 				if (true)
 				{
@@ -293,156 +301,161 @@ bool al_source::update(void)
 
 size_t al_source::_streamBuffer(ALuint iBufferID, size_t sizeLength)
 {
+	sizeLength *= 32;
+
 	size_t result = m_pWave->streamWaveData(sizeLength);
 
-	ALenum eBufferFormat = 0;
-
-	switch (m_pWave->getNumChannels())
+	if (result || !sizeLength)
 	{
-	case 1:
-		switch (m_pWave->getBitsPerSample())
+		ALenum eBufferFormat = 0;
+
+		switch (m_pWave->getNumChannels())
 		{
+		case 1:
+			switch (m_pWave->getBitsPerSample())
+			{
+			case 4:
+				eBufferFormat = AL_FORMAT_MONO_IMA4; // alGetEnumValue("AL_FORMAT_MONO_IMA4");
+				break;
+
+			case 8:
+				eBufferFormat = AL_FORMAT_MONO8; // alGetEnumValue("AL_FORMAT_MONO8");
+				break;
+
+			case 16:
+				eBufferFormat = AL_FORMAT_MONO16; // alGetEnumValue("AL_FORMAT_MONO16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_MONO_FLOAT32; // alGetEnumValue("AL_FORMAT_MONO_FLOAT32");
+				break;
+
+			}
+			break;
+
+		case 2:
+			switch (m_pWave->getBitsPerSample())
+			{
+			case 4:
+				eBufferFormat = AL_FORMAT_STEREO_IMA4; // alGetEnumValue("AL_FORMAT_STEREO_IMA4");
+				break;
+
+			case 8:
+				if (m_pWave->getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
+				{
+					eBufferFormat = AL_FORMAT_REAR8; // alGetEnumValue("AL_FORMAT_REAR16");
+				}
+				else
+				{
+					eBufferFormat = AL_FORMAT_STEREO8; // alGetEnumValue("AL_FORMAT_STEREO8");
+				}
+				break;
+
+			case 16:
+				if (m_pWave->getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
+				{
+					eBufferFormat = AL_FORMAT_REAR16; // alGetEnumValue("AL_FORMAT_REAR16");
+				}
+				else
+				{
+					eBufferFormat = AL_FORMAT_STEREO16; // alGetEnumValue("AL_FORMAT_STEREO16");
+				}
+				break;
+
+			case 32:
+				if (m_pWave->getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
+				{
+					eBufferFormat = AL_FORMAT_REAR32; // alGetEnumValue("AL_FORMAT_REAR32");
+				}
+				else
+				{
+					eBufferFormat = AL_FORMAT_STEREO_FLOAT32; // alGetEnumValue("AL_FORMAT_STEREO_FLOAT32");
+				}
+				break;
+
+			}
+			break;
+
 		case 4:
-			eBufferFormat = AL_FORMAT_MONO_IMA4; // alGetEnumValue("AL_FORMAT_MONO_IMA4");
-			break;
-
-		case 8:
-			eBufferFormat = AL_FORMAT_MONO8; // alGetEnumValue("AL_FORMAT_MONO8");
-			break;
-
-		case 16:
-			eBufferFormat = AL_FORMAT_MONO16; // alGetEnumValue("AL_FORMAT_MONO16");
-			break;
-
-		case 32:
-			eBufferFormat = AL_FORMAT_MONO_FLOAT32; // alGetEnumValue("AL_FORMAT_MONO_FLOAT32");
-			break;
-
-		}
-		break;
-
-	case 2:
-		switch (m_pWave->getBitsPerSample())
-		{
-		case 4:
-			eBufferFormat = AL_FORMAT_STEREO_IMA4; // alGetEnumValue("AL_FORMAT_STEREO_IMA4");
-			break;
-
-		case 8:
-			if (m_pWave->getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
+			switch (m_pWave->getBitsPerSample())
 			{
-				eBufferFormat = AL_FORMAT_REAR8; // alGetEnumValue("AL_FORMAT_REAR16");
-			}
-			else
-			{
-				eBufferFormat = AL_FORMAT_STEREO8; // alGetEnumValue("AL_FORMAT_STEREO8");
+			case 8:
+				eBufferFormat = AL_FORMAT_QUAD8; // alGetEnumValue("AL_FORMAT_QUAD8");
+				break;
+
+			case 16:
+				eBufferFormat = AL_FORMAT_QUAD16; // alGetEnumValue("AL_FORMAT_QUAD16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_QUAD32; // alGetEnumValue("AL_FORMAT_QUAD32");
+				break;
+
 			}
 			break;
 
-		case 16:
-			if (m_pWave->getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
+		case 6:
+			switch (m_pWave->getBitsPerSample())
 			{
-				eBufferFormat = AL_FORMAT_REAR16; // alGetEnumValue("AL_FORMAT_REAR16");
-			}
-			else
-			{
-				eBufferFormat = AL_FORMAT_STEREO16; // alGetEnumValue("AL_FORMAT_STEREO16");
-			}
-			break;
+			case 8:
+				eBufferFormat = AL_FORMAT_51CHN8; // alGetEnumValue("AL_FORMAT_51CHN8");
+				break;
 
-		case 32:
-			if (m_pWave->getChannelMask() == (SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT))
-			{
-				eBufferFormat = AL_FORMAT_REAR32; // alGetEnumValue("AL_FORMAT_REAR32");
-			}
-			else
-			{
-				eBufferFormat = AL_FORMAT_STEREO_FLOAT32; // alGetEnumValue("AL_FORMAT_STEREO_FLOAT32");
+			case 16:
+				eBufferFormat = AL_FORMAT_51CHN16; // alGetEnumValue("AL_FORMAT_51CHN16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_51CHN32; // alGetEnumValue("AL_FORMAT_51CHN32");
+				break;
+
 			}
 			break;
 
-		}
-		break;
+		case 7:
+			switch (m_pWave->getBitsPerSample())
+			{
+			case 8:
+				eBufferFormat = AL_FORMAT_61CHN8; // alGetEnumValue("AL_FORMAT_61CHN8");
+				break;
 
-	case 4:
-		switch (m_pWave->getBitsPerSample())
-		{
+			case 16:
+				eBufferFormat = AL_FORMAT_61CHN16; // alGetEnumValue("AL_FORMAT_61CHN16");
+				break;
+
+			case 32:
+				eBufferFormat = AL_FORMAT_61CHN32; // alGetEnumValue("AL_FORMAT_61CHN32");
+				break;
+
+			}
+			break;
+
 		case 8:
-			eBufferFormat = AL_FORMAT_QUAD8; // alGetEnumValue("AL_FORMAT_QUAD8");
-			break;
+			switch (m_pWave->getBitsPerSample())
+			{
+			case 8:
+				eBufferFormat = AL_FORMAT_71CHN8; // alGetEnumValue("AL_FORMAT_71CHN8");
+				break;
 
-		case 16:
-			eBufferFormat = AL_FORMAT_QUAD16; // alGetEnumValue("AL_FORMAT_QUAD16");
-			break;
+			case 16:
+				eBufferFormat = AL_FORMAT_71CHN16; // alGetEnumValue("AL_FORMAT_71CHN16");
+				break;
 
-		case 32:
-			eBufferFormat = AL_FORMAT_QUAD32; // alGetEnumValue("AL_FORMAT_QUAD32");
-			break;
+			case 32:
+				eBufferFormat = AL_FORMAT_71CHN32; // alGetEnumValue("AL_FORMAT_71CHN32");
+				break;
 
-		}
-		break;
-
-	case 6:
-		switch (m_pWave->getBitsPerSample())
-		{
-		case 8:
-			eBufferFormat = AL_FORMAT_51CHN8; // alGetEnumValue("AL_FORMAT_51CHN8");
-			break;
-
-		case 16:
-			eBufferFormat = AL_FORMAT_51CHN16; // alGetEnumValue("AL_FORMAT_51CHN16");
-			break;
-
-		case 32:
-			eBufferFormat = AL_FORMAT_51CHN32; // alGetEnumValue("AL_FORMAT_51CHN32");
+			}
 			break;
 
 		}
-		break;
 
-	case 7:
-		switch (m_pWave->getBitsPerSample())
-		{
-		case 8:
-			eBufferFormat = AL_FORMAT_61CHN8; // alGetEnumValue("AL_FORMAT_61CHN8");
-			break;
-
-		case 16:
-			eBufferFormat = AL_FORMAT_61CHN16; // alGetEnumValue("AL_FORMAT_61CHN16");
-			break;
-
-		case 32:
-			eBufferFormat = AL_FORMAT_61CHN32; // alGetEnumValue("AL_FORMAT_61CHN32");
-			break;
-
-		}
-		break;
-
-	case 8:
-		switch (m_pWave->getBitsPerSample())
-		{
-		case 8:
-			eBufferFormat = AL_FORMAT_71CHN8; // alGetEnumValue("AL_FORMAT_71CHN8");
-			break;
-
-		case 16:
-			eBufferFormat = AL_FORMAT_71CHN16; // alGetEnumValue("AL_FORMAT_71CHN16");
-			break;
-
-		case 32:
-			eBufferFormat = AL_FORMAT_71CHN32; // alGetEnumValue("AL_FORMAT_71CHN32");
-			break;
-
-		}
-		break;
-
+		alBufferData(iBufferID,
+			eBufferFormat,
+			static_cast<const void*>(m_pWave->getData()),
+			static_cast<ALsizei>(m_pWave->getSize()),
+			static_cast<ALsizei>(m_pWave->getSamplesPerSecond()));
 	}
-
-	alBufferData(iBufferID,
-		eBufferFormat,
-		static_cast<const void*>(m_pWave->getData()),
-		static_cast<ALsizei>(m_pWave->getSize()),
-		static_cast<ALsizei>(m_pWave->getSamplesPerSecond()));
 
 	return result;
 }
@@ -456,7 +469,7 @@ void al_source::_enqueueBuffer(void)
 
 	if (m_pWave->isEndOfStream())
 	{
-		int bIsLooping;
+		int bIsLooping = 0;
 		alGetSourcei(m_handle, AL_LOOPING, &bIsLooping);
 
 		if (bIsLooping)
@@ -513,11 +526,10 @@ void al_source::_unqueueBuffers(void)
 	int iNumQueued;
 	alGetSourcei(m_handle, AL_BUFFERS_QUEUED, &iNumQueued);
 
-	if (iNumQueued > 0)
+	if (iNumQueued)
 	{
 		alSourceUnqueueBuffers(m_handle, iNumQueued, m_uBufferID);
 	}
-
 }
 
 

@@ -35,7 +35,7 @@ int main(const int argc, const char* const argv[])
 {
 	const MainWindow* mainWindow = new MainWindow();
 
-#if PLATFORM_WINDOWS & NDEBUG
+#if PLATFORM_WINDOWS & NDEBUG & 0
 	{
 		HWND w = GetConsoleWindow();
 		ShowWindow(w, 0);
@@ -53,8 +53,8 @@ int main(const int argc, const char* const argv[])
 	{
 		source = mainSound->createSound(*wave);
 
-		delete wave;
-		wave = nullptr;
+		//delete wave;
+		//wave = nullptr;
 	}
 
 	if (source)
@@ -68,7 +68,10 @@ int main(const int argc, const char* const argv[])
 	{
 		if (source)
 		{
-			source->update();
+			if (!source->update())
+			{
+				continue;
+			}
 		}
 
 		if (!mainWindow->getWnd())

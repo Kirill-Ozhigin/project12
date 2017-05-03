@@ -29,5 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MemoryMappedFile.h" />
   </ItemGroup>
 </Project>

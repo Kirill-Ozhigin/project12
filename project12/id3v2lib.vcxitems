@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <ItemsProjectGuid>{2b47c459-abd5-4282-adb5-a614d044520b}</ItemsProjectGuid>
+    <ItemsProjectGuid>{332ae7d7-7122-4b76-88a9-6d928766e095}</ItemsProjectGuid>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -14,12 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\MP3FileLoader.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\sound.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundSource.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\frame.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\header.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\id3v2lib.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\types.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\util.cpp" />
   </ItemGroup>
 </Project>
