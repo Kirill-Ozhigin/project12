@@ -52,7 +52,7 @@ public:
 
 	virtual bool isEndOfStream() const override { return m_bIsEndOfStream; }
 
-	virtual void seek(void) override;
+	virtual bool seek(void) override;
 
 	int _decodeFromFile(size_t sizeBytesRead);
 
@@ -71,6 +71,9 @@ private:
 	size_t m_sizeStreamPos;
 
 	unsigned char m_bIsEndOfStream;
+
+	ID3v2_tag* m_pID3v2_tag;
+
 };
 
 mp3Data::mp3Data(unsigned char* pEncodedData, size_t size)
@@ -83,7 +86,6 @@ mp3Data::mp3Data(unsigned char* pEncodedData, size_t size)
 	, m_sizeStreamPos(0)
 	, m_bIsEndOfStream(false)
 {
-	seek();
 }
 
 void mp3Data::release(void)
@@ -128,7 +130,7 @@ size_t mp3Data::streamWaveData(size_t size)
 	return sizeBytesRead;
 }
 
-void mp3Data::seek(void)
+bool mp3Data::seek(void)
 {
 	if (m_MP3Decoder)
 	{
@@ -163,6 +165,8 @@ void mp3Data::seek(void)
 	);
 
 	m_sizeStreamPos += iByteCount;
+
+	return iByteCount != 0;
 }
 
 int mp3Data::_decodeFromFile(size_t sizeBytesRead)
@@ -193,6 +197,12 @@ int mp3Data::_decodeFromFile(size_t sizeBytesRead)
 EXTERN_C DLL_EXPORT WaveFileData* loadMP3WaveFromEncodedData(void* pData, size_t sizeInBytes)
 {
 	mp3Data* result = new mp3Data(static_cast<unsigned char*>(pData), sizeInBytes);
+
+	if (!result->seek())
+	{
+		delete result;
+		result = nullptr;
+	}
 
 	return static_cast<WaveFileData*>(result);
 }
@@ -233,6 +243,11 @@ EXTERN_C DLL_EXPORT WaveFileData* loadMP3WaveFromFile(const char* const filename
 		if (fread(buffer, 1, sizeLength, filePtr) == sizeLength)
 		{
 			result = new mp3Data(buffer, sizeLength);
+			if (!result->seek())
+			{
+				delete result;
+				result = nullptr;
+			}
 		}
 		else
 		{

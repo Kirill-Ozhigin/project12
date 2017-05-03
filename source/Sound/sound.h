@@ -28,7 +28,6 @@ public:
 	virtual void resume(void) = 0;
 
 	// creates the SoundSource buffer from a WaveFileData 
-	// after a WaveFileData may be release 
 	virtual SoundSource* createSound(WaveFileData& fileData) = 0;
 
 };

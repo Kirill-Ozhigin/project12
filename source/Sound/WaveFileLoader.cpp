@@ -168,7 +168,7 @@ public:
 
 	virtual bool isEndOfStream(void) const override { return false; }
 
-	virtual void seek(void) override { }
+	virtual bool seek(void) override { return true; }
 
 	WAVEFORMATEXTENSIBLE& _getWFEXT(void) { return m_wfEXT; }
 
