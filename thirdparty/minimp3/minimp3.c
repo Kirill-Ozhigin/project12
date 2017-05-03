@@ -53,7 +53,7 @@
 #define FRAC_RND(a) (((a) + (FRAC_ONE/2)) >> FRAC_BITS)
 #define FIXHR(a) ((int)((a) * (1LL<<32) + 0.5))
 
-#if !defined(_MSC_VER) || 1
+#if !defined(_MSC_VER) || _WIN64
     #define MULL(a,b) (((int64_t)(a) * (int64_t)(b)) >> FRAC_BITS)
     #define MULH(a,b) (((int64_t)(a) * (int64_t)(b)) >> 32)
 #else
