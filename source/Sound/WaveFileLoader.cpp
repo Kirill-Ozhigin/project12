@@ -40,7 +40,7 @@ public:
 
 	virtual size_t streamWaveData(size_t size) override { return 0; }
 
-	virtual bool isEndOfStream(void) const override { return false; }
+	virtual bool isEndOfStream(void) const override { return true; }
 
 	virtual bool seek(void) override { return true; }
 

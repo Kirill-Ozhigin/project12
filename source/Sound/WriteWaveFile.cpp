@@ -74,7 +74,6 @@ EXTERN_C DLL_EXPORT int writeFileFromWave(WaveFileData& wave, const char* filena
 		fwrite("WAVE", 4, 1, filePtr);
 	}
 
-
 	// RIFFCHUNK [fmt ] 
 	{
 		unsigned long ulChunkSize;
@@ -100,6 +99,7 @@ EXTERN_C DLL_EXPORT int writeFileFromWave(WaveFileData& wave, const char* filena
 		}
 		else
 		{
+			waveFmt.usFormatTag = FORMAT_PCM;
 			ulChunkSize = sizeof(PCMWAVEFORMAT);
 		}
 
