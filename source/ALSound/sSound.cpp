@@ -301,7 +301,7 @@ bool al_source::update(void)
 
 size_t al_source::_streamBuffer(ALuint iBufferID, size_t sizeLength)
 {
-	sizeLength *= 32;
+	//sizeLength *= 32;
 
 	size_t result = m_pWave->streamWaveData(sizeLength);
 

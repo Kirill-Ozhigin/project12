@@ -68,10 +68,7 @@ int main(const int argc, const char* const argv[])
 	{
 		if (source)
 		{
-			if (!source->update())
-			{
-				continue;
-			}
+			source->update();
 		}
 
 		if (!mainWindow->getWnd())
