@@ -29,6 +29,9 @@ public:
 	virtual bool isEndOfStream(void) const = 0;
 
 	virtual bool seek(void) = 0;
+
+	virtual int writeToFile(const char* filename = nullptr) const = 0;
+
 };
 
 typedef WaveFileData* (*PFNLOADWAVEFROMRESOURCEPROC)(unsigned uResourceID, void* hInstance);

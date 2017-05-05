@@ -54,6 +54,8 @@ public:
 
 	virtual bool seek(void) override;
 
+	virtual int writeToFile(const char* filename = nullptr) const override;
+
 	int _decodeFromFile(size_t sizeBytesRead);
 
 private:
@@ -154,6 +156,66 @@ bool mp3Data::seek(void)
 	m_sizeStreamPos += iByteCount;
 
 	return iByteCount != 0;
+}
+
+extern void write_header(ID3v2_header* tag_header, FILE* file);
+extern void write_frame(ID3v2_frame* frame, FILE* file);
+
+int mp3Data::writeToFile(const char * filename) const
+{
+	const char* sName = nullptr;
+	FILE* filePtr = nullptr;
+
+	if (filename)
+	{
+		if (*filename)
+		{
+#if NDEBUG
+			filePtr = fopen(filename, "rb");
+#else
+			int error = fopen_s(&filePtr, filename, "rb");
+#endif // NDEBUG
+			if (!filePtr)
+			{
+				sName = filename;
+			}
+			else
+			{
+				fclose(filePtr);
+			}
+		}
+	}
+
+	if (!sName)
+	{
+		char name[16];
+#if NDEBUG
+		sprintf(name, "./%d.mp3", this);
+#else
+		sprintf_s(name, "./%d.mp3", this);
+#endif // NDEBUG
+		sName = name;
+	}
+
+#if NDEBUG
+	filePtr = fopen(sName, "wb");
+#else
+	int error = fopen_s(&filePtr, sName, "wb");
+#endif // NDEBUG
+
+	fseek(filePtr, 0, SEEK_SET);
+
+	write_header(m_pID3v2_tag->tag_header, filePtr);
+	ID3v2_frame_list* frame_list = m_pID3v2_tag->frames->start;
+	while (frame_list)
+	{
+		write_frame(frame_list->frame, filePtr);
+		frame_list = frame_list->next;
+	}
+
+	fclose(filePtr);
+
+	return 0;
 }
 
 int mp3Data::_decodeFromFile(size_t sizeBytesRead)

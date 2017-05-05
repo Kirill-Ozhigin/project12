@@ -16,10 +16,12 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\MP3FileLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WriteWaveFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\sound.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundSource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\wave.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.h" />
   </ItemGroup>
 </Project>
