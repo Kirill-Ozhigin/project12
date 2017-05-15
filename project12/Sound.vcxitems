@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\AACFileLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\MP3FileLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\split.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\VorbisFileLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Sound\WriteWaveFile.cpp" />
@@ -23,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundContext.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\SoundSource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\split.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\wave.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Sound\WaveFileLoader.h" />
   </ItemGroup>
