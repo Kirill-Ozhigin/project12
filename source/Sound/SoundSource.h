@@ -30,6 +30,8 @@ public:
 
 	virtual bool update(void) = 0;
 
+	virtual void setLoop(bool value) = 0;
+
 };
 
 typedef SoundSource* const (*PFNCREATESOUNDSOURCEPROC)(WaveFileData& data);

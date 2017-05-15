@@ -1,5 +1,5 @@
-#ifndef __Sound_H
-#define __Sound_H 1
+#ifndef __SoundContext_H
+#define __SoundContext_H 1
 
 class window;
 class WaveFileData;
@@ -35,5 +35,5 @@ public:
 typedef Sound* (*PFNCREATESOUNDPROC_C)(const window& cwnd);
 typedef Sound* (*PFNCREATESOUNDPROC)(void);
 
-#endif // !__Sound_H
+#endif // !__SoundContext_H
 

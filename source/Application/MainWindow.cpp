@@ -11,6 +11,8 @@
 #include <thread>
 #include <chrono>
 
+EXTERN_C void terminateApp(void);
+
 // close WindowInput lib
 EXTERN_C void closeWindowInput(void);
 // close GLRender lib
@@ -114,13 +116,13 @@ void MainWindow::mProc()
 		m_pMouse = ::getMouse(*m_pInput);
 	}
 
-	m_pRC = ::createRenderContextVer(*m_pWindow, 4, 0);
+	//m_pRC = ::createRenderContextVer(*m_pWindow, 4, 0);
 
 	m_pWindow->show();
 
 	while (m_pWindow->update())
 	{
-		if (m_pInput)
+		if (1 || m_pInput)
 		{
 			if (m_pKeyboard)
 			{
@@ -160,5 +162,6 @@ void MainWindow::mProc()
 
 	closeWindowInput();
 	closeGLRender();
+	terminateApp();
 }
 

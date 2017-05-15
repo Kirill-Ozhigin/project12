@@ -12,6 +12,8 @@
 #include <xram.h>
 
 
+#define BUFFER_SIZE 44100
+
 enum XRAMBufferMode
 {
 	AL_STORAGE_AUTOMATIC = 1,
@@ -74,6 +76,8 @@ public:
 
 	virtual bool update(void) override;
 
+	virtual void setLoop(bool value) override;
+
 	size_t _streamBuffer(ALuint iBufferID, size_t sizeLength);
 
 	void _enqueueBuffer(void);
@@ -92,6 +96,8 @@ private:
 	ALuint m_uBufferID[2];
 	ALsizei m_iBufferCount;
 
+	ALfloat m_length;
+
 };
 
 al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
@@ -99,6 +105,7 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 	, m_handle(0)
 	, m_iBufferCount(0)
 	, m_pWave(&fileData)
+	, m_length(0.f)
 {
 	// Generate a Source to playback the Buffer
 	alGenSources(1, &m_handle);
@@ -149,7 +156,15 @@ al_source::al_source(WaveFileData& fileData, int eXRAMBufferMode)
 
 		// Attach Source to Buffer
 		alSourcei(m_handle, AL_BUFFER, m_uBufferID[0]);
+
+		int bytes; alGetBufferi(m_uBufferID[0], AL_SIZE, &bytes);
+
+		m_length = ((static_cast<float>(bytes) / 
+			(m_pWave->getBitsPerSample() / 8)) / 
+			static_cast<float>(m_pWave->getSamplesPerSecond())) / 
+			m_pWave->getNumChannels();
 	}
+
 }
 
 void al_source::release(void) const 
@@ -165,7 +180,12 @@ void al_source::play(long lStartPosition, bool bLoop) const
 {
 	if (m_handle)
 	{
-		alSourcef(m_handle, AL_SEC_OFFSET, static_cast<ALfloat>(lStartPosition));
+		ALfloat fStartPosition = static_cast<ALfloat>(lStartPosition);
+		if (fStartPosition < m_length)
+		{
+			alSourcef(m_handle, AL_SEC_OFFSET, fStartPosition);
+		}
+
 		alSourcei(m_handle, AL_LOOPING, static_cast<ALint>(bLoop));
 
 		unconst(this)->_preBuffers();
@@ -299,10 +319,13 @@ bool al_source::update(void)
 	return false;
 }
 
+void al_source::setLoop(bool value)
+{
+	alSourcei(m_handle, AL_LOOPING, value);
+}
+
 size_t al_source::_streamBuffer(ALuint iBufferID, size_t sizeLength)
 {
-	//sizeLength *= 32;
-
 	size_t result = m_pWave->streamWaveData(sizeLength);
 
 	if (result || !sizeLength)
@@ -465,7 +488,7 @@ void al_source::_enqueueBuffer(void)
 	ALuint iBufferID;
 	alSourceUnqueueBuffers(m_handle, 1, &iBufferID);
 
-	size_t size = _streamBuffer(iBufferID, 44100);
+	size_t size = _streamBuffer(iBufferID, BUFFER_SIZE);
 
 	if (m_pWave->isEndOfStream())
 	{
@@ -477,7 +500,7 @@ void al_source::_enqueueBuffer(void)
 			m_pWave->seek();
 			if (!size)
 			{
-				size = _streamBuffer(iBufferID, 44100);
+				size = _streamBuffer(iBufferID, BUFFER_SIZE);
 			}
 		}
 	}
@@ -485,6 +508,12 @@ void al_source::_enqueueBuffer(void)
 	if (size)
 	{
 		alSourceQueueBuffers(m_handle, 1, &iBufferID);
+	}
+	else
+	{
+		alSourceStop(m_handle);
+		_unqueueBuffers();
+		m_pWave->seek();
 	}
 }
 
@@ -498,9 +527,9 @@ void al_source::_preBuffers(void)
 
 			int iBuffersToQueue = m_iBufferCount;
 
-			_streamBuffer(m_uBufferID[0], 44100);
+			_streamBuffer(m_uBufferID[0], BUFFER_SIZE);
 
-			if (_streamBuffer(m_uBufferID[1], 44100) == 0)
+			if (_streamBuffer(m_uBufferID[1], BUFFER_SIZE) == 0)
 			{
 				int bIsLooping;
 				alGetSourcei(m_handle, AL_LOOPING, &bIsLooping);
@@ -508,7 +537,7 @@ void al_source::_preBuffers(void)
 				if (bIsLooping)
 				{
 					m_pWave->seek();
-					_streamBuffer(m_uBufferID[1], 44100);
+					_streamBuffer(m_uBufferID[1], BUFFER_SIZE);
 				}
 				else
 				{
