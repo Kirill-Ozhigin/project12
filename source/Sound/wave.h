@@ -1,6 +1,8 @@
 #ifndef __WAVE_H
 #define __WAVE_H 1
 
+#include "../include/PlatformDefines.h"
+
 #ifndef GUID_DEFINED
 #define GUID_DEFINED 1
 #if defined(__midl)
