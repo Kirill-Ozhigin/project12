@@ -17,6 +17,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\input.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\keyboard.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\mouse.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\widgets.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\window.h" />
   </ItemGroup>
 </Project>

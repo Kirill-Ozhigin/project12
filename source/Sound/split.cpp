@@ -2,6 +2,10 @@
 
 #include "../include/PlatformDefines.h"
 
+#include <string.h>
+#include <math.h>
+
+
 
 split_point::split_point(unsigned long value, char* name)
 {
@@ -21,7 +25,7 @@ public:
 	AudioSplitter_p();
 	virtual ~AudioSplitter_p() override {}
 
-	virtual split_point* new_split_point(unsigned long value, char* name = nullptr) override { return new split_point(value, name); }
+	virtual split_point* new_split_point(unsigned long value, char* name = nullptr) const override { return new split_point(value, name); }
 
 private:
 

@@ -108,6 +108,7 @@
     <ClCompile Include="..\source\XWindowInput\input.cpp" />
     <ClCompile Include="..\source\XWindowInput\keyboard.cpp" />
     <ClCompile Include="..\source\XWindowInput\mouse.cpp" />
+    <ClCompile Include="..\source\XWindowInput\widgets.cpp" />
     <ClCompile Include="..\source\XWindowInput\window.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup />

@@ -10,7 +10,7 @@
 #include "../WindowInput/keyboard.h"
 #include "../WindowInput/mouse.h"
 
-#include "../Sound/sound.h"
+#include "../Sound/SoundContext.h"
 #include "../Sound/SoundSource.h"
 #include "../Sound/WaveFileLoader.h"
 

@@ -21,7 +21,7 @@ class AudioSplitter
 public:
 	virtual ~AudioSplitter() = 0;
 
-	virtual split_point* new_split_point(unsigned long value, char* name = nullptr) = 0;
+	virtual split_point* new_split_point(unsigned long value, char* name = nullptr) const = 0;
 
 };
 
