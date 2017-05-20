@@ -6,6 +6,7 @@
     <ClCompile Include="..\source\WWindowInput\mouse.cpp" />
     <ClCompile Include="..\source\WWindowInput\window.cpp" />
     <ClCompile Include="..\source\WWindowInput\widgets.cpp" />
+    <ClCompile Include="..\source\WWindowInput\menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="test">
