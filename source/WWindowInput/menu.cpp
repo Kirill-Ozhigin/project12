@@ -4,88 +4,23 @@
 #include "../include/vector.h"
 
 
-wingetMenu::~wingetMenu()
+widgetMenu::~widgetMenu()
 {
 }
 
-wingetMenuItem::~wingetMenuItem()
+widgetMenuItem::~widgetMenuItem()
 {
 }
 
-class w_wingetMenu;
+class w_widgetMenuItem;
 
-class w_wingetMenuItem : public wingetMenuItem
+class w_widgetMenu : public widgetMenu
 {
 public:
-	w_wingetMenuItem(w_wingetMenu* parent, size_t id, unsigned pos, wingetMenuItemType type, HMENU submenu = nullptr);
-	~w_wingetMenuItem();
+	w_widgetMenu(const char* const title = nullptr);
+	w_widgetMenu(const wchar_t* const title = nullptr);
 
-	virtual wingetMenuItemType getType(void) const override { return m_type; }
-
-	virtual wingetMenu* getMenu(void) const override { return m_parent; }
-
-	virtual unsigned getID(void) const override { return m_uPos; }
-
-	virtual void setTitle(const char* const title) const override;
-
-	virtual void setTitle(const wchar_t* const title) const override;
-
-
-private:
-	unsigned m_uPos;
-
-	wingetMenuItemType m_type;
-
-	w_wingetMenu* m_parent;
-
-	HMENU m_hSubmenu;
-
-	friend w_wingetMenu;
-};
-
-w_wingetMenuItem::w_wingetMenuItem(w_wingetMenu* parent, size_t id, unsigned pos, wingetMenuItemType type, HMENU sybmenu)
-	: m_parent(parent)
-	, m_uPos(pos)
-	, m_type(type)
-	, m_hSubmenu(sybmenu)
-{
-}
-
-w_wingetMenuItem::~w_wingetMenuItem()
-{
-}
-
-void w_wingetMenuItem::setTitle(const char* const title) const
-{
-	MENUITEMINFOA info;
-
-	GetMenuItemInfoA(m_parent->m_handle, m_uPos, TRUE, &info);
-
-	info.fMask |= MIIM_STRING;
-	info.dwTypeData = const_cast<LPSTR>(title);
-
-	SetMenuItemInfoA(m_parent->m_handle, m_uPos, TRUE, &info);
-}
-
-void w_wingetMenuItem::setTitle(const wchar_t* const title) const
-{
-	MENUITEMINFOW info;
-
-	GetMenuItemInfoW(m_parent->m_handle, m_uPos, TRUE, &info);
-
-	info.fMask |= MIIM_STRING;
-	info.dwTypeData = const_cast<LPWSTR>(title);
-
-	SetMenuItemInfoW(m_parent->m_handle, m_uPos, TRUE, &info);
-}
-
-class w_wingetMenu : public wingetMenu
-{
-public:
-	w_wingetMenu(const char* const title = nullptr);
-	w_wingetMenu(const wchar_t* const title = nullptr);
-
-	virtual ~w_wingetMenu() override { destroy(); }
+	virtual ~w_widgetMenu() override { destroy(); }
 
 	virtual size_t getHandle(void) const override { return reinterpret_cast<size_t>(m_handle); }
 
@@ -95,26 +30,94 @@ public:
 
 	virtual void setTitle(const wchar_t* const title) const override;
 
-	virtual wingetMenuItem* append(const char* const title = nullptr, bool enabled = true, wingetMenuItemType type = normal) override;
-	virtual wingetMenuItem* append(const wchar_t* const title = nullptr, bool enabled = true, wingetMenuItemType type = normal) override;
+	virtual widgetMenuItem* append(const char* const title = nullptr, bool enabled = true, widgetMenuItemType type = normal) override;
+	virtual widgetMenuItem* append(const wchar_t* const title = nullptr, bool enabled = true, widgetMenuItemType type = normal) override;
 
-	virtual wingetMenuItem* appendSubmenu(wingetMenu& submenu, const char* const title = nullptr) override;
-	virtual wingetMenuItem* appendSubmenu(wingetMenu& submenu, const wchar_t* const title = nullptr) override;
+	virtual widgetMenuItem* appendSubmenu(widgetMenu& submenu, const char* const title = nullptr) override;
+	virtual widgetMenuItem* appendSubmenu(widgetMenu& submenu, const wchar_t* const title = nullptr) override;
 
-	virtual wingetMenuItem& remove(wingetMenuItem& item) override;
+	virtual widgetMenuItem& remove(widgetMenuItem& item) override;
 
-	virtual void destroy(wingetMenuItem& item) override;
+	virtual void destroy(widgetMenuItem& item) override;
 
 private:
 	HMENU m_handle;
 
-	vector<w_wingetMenuItem> m_vectorItems;
+	vector<w_widgetMenuItem> m_vectorItems;
 
-	friend w_wingetMenuItem;
+	friend w_widgetMenuItem;
 
 };
 
-w_wingetMenu::w_wingetMenu(const char* const title)
+class w_widgetMenuItem : public widgetMenuItem
+{
+public:
+	w_widgetMenuItem(w_widgetMenu& parent, size_t id, unsigned pos, widgetMenuItemType type, HMENU submenu = nullptr);
+	~w_widgetMenuItem();
+
+	virtual widgetMenuItemType getType(void) const override { return m_type; }
+
+	virtual widgetMenu& getMenu(void) override { return *static_cast<widgetMenu*>(&m_parent); }
+
+	virtual unsigned getID(void) const override { return m_id; }
+
+	virtual void setTitle(const char* const title) const override;
+
+	virtual void setTitle(const wchar_t* const title) const override;
+
+
+private:
+	unsigned m_id;
+	unsigned m_uPos;
+
+	widgetMenuItemType m_type;
+
+	w_widgetMenu& m_parent;
+
+	HMENU m_hSubmenu;
+
+	friend w_widgetMenu;
+};
+
+w_widgetMenuItem::w_widgetMenuItem(w_widgetMenu& parent, size_t id, unsigned pos, widgetMenuItemType type, HMENU sybmenu)
+	: m_parent(parent)
+	, m_id(id)
+	, m_uPos(pos)
+	, m_type(type)
+	, m_hSubmenu(sybmenu)
+{
+}
+
+w_widgetMenuItem::~w_widgetMenuItem()
+{
+}
+
+void w_widgetMenuItem::setTitle(const char* const title) const
+{
+	MENUITEMINFOA info;
+
+	GetMenuItemInfoA(m_parent.m_handle, m_uPos, TRUE, &info);
+
+	info.fMask |= MIIM_STRING;
+	info.dwTypeData = const_cast<LPSTR>(title);
+
+	SetMenuItemInfoA(m_parent.m_handle, m_uPos, TRUE, &info);
+}
+
+void w_widgetMenuItem::setTitle(const wchar_t* const title) const
+{
+	MENUITEMINFOW info;
+
+	GetMenuItemInfoW(m_parent.m_handle, m_uPos, TRUE, &info);
+
+	info.fMask |= MIIM_STRING;
+	info.dwTypeData = const_cast<LPWSTR>(title);
+
+	SetMenuItemInfoW(m_parent.m_handle, m_uPos, TRUE, &info);
+}
+
+
+w_widgetMenu::w_widgetMenu(const char* const title)
 	: m_handle(CreateMenu())
 {
 	if (title)
@@ -123,7 +126,7 @@ w_wingetMenu::w_wingetMenu(const char* const title)
 	}
 }
 
-w_wingetMenu::w_wingetMenu(const wchar_t* const title)
+w_widgetMenu::w_widgetMenu(const wchar_t* const title)
 	: m_handle(CreateMenu())
 {
 	if (title)
@@ -132,7 +135,7 @@ w_wingetMenu::w_wingetMenu(const wchar_t* const title)
 	}
 }
 
-void w_wingetMenu::destroy(void)
+void w_widgetMenu::destroy(void)
 {
 	if (m_handle)
 	{
@@ -142,7 +145,7 @@ void w_wingetMenu::destroy(void)
 	m_vectorItems.clear();
 }
 
-void w_wingetMenu::setTitle(const char* const title) const
+void w_widgetMenu::setTitle(const char* const title) const
 {
 	if (m_handle)
 	{
@@ -150,7 +153,7 @@ void w_wingetMenu::setTitle(const char* const title) const
 	}
 }
 
-void w_wingetMenu::setTitle(const wchar_t* const title) const
+void w_widgetMenu::setTitle(const wchar_t* const title) const
 {
 	if (m_handle)
 	{
@@ -158,7 +161,7 @@ void w_wingetMenu::setTitle(const wchar_t* const title) const
 	}
 }
 
-wingetMenuItem* w_wingetMenu::append(const char* const title, bool enabled, wingetMenuItemType type)
+widgetMenuItem* w_widgetMenu::append(const char* const title, bool enabled, widgetMenuItemType type)
 {
 	size_t id = m_vectorItems.size();
 	unsigned uPos = GetMenuItemCount(m_handle);
@@ -212,17 +215,17 @@ wingetMenuItem* w_wingetMenu::append(const char* const title, bool enabled, wing
 
 	if (AppendMenuA(m_handle, uFlags, id, pData))
 	{
-		m_vectorItems[id] = w_wingetMenuItem(this, id, uPos, type);
+		m_vectorItems.push_back(w_widgetMenuItem(*this, id, uPos, type));
 	}
 	else
 	{
 		return nullptr;
 	}
 
-	return dynamic_cast<wingetMenuItem*>(&m_vectorItems[id]);
+	return dynamic_cast<widgetMenuItem*>(&m_vectorItems[id]);
 }
 
-wingetMenuItem* w_wingetMenu::append(const wchar_t* const title, bool enabled, wingetMenuItemType type)
+widgetMenuItem* w_widgetMenu::append(const wchar_t* const title, bool enabled, widgetMenuItemType type)
 {
 	size_t id = m_vectorItems.size();
 	unsigned uPos = GetMenuItemCount(m_handle);
@@ -277,19 +280,19 @@ wingetMenuItem* w_wingetMenu::append(const wchar_t* const title, bool enabled, w
 
 	if (AppendMenuW(m_handle, uFlags, id, pData))
 	{
-		m_vectorItems[id] = w_wingetMenuItem(this, id, uPos, type);
+		m_vectorItems.push_back(w_widgetMenuItem(*this, id, uPos, type));
 	}
 	else
 	{
 		return nullptr;
 	}
 
-	return dynamic_cast<wingetMenuItem*>(&m_vectorItems[id]);
+	return dynamic_cast<widgetMenuItem*>(&m_vectorItems[id]);
 }
 
-wingetMenuItem* w_wingetMenu::appendSubmenu(wingetMenu& submenu, const char* const title)
+widgetMenuItem* w_widgetMenu::appendSubmenu(widgetMenu& submenu, const char* const title)
 {
-	w_wingetMenu* pSubmenu = dynamic_cast<w_wingetMenu*>(&submenu);
+	w_widgetMenu* pSubmenu = dynamic_cast<w_widgetMenu*>(&submenu);
 
 	if (!pSubmenu)
 	{
@@ -300,7 +303,7 @@ wingetMenuItem* w_wingetMenu::appendSubmenu(wingetMenu& submenu, const char* con
 	unsigned uPos = GetMenuItemCount(m_handle);
 	LPCSTR pData = nullptr;
 
-	unsigned uFlags = MF_ENABLED;
+	unsigned uFlags = MF_ENABLED | MF_POPUP;
 
 	if (title && !pData)
 	{
@@ -310,19 +313,19 @@ wingetMenuItem* w_wingetMenu::appendSubmenu(wingetMenu& submenu, const char* con
 
 	if (AppendMenuA(m_handle, uFlags, pSubmenu->getHandle(), pData))
 	{
-		m_vectorItems[id] = w_wingetMenuItem(this, id, uPos, dropdown, pSubmenu->m_handle);
+		m_vectorItems.push_back(w_widgetMenuItem(*this, id, uPos, dropdown, pSubmenu->m_handle));
 	}
 	else
 	{
 		return nullptr;
 	}
 
-	return dynamic_cast<wingetMenuItem*>(&m_vectorItems[id]);
+	return dynamic_cast<widgetMenuItem*>(&m_vectorItems[id]);
 }
 
-wingetMenuItem* w_wingetMenu::appendSubmenu(wingetMenu& submenu, const wchar_t* const title)
+widgetMenuItem* w_widgetMenu::appendSubmenu(widgetMenu& submenu, const wchar_t* const title)
 {
-	w_wingetMenu* pSubmenu = dynamic_cast<w_wingetMenu*>(&submenu);
+	w_widgetMenu* pSubmenu = dynamic_cast<w_widgetMenu*>(&submenu);
 
 	if (!pSubmenu)
 	{
@@ -333,7 +336,7 @@ wingetMenuItem* w_wingetMenu::appendSubmenu(wingetMenu& submenu, const wchar_t* 
 	unsigned uPos = GetMenuItemCount(m_handle);
 	LPCWSTR pData = nullptr;
 
-	unsigned uFlags = MF_ENABLED;
+	unsigned uFlags = MF_ENABLED | MF_POPUP;
 
 	if (title && !pData)
 	{
@@ -343,19 +346,19 @@ wingetMenuItem* w_wingetMenu::appendSubmenu(wingetMenu& submenu, const wchar_t* 
 
 	if (AppendMenuW(m_handle, uFlags, pSubmenu->getHandle(), pData))
 	{
-		m_vectorItems[id] = w_wingetMenuItem(this, id, uPos, dropdown, pSubmenu->m_handle);
+		m_vectorItems.push_back(w_widgetMenuItem(*this, id, uPos, dropdown, pSubmenu->m_handle));
 	}
 	else
 	{
 		return nullptr;
 	}
 
-	return dynamic_cast<wingetMenuItem*>(&m_vectorItems[id]);
+	return dynamic_cast<widgetMenuItem*>(&m_vectorItems[id]);
 }
 
-wingetMenuItem& w_wingetMenu::remove(wingetMenuItem& item)
+widgetMenuItem& w_widgetMenu::remove(widgetMenuItem& item)
 {
-	w_wingetMenuItem* pItem = dynamic_cast<w_wingetMenuItem*>(&item);
+	w_widgetMenuItem* pItem = dynamic_cast<w_widgetMenuItem*>(&item);
 
 	if (m_handle && pItem)
 	{
@@ -393,9 +396,9 @@ wingetMenuItem& w_wingetMenu::remove(wingetMenuItem& item)
 	return item;
 }
 
-void w_wingetMenu::destroy(wingetMenuItem& item)
+void w_widgetMenu::destroy(widgetMenuItem& item)
 {
-	w_wingetMenuItem* pItem = dynamic_cast<w_wingetMenuItem*>(&item);
+	w_widgetMenuItem* pItem = dynamic_cast<w_widgetMenuItem*>(&item);
 
 	if (m_handle && pItem)
 	{
@@ -430,3 +433,12 @@ void w_wingetMenu::destroy(wingetMenuItem& item)
 		DeleteMenu(m_handle, uPos, MF_BYPOSITION);
 	}
 }
+
+
+EXTERN_C DLL_EXPORT widgetMenu* createMenu(const TCHAR* const title = nullptr)
+{
+	w_widgetMenu* result = new w_widgetMenu(title);
+
+	return static_cast<widgetMenu*>(result);
+}
+

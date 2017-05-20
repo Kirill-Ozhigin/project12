@@ -16,11 +16,13 @@ static PFNCREATEWINDOWPROC createWindowProc = nullptr;
 // [in] height - the height of the client area [default = 480]
 // [in] icon_path - the path of icon [default = nullptr (without icon)]
 // [in] parent - pointer to the parent window of the window [default = nullptr (without a parent window)]
+// [in] menu - pointer to the menu of the window [default = nullptr (without a menu)]
 EXTERN_C window* createWindow(
 	const TCHAR* const title = nullptr, 
 	const long width = 640L, const long height = 480L, 
 	const TCHAR* const icon_path = nullptr, 
-	const window* const parent = nullptr)
+	const window* const parent = nullptr,
+	const widgetMenu* const menu = nullptr)
 {
 	if (createWindowProc == nullptr)
 	{
@@ -32,7 +34,7 @@ EXTERN_C window* createWindow(
 	}
 	if (createWindowProc != nullptr)
 	{
-		return createWindowProc(title, width, height, icon_path, parent);
+		return createWindowProc(title, width, height, icon_path, parent, menu);
 	}
 
 	return nullptr;

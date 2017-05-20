@@ -14,8 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\bitmap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\input.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\keyboard.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\label.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\menu.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\mouse.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\WindowInput\widgets.h" />

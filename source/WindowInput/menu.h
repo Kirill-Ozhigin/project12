@@ -1,11 +1,19 @@
 #ifndef __widget_menu_H
 #define __widget_menu_H 1
 
+#ifdef UNICODE
+typedef wchar_t TCHAR;
+#define TEXT(quote) L##quote
+#else
+typedef char TCHAR;
+#define TEXT(quote) quote
+#endif // UNICODE
+
 #include <stdlib.h>
 
-class wingetMenuItem;
+class widgetMenuItem;
 
-enum wingetMenuItemType
+enum widgetMenuItemType
 {
 	normal,
 	chek,
@@ -14,10 +22,10 @@ enum wingetMenuItemType
 	separator
 };
 
-class wingetMenu
+class widgetMenu
 {
 public:
-	virtual ~wingetMenu() = 0;
+	virtual ~widgetMenu() = 0;
 
 	// get a handle of a menu 
 	virtual size_t getHandle(void) const = 0;
@@ -34,31 +42,31 @@ public:
 	virtual void setTitle(const wchar_t* const title) const = 0;
 
 	// append any type of a item (normal/check/radio)
-	virtual wingetMenuItem* append(const char* const title = nullptr, bool enabled = true, wingetMenuItemType type = normal) = 0;
-	virtual wingetMenuItem* append(const wchar_t* const title = nullptr, bool enabled = true, wingetMenuItemType type = normal) = 0;
+	virtual widgetMenuItem* append(const char* const title = nullptr, bool enabled = true, widgetMenuItemType type = normal) = 0;
+	virtual widgetMenuItem* append(const wchar_t* const title = nullptr, bool enabled = true, widgetMenuItemType type = normal) = 0;
 
 	// append a submenu
-	virtual wingetMenuItem* appendSubmenu(wingetMenu& submenu, const char* const title = nullptr) = 0;
-	virtual wingetMenuItem* appendSubmenu(wingetMenu& submenu, const wchar_t* const title = nullptr) = 0;
+	virtual widgetMenuItem* appendSubmenu(widgetMenu& submenu, const char* const title = nullptr) = 0;
+	virtual widgetMenuItem* appendSubmenu(widgetMenu& submenu, const wchar_t* const title = nullptr) = 0;
 
 	// remove a item from a menu 
-	virtual wingetMenuItem& remove(wingetMenuItem& item) = 0;
+	virtual widgetMenuItem& remove(widgetMenuItem& item) = 0;
 
 	// delete a item and destoy a item 
-	virtual void destroy(wingetMenuItem& item) = 0;
+	virtual void destroy(widgetMenuItem& item) = 0;
 
 };
 
-class wingetMenuItem
+class widgetMenuItem
 {
 public:
-	virtual ~wingetMenuItem() = 0;
+	virtual ~widgetMenuItem() = 0;
 
 	// get a type of a item 
-	virtual wingetMenuItemType getType(void) const = 0;
+	virtual widgetMenuItemType getType(void) const = 0;
 
 	// get a parent menu
-	virtual wingetMenu* getMenu(void) const = 0;
+	virtual widgetMenu& getMenu(void) = 0;
 
 	// get id
 	virtual unsigned getID(void) const = 0;
@@ -73,6 +81,9 @@ public:
 
 
 };
+
+
+typedef widgetMenu* (*PFNCREATEMENUPROC)(const TCHAR* const title);
 
 
 #endif // !__widget_menu_H

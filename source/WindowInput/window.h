@@ -11,6 +11,8 @@ typedef char TCHAR;
 
 #include <stdlib.h>
 
+class widgetMenu;
+
 class window
 {
 public:
@@ -72,12 +74,14 @@ public:
 // [in] height - the height of the client area [default = 480]
 // [in] icon_path - the path of icon [default = nullptr (without icon)]
 // [in] parent - pointer to the parent window of the window [default = nullptr (without a parent window)]
+// [in] menu - pointer to the menu of the window [default = nullptr (without a menu)]
 typedef window* (*PFNCREATEWINDOWPROC)(
 	const TCHAR* const title /* = nullptr */,
 	const long width /* = 640 */,
 	const long height /* = 480 */,
 	const TCHAR* const icon_path /* = nullptr */,
-	const window* const parent /* = nullptr */
+	const window* const parent /* = nullptr */,
+	const widgetMenu* const menu /* = nullptr */
 );
 
 

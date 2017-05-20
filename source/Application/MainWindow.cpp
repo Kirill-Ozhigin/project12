@@ -6,6 +6,8 @@
 #include "../WindowInput/keyboard.h"
 #include "../WindowInput/mouse.h"
 
+#include "../WindowInput/widgets.h"
+
 #include "../Render/context.h"
 
 #include <thread>
@@ -24,7 +26,8 @@ EXTERN_C window* createWindow(
 	const TCHAR* const title = nullptr, 
 	const long width = 640L, const long height = 480L, 
 	const TCHAR* const icon_path = nullptr,
-	const window* const parent = nullptr
+	const window* const parent = nullptr,
+	const widgetMenu* const menu = nullptr
 );
 // get a input by the window
 EXTERN_C input* getInput(const window& cwnd);
@@ -35,6 +38,9 @@ EXTERN_C mouse* const getMouse(const input& cinput);
 
 // create a render context
 EXTERN_C RenderContext* createRenderContextVer(const window& cwnd, int major_version, int minor_version);
+
+
+EXTERN_C widgetMenu* createMenu(const TCHAR* const title = nullptr);
 
 
 MainWindow::MainWindow()
@@ -94,7 +100,16 @@ void MainWindow::mProc()
 	const long cx = 640;
 	const long cy = 480;
 
-	m_pWindow = ::createWindow("test", cx, cy, "../source/icon.ico");
+	widgetMenu* mainmenu = createMenu();
+
+	if (mainmenu)
+	{
+		widgetMenu* file_menu = createMenu();
+		file_menu->append("exit");
+		mainmenu->appendSubmenu(*file_menu, "file");
+	}	
+
+	m_pWindow = ::createWindow("test", cx, cy, "../source/icon.ico", nullptr, mainmenu);
 
 	if (m_pWindow == nullptr)
 	{

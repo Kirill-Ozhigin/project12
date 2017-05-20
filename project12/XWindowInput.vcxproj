@@ -105,8 +105,10 @@
     <IntDir>$(ProjectDir)..\obj\$(Configuration)_$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\XWindowInput\bitmap.cpp" />
     <ClCompile Include="..\source\XWindowInput\input.cpp" />
     <ClCompile Include="..\source\XWindowInput\keyboard.cpp" />
+    <ClCompile Include="..\source\XWindowInput\label.cpp" />
     <ClCompile Include="..\source\XWindowInput\menu.cpp" />
     <ClCompile Include="..\source\XWindowInput\mouse.cpp" />
     <ClCompile Include="..\source\XWindowInput\widgets.cpp" />

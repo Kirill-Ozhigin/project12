@@ -44,6 +44,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\WindowInput.cpp">
       <Filter>WindowInput</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\source\Application\widgets.cpp">
+      <Filter>WindowInput</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\source\Application\MainWindow.h" />

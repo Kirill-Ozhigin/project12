@@ -2,14 +2,15 @@
 #include "../include/windows.h"
 #include "../include/cpputils.h"
 
+#include "../WindowInput/widgets.h"
 
 window::~window() {}
 
 class w_window : public window
 {
 public:
-	w_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent);
-	w_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent);
+	w_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
+	w_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
 
 	virtual ~w_window() override { destroy(); }
 
@@ -46,6 +47,9 @@ private:
 	// is active (false/true or 0/1)
 	unsigned char m_active;
 
+	// a pointer to a window menu
+	const widgetMenu* m_pMenu;
+
 	// the low-order word specifies a width of the client area (LOWORD)
 	// the high-order word specifies a height of the client area (HIWORD)
 	long long m_clientSize;
@@ -56,13 +60,21 @@ private:
 };
 
 
-w_window::w_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)
+w_window::w_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu)
 	: m_handle(nullptr)
 	, m_visible(false)
 	, m_active(false)
+	, m_pMenu(menu)
 	, m_clientSize(0)
 {
 	{
+		HMENU hMenu = nullptr;
+
+		if (menu)
+		{
+			hMenu = reinterpret_cast<HMENU>(menu->getHandle());
+		}
+
 		HWND hParent = nullptr;
 
 		if (parent)
@@ -98,7 +110,7 @@ w_window::w_window(const char* const title, const long width, const long height,
 			}
 			else
 			{
-				AdjustWindowRectEx(&windowRect, windowStyle, 0, windowExtendedStyle);
+				AdjustWindowRectEx(&windowRect, windowStyle, hMenu ? 1 : 0, windowExtendedStyle);
 			}
 
 			m_handle = CreateWindowExA(windowExtendedStyle, // window extended style 
@@ -110,7 +122,7 @@ w_window::w_window(const char* const title, const long width, const long height,
 				windowRect.right - windowRect.left, // width of a window 
 				windowRect.bottom - windowRect.top, // height of a window 
 				hParent, // a parent window 
-				nullptr, // not using menus 
+				hMenu, // a window menu
 				hInstance, // application handle 
 				nullptr); // used with multiple windows 
 		}
@@ -121,13 +133,21 @@ w_window::w_window(const char* const title, const long width, const long height,
 	}
 }
 
-w_window::w_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent)
+w_window::w_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu)
 	: m_handle(nullptr)
 	, m_visible(false)
 	, m_active(false)
+	, m_pMenu(menu)
 	, m_clientSize(0)
 {
 	{
+		HMENU hMenu = nullptr;
+
+		if (menu)
+		{
+			hMenu = reinterpret_cast<HMENU>(menu->getHandle());
+		}
+
 		HWND hParent = nullptr;
 
 		if (parent)
@@ -163,7 +183,7 @@ w_window::w_window(const wchar_t* const title, const long width, const long heig
 			}
 			else
 			{
-				AdjustWindowRectEx(&windowRect, windowStyle, 0, windowExtendedStyle);
+				AdjustWindowRectEx(&windowRect, windowStyle, hMenu ? 1 : 0, windowExtendedStyle);
 			}
 
 			m_handle = CreateWindowExW(windowExtendedStyle, // window extended style
@@ -175,7 +195,7 @@ w_window::w_window(const wchar_t* const title, const long width, const long heig
 				windowRect.right - windowRect.left, // width of a window
 				windowRect.bottom - windowRect.top, // height of a window
 				hParent, // a parent window
-				nullptr, // not using menus
+				hMenu, // a window menu
 				hInstance, // application handle
 				nullptr); // used with multiple windows
 
@@ -395,9 +415,10 @@ EXTERN_C __declspec(dllexport) window* const createWindow(
 	const TCHAR* const title = nullptr,
 	const long width = 640L, const long height = 480L,
 	const TCHAR* const icon_dir = nullptr,
-	const window* const parent = nullptr)
+	const window* const parent = nullptr,
+	const widgetMenu* const menu = nullptr)
 {
-	w_window* result = new w_window(title, width, height, icon_dir, parent);
+	w_window* result = new w_window(title, width, height, icon_dir, parent, menu);
 
 	return static_cast<window*>(result);
 }
