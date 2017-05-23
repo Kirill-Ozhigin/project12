@@ -89,6 +89,30 @@ typedef window* (*PFNCREATEWINDOWPROC)(
 	const widgetMenu* const menu /* = nullptr */
 );
 
+class windowFactory
+{
+public:
+	virtual window* const createWindow(
+		const char* const title = nullptr,
+		const long width = 640L, const long height = 480L,
+		const char* const icon_dir = nullptr,
+		const window* const parent = nullptr,
+		const widgetMenu* const menu = nullptr
+	) const = 0;
+
+	virtual window* const createWindow(
+		const wchar_t* const title = nullptr,
+		const long width = 640L, const long height = 480L,
+		const wchar_t* const icon_dir = nullptr,
+		const window* const parent = nullptr,
+		const widgetMenu* const menu = nullptr
+	) const = 0;
+
+	virtual bool isWindowUnicode(const window& cwnd) const = 0;
+
+};
+
+typedef windowFactory* (*PFNGETWINDOWFACTORYPROC)(void);
 
 
 #endif // !__window_H

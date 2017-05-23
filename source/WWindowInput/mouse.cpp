@@ -48,7 +48,7 @@ private:
 };
 
 
-extern HWND getHandle(const window& wnd);
+extern HWND getWindowHandle(const window& wnd);
 
 w_mouse::w_mouse(const input& cinput)
 	: m_input(cinput)
@@ -56,7 +56,7 @@ w_mouse::w_mouse(const input& cinput)
 {
 	memset(m_state, 0, mouseButtonsCount);
 	GetCursorPos(&m_pos);
-	ScreenToClient(::getHandle(cinput.getWnd()), &m_pos);
+	ScreenToClient(::getWindowHandle(cinput.getWnd()), &m_pos);
 	m_deltas[0] = 0;
 	m_deltas[1] = 0;
 	if (!g_hHook)
@@ -85,7 +85,7 @@ bool w_mouse::isButtonDown(const mouseButtons button) const
 bool w_mouse::update(void)
 {
 	POINT pt = g_msStruct.pt;
-	ScreenToClient(::getHandle(m_input.getWnd()), &pt);
+	ScreenToClient(::getWindowHandle(m_input.getWnd()), &pt);
 
 	if (m_input.getWnd().isActive())
 	{
@@ -94,7 +94,7 @@ bool w_mouse::update(void)
 		m_pos = pt;
 	}
 
-	if (::getHandle(m_input.getWnd()) == WindowFromPoint(g_msStruct.pt))
+	if (::getWindowHandle(m_input.getWnd()) == WindowFromPoint(g_msStruct.pt))
 	{
 		m_state[0] = g_mouseState[0];
 		m_state[1] = g_mouseState[1];

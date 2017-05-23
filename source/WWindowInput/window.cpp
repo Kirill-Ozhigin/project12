@@ -4,13 +4,15 @@
 
 #include "../WindowInput/widgets.h"
 
+class w_windowFactory;
+
 window::~window() {}
 
 class w_window : public window
 {
 public:
-	w_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
-	w_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
+	w_window(const char* const title, const long width, const long height, const char* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
+	w_window(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
 
 	virtual ~w_window() override { destroy(); }
 
@@ -59,12 +61,12 @@ private:
 	// WNDPROC
 	friend static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-	friend HWND getHandle(const window& wnd);
+	friend HWND getWindowHandle(const window& wnd);
 
 };
 
 
-w_window::w_window(const char* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu)
+w_window::w_window(const char* const title, const long width, const long height, const char* const icon_dir, const window* const parent, const widgetMenu* const menu)
 	: m_handle(nullptr)
 	, m_visible(false)
 	, m_active(false)
@@ -137,7 +139,7 @@ w_window::w_window(const char* const title, const long width, const long height,
 	}
 }
 
-w_window::w_window(const wchar_t* const title, const long width, const long height, const TCHAR* const icon_dir, const window* const parent, const widgetMenu* const menu)
+w_window::w_window(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window* const parent, const widgetMenu* const menu)
 	: m_handle(nullptr)
 	, m_visible(false)
 	, m_active(false)
@@ -436,12 +438,12 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
 
-HWND getHandle(const window& wnd)
+HWND getWindowHandle(const window& wnd)
 {
 	return static_cast<const w_window*>(&wnd)->m_handle;
 }
 
-EXTERN_C __declspec(dllexport) window* const createWindow(
+EXTERN_C DLL_EXPORT window* const createWindow(
 	const TCHAR* const title = nullptr,
 	const long width = 640L, const long height = 480L,
 	const TCHAR* const icon_dir = nullptr,
@@ -453,32 +455,64 @@ EXTERN_C __declspec(dllexport) window* const createWindow(
 	return static_cast<window*>(result);
 }
 
-#ifdef UNICODE
 
-EXTERN_C __declspec(dllexport) window* const createWindowA(
-	const char* const title = nullptr,
-	const long width = 640L, const long height = 480L,
-	const TCHAR* const icon_dir = nullptr,
-	const window* const parent = nullptr)
+class w_windowFactory : public windowFactory
 {
-	w_window* result = new w_window(title, width, height, icon_dir, parent);
+public:
+	w_windowFactory();
+	~w_windowFactory();
+
+	virtual window* const createWindow(
+		const char* const title = nullptr,
+		const long width = 640L, const long height = 480L,
+		const char* const icon_dir = nullptr,
+		const window* const parent = nullptr,
+		const widgetMenu* const menu = nullptr
+	) const override;
+
+	virtual window* const createWindow(
+		const wchar_t* const title = nullptr,
+		const long width = 640L, const long height = 480L,
+		const wchar_t* const icon_dir = nullptr,
+		const window* const parent = nullptr,
+		const widgetMenu* const menu = nullptr
+	) const override;
+
+	virtual bool isWindowUnicode(const window& cwnd) const override;
+
+};
+
+w_windowFactory::w_windowFactory()
+{
+}
+
+w_windowFactory::~w_windowFactory()
+{
+}
+
+window* const w_windowFactory::createWindow(const char* const title, const long width, const long height, const char* const icon_dir, const window * const parent, const widgetMenu * const menu) const
+{
+	w_window* result = new w_window(title, width, height, icon_dir, parent, menu);
 
 	return static_cast<window*>(result);
 }
 
-#else // if !UNICODE
-
-EXTERN_C __declspec(dllexport) window* const createWindowW(
-	const wchar_t* const title = nullptr,
-	const long width = 640L, const long height = 480L,
-	const TCHAR* const icon_dir = nullptr,
-	const window* const parent = nullptr)
+window* const w_windowFactory::createWindow(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window * const parent, const widgetMenu * const menu) const
 {
-	w_window* result = new w_window(title, width, height, icon_dir, parent);
+	w_window* result = new w_window(title, width, height, icon_dir, parent, menu);
 
 	return static_cast<window*>(result);
 }
 
-#endif // UNICODE
+bool w_windowFactory::isWindowUnicode(const window& cwnd) const
+{
+	return ::IsWindowUnicode(::getWindowHandle(cwnd));
+}
 
+EXTERN_C DLL_EXPORT windowFactory* getWindowFactory(void)
+{
+	static w_windowFactory result;
+
+	return static_cast<windowFactory*>(&result);
+}
 

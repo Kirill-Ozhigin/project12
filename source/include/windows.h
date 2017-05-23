@@ -17,7 +17,7 @@
 
 
 // Registers the window class
-inline const wchar_t* const registerWndClass(HINSTANCE hInstance, const wchar_t* const className, WNDPROC windowProc = DefWindowProc, const TCHAR* const icon_path = nullptr)
+inline const wchar_t* const registerWndClass(HINSTANCE hInstance, const wchar_t* const className, WNDPROC windowProc = DefWindowProc, const wchar_t* const icon_path = nullptr)
 {
 	WNDCLASSEXW wcex;
 
@@ -34,8 +34,8 @@ inline const wchar_t* const registerWndClass(HINSTANCE hInstance, const wchar_t*
 	wcex.hInstance = hInstance;
 	if (icon_path)
 	{
-		wcex.hIcon = (HICON)LoadImage(nullptr, icon_path, IMAGE_ICON, 256, 256, LR_LOADFROMFILE);
-		wcex.hIconSm = (HICON)LoadImage(nullptr, icon_path, IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
+		wcex.hIcon = (HICON)LoadImageW(nullptr, icon_path, IMAGE_ICON, 256, 256, LR_LOADFROMFILE);
+		wcex.hIconSm = (HICON)LoadImageW(nullptr, icon_path, IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
 	}
 	wcex.hCursor = LoadCursorW(nullptr, MAKEINTRESOURCEW(32512));
 	wcex.hbrBackground = (HBRUSH)(COLOR_APPWORKSPACE);
