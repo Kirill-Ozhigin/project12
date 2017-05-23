@@ -10,10 +10,12 @@ class mouse;
 
 class RenderContext;
 
+class widgetMenu;
+
 class MainWindow
 {
 public:
-	MainWindow();
+	MainWindow(widgetMenu* mainmenu = nullptr);
 
 	virtual ~MainWindow();
 
@@ -35,7 +37,8 @@ private:
 
 	RenderContext* m_pRC;
 
-	void mProc();
+	void mProc(widgetMenu* mainmenu);
+
 
 };
 

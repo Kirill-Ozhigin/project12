@@ -43,14 +43,14 @@ EXTERN_C RenderContext* createRenderContextVer(const window& cwnd, int major_ver
 EXTERN_C widgetMenu* createMenu(const TCHAR* const title = nullptr);
 
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(widgetMenu* mainmenu)
 	: m_pWindow(nullptr)
 	, m_pInput(nullptr)
 	, m_pKeyboard(nullptr)
 	, m_pMouse(nullptr)
 	, m_pRC(nullptr)
 {
-	m_thread = std::thread(&MainWindow::mProc, this);
+	m_thread = std::thread(&MainWindow::mProc, this, mainmenu);
 
 	if (!m_pWindow)
 	{
@@ -90,7 +90,7 @@ const mouse* const MainWindow::getMouse(void) const
 	return m_pMouse;
 }
 
-void MainWindow::mProc()
+void MainWindow::mProc(widgetMenu* mainmenu)
 {
 	m_pWindow = nullptr;
 	m_pInput = nullptr;
@@ -100,14 +100,6 @@ void MainWindow::mProc()
 	const long cx = 640;
 	const long cy = 480;
 
-	widgetMenu* mainmenu = createMenu();
-
-	if (mainmenu)
-	{
-		widgetMenu* file_menu = createMenu();
-		file_menu->append("exit");
-		mainmenu->appendSubmenu(*file_menu, "file");
-	}	
 
 	m_pWindow = ::createWindow("test", cx, cy, "../source/icon.ico", nullptr, mainmenu);
 

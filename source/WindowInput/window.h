@@ -67,6 +67,11 @@ public:
 	// [in] title - the new title in Unicode 
 	virtual void setTitle(const wchar_t* const title) const = 0;
 
+	// set the window menu 
+	virtual void setMenu(const widgetMenu& menu) = 0;
+
+	
+
 };
 
 // [in] title - the title text of the window [default = nullptr ("")]

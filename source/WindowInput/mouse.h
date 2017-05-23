@@ -23,6 +23,9 @@ public:
 
 	virtual float getWheel(void) const = 0;
 
+	virtual void getDeltas(long& x, long& y) const = 0;
+
+
 };
 
 typedef mouse* const (*PFNGETMOUSEPROC)(const input& cinput);

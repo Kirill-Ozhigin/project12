@@ -26,6 +26,8 @@ public:
 
 	virtual float getWheel(void) const override { return m_wheel; }
 
+	virtual void getDeltas(long& x, long& y) const override;
+
 	virtual void release(void) const override;
 
 	virtual bool isButtonDown(const mouseButtons button) const override;
@@ -37,20 +39,36 @@ private:
 
 	float m_wheel;
 
+	int m_deltas[2];
+
+	POINT m_pos;
+
 	unsigned char m_state[mouseButtonsCount];
 
 };
 
+
+extern HWND getHandle(const window& wnd);
 
 w_mouse::w_mouse(const input& cinput)
 	: m_input(cinput)
 	, m_wheel(0.f)
 {
 	memset(m_state, 0, mouseButtonsCount);
+	GetCursorPos(&m_pos);
+	ScreenToClient(::getHandle(cinput.getWnd()), &m_pos);
+	m_deltas[0] = 0;
+	m_deltas[1] = 0;
 	if (!g_hHook)
 	{
 		g_hHook = SetWindowsHookEx(WH_MOUSE_LL, ProcMouseLL, NULL, 0);
 	}
+}
+
+void w_mouse::getDeltas(long& x, long& y) const
+{
+	x = m_deltas[0];
+	y = m_deltas[1];
 }
 
 void w_mouse::release(void) const
@@ -66,7 +84,17 @@ bool w_mouse::isButtonDown(const mouseButtons button) const
 
 bool w_mouse::update(void)
 {
+	POINT pt = g_msStruct.pt;
+	ScreenToClient(::getHandle(m_input.getWnd()), &pt);
+
 	if (m_input.getWnd().isActive())
+	{
+		m_deltas[0] = pt.x - m_pos.x;
+		m_deltas[1] = pt.y - m_pos.y;
+		m_pos = pt;
+	}
+
+	if (::getHandle(m_input.getWnd()) == WindowFromPoint(g_msStruct.pt))
 	{
 		m_state[0] = g_mouseState[0];
 		m_state[1] = g_mouseState[1];
@@ -79,12 +107,21 @@ bool w_mouse::update(void)
 
 		m_wheel = g_mouseWheel;
 
+		if (!m_input.getWnd().isActive())
+		{
+			m_deltas[0] = pt.x - m_pos.x;
+			m_deltas[1] = pt.y - m_pos.y;
+			m_pos = pt;
+		}
+
 		return true;
 	}
-	else
+	
 	{
 		memset(m_state, 0, mouseButtonsCount);
 		m_wheel = 0.f;
+		m_deltas[0] = 0;
+		m_deltas[1] = 0;
 		return true;
 	}
 }
@@ -157,8 +194,7 @@ static LRESULT WINAPI ProcMouseLL(int nCode, WPARAM wParam, LPARAM lParam)
 		case 0x020E: // WM_MOUSEHWHEEL 
 			break;
 
-		default:
-			break;
+
 		}
 	}
 

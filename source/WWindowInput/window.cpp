@@ -36,6 +36,8 @@ public:
 	virtual void setTitle(const char* const title) const override;
 	virtual void setTitle(const wchar_t* const title) const override;
 
+	virtual void setMenu(const widgetMenu& menu) override;
+
 	virtual bool update(void) const override;
 
 private:
@@ -56,6 +58,8 @@ private:
 
 	// WNDPROC
 	friend static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+
+	friend HWND getHandle(const window& wnd);
 
 };
 
@@ -294,6 +298,15 @@ void w_window::setTitle(const wchar_t* const newTitle) const
 	}
 }
 
+void w_window::setMenu(const widgetMenu& menu)
+{
+	if (m_handle)
+	{
+		HMENU hMenu = reinterpret_cast<HMENU>(menu.getHandle());
+		SetMenu(m_handle, hMenu);
+	}
+}
+
 const window* const w_window::getParent(void) const
 {
 	if (m_handle)
@@ -337,12 +350,18 @@ bool w_window::update(void) const
 	return result;
 }
 
+extern void launchMenuEvent(size_t id);
+
 static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	w_window* pWindow = reinterpret_cast<w_window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
 	switch (Msg)
 	{
+	case WM_COMMAND:
+		launchMenuEvent(lParam);
+		return 0;
+
 	case WM_CREATE:
 		return 0;
 
@@ -409,6 +428,11 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 
 	}
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
+}
+
+HWND getHandle(const window& wnd)
+{
+	return static_cast<const w_window*>(&wnd)->m_handle;
 }
 
 EXTERN_C __declspec(dllexport) window* const createWindow(

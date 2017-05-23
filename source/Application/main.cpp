@@ -14,13 +14,28 @@
 #include "../Sound/SoundSource.h"
 #include "../Sound/WaveFileLoader.h"
 
+#include "../WindowInput/widgets.h"
+
 static volatile bool g_bLooping = false;
+
+static const MainWindow* g_pMainWindow = nullptr;
 
 EXTERN_C void terminateApp(void);
 
 EXTERN_C void terminateApp(void)
 {
 	g_bLooping = false;
+}
+
+EXTERN_C void closeMainWindow(void)
+{
+	if (g_pMainWindow)
+	{
+		if (g_pMainWindow->getWnd())
+		{
+			g_pMainWindow->getWnd()->close();
+		}
+	}
 }
 
 EXTERN_C int writeFileFromWave(WaveFileData& wave, const char* filename = nullptr);
@@ -30,10 +45,23 @@ EXTERN_C WaveFileData* loadMP3WaveFromFile(const char* const filename);
 
 EXTERN_C Sound* const createSound(void);
 
+EXTERN_C widgetMenu* createMenu(const TCHAR* const title = nullptr);
+
 
 int main(const int argc, const char* const argv[])
 {
-	const MainWindow* mainWindow = new MainWindow();
+	{
+		widgetMenu* mainmenu = createMenu();
+
+		if (mainmenu)
+		{
+			widgetMenu* file_menu = createMenu();
+			file_menu->append("exit")->setEventProc(closeMainWindow);
+			mainmenu->appendSubmenu(*file_menu, "file");
+		}
+
+		g_pMainWindow = new MainWindow(mainmenu);
+	}
 
 #if PLATFORM_WINDOWS & NDEBUG & 0
 	{
@@ -62,7 +90,7 @@ int main(const int argc, const char* const argv[])
 		source->play();
 	}
 
-	g_bLooping = mainWindow != nullptr;
+	g_bLooping = g_pMainWindow != nullptr;
 
 	while (g_bLooping)
 	{
@@ -71,79 +99,72 @@ int main(const int argc, const char* const argv[])
 			source->update();
 		}
 
-		if (!mainWindow->getWnd())
+		if (g_pMainWindow->getKeyboard())
 		{
-			g_bLooping = false;
-			break;
-		}
-		else
-		{
-			if (mainWindow->getKeyboard())
+			if (g_pMainWindow->getKeyboard()->isKeyDown(K_Q))
 			{
-				if (mainWindow->getKeyboard()->isKeyDown(K_Q))
+				g_bLooping = false;
+				break;
+			}
+			else if (g_pMainWindow->getKeyboard()->isKeyDown(K_ENTER))
+			{
+				if (source)
 				{
-					g_bLooping = false;
-					break;
-				}
-				else if (mainWindow->getKeyboard()->isKeyDown(K_ENTER))
-				{
-					if (source)
+					if (source->getState() == SourceState::Paused)
 					{
-						if (source->getState() == SourceState::Paused)
-						{
-							source->resume();
-						}
-						else
-						{
-							source->pause();
-						}
-						std::this_thread::sleep_for(std::chrono::milliseconds(1));
+						source->resume();
 					}
-				}
-				else if (mainWindow->getKeyboard()->isKeyDown(K_S))
-				{
-					if (source)
+					else
 					{
-						source->stop();
-					}
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				}
-				else if (mainWindow->getKeyboard()->isKeyDown(K_P))
-				{
-					if (source)
-					{
-						source->play();
+						source->pause();
 					}
 					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
-			if (mainWindow->getMouse())
+			else if (g_pMainWindow->getKeyboard()->isKeyDown(K_S))
 			{
-				if (mainWindow->getMouse()->isButtonDown(mouse1))
+				if (source)
 				{
-					if (source)
-					{
-						if (source->getState() == SourceState::Paused)
-						{
-							source->resume();
-						}
-						else
-						{
-							source->pause();
-						}
-					}
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
+					source->stop();
 				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			}
+			else if (g_pMainWindow->getKeyboard()->isKeyDown(K_P))
+			{
+				if (source)
+				{
+					source->play();
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			}
+		}
+
+		if (g_pMainWindow->getMouse())
+		{
+			if (g_pMainWindow->getMouse()->isButtonDown(mouse1))
+			{
+				if (source)
+				{
+					if (source->getState() == SourceState::Paused)
+					{
+						source->resume();
+					}
+					else
+					{
+						source->pause();
+					}
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 		}
 
 		std::this_thread::sleep_for(std::chrono::nanoseconds(1));
 	}
 
-	if (mainWindow)
+	if (g_pMainWindow)
 	{
-		delete mainWindow;
-		mainWindow = nullptr;
+		delete g_pMainWindow;
+		g_pMainWindow = nullptr;
 	}
 
 	if (wave)

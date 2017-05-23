@@ -49,6 +49,9 @@ public:
 	virtual widgetMenuItem* appendSubmenu(widgetMenu& submenu, const char* const title = nullptr) = 0;
 	virtual widgetMenuItem* appendSubmenu(widgetMenu& submenu, const wchar_t* const title = nullptr) = 0;
 
+	// append 
+	virtual void append(widgetMenuItem& item) = 0;
+
 	// remove a item from a menu 
 	virtual widgetMenuItem& remove(widgetMenuItem& item) = 0;
 
@@ -79,6 +82,8 @@ public:
 	// [in] title - the new title in Unicode 
 	virtual void setTitle(const wchar_t* const title) const = 0;
 
+	// setEventProc
+	virtual void setEventProc(void(*pfn)(void)) = 0;
 
 };
 
