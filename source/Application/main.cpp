@@ -140,8 +140,8 @@ int main(const int argc, const char* const argv[])
 					}
 					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}*/
-			}
-			/*
+			}/*
+			
 			if (g_pMainWindow->getMouse())
 			{
 				if (g_pMainWindow->getMouse()->isButtonDown(mouse1))
