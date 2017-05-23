@@ -33,14 +33,6 @@ public:
 	// destroy a menu 
 	virtual void destroy(void) = 0;
 
-	// set the title of a menu (ASCII) 
-	// [in] title - the new title in ASCII 
-	virtual void setTitle(const char* const title) const = 0;
-
-	// set the title of a menu (Unicode) 
-	// [in] title - the new title in Unicode 
-	virtual void setTitle(const wchar_t* const title) const = 0;
-
 	// append any type of a item (normal/check/radio)
 	virtual widgetMenuItem* append(const char* const title = nullptr, bool enabled = true, widgetMenuItemType type = normal) = 0;
 	virtual widgetMenuItem* append(const wchar_t* const title = nullptr, bool enabled = true, widgetMenuItemType type = normal) = 0;
@@ -83,12 +75,12 @@ public:
 	virtual void setTitle(const wchar_t* const title) const = 0;
 
 	// setEventProc
-	virtual void setEventProc(void(*pfn)(void)) = 0;
+	virtual void setEventProc(void* pfn) = 0;
 
 };
 
 
-typedef widgetMenu* (*PFNCREATEMENUPROC)(const TCHAR* const title);
+typedef widgetMenu* (*PFNCREATEMENUPROC)();
 
 
 #endif // !__widget_menu_H

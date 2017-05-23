@@ -358,10 +358,6 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 
 	switch (Msg)
 	{
-	case WM_COMMAND:
-		launchMenuEvent(lParam);
-		return 0;
-
 	case WM_CREATE:
 		return 0;
 
@@ -411,6 +407,16 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 		if (pWindow != nullptr)
 		{
 			pWindow->m_visible = wParam;
+		}
+		return 0;
+
+	case WM_COMMAND:
+		if (pWindow != nullptr)
+		{
+			if (pWindow->m_pMenu)
+			{
+				launchMenuEvent(wParam);
+			}
 		}
 		return 0;
 

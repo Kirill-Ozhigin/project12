@@ -40,9 +40,6 @@ EXTERN_C mouse* const getMouse(const input& cinput);
 EXTERN_C RenderContext* createRenderContextVer(const window& cwnd, int major_version, int minor_version);
 
 
-EXTERN_C widgetMenu* createMenu(const TCHAR* const title = nullptr);
-
-
 MainWindow::MainWindow(widgetMenu* mainmenu)
 	: m_pWindow(nullptr)
 	, m_pInput(nullptr)

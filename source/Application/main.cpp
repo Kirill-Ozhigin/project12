@@ -45,7 +45,7 @@ EXTERN_C WaveFileData* loadMP3WaveFromFile(const char* const filename);
 
 EXTERN_C Sound* const createSound(void);
 
-EXTERN_C widgetMenu* createMenu(const TCHAR* const title = nullptr);
+EXTERN_C widgetMenu* createMenu();
 
 
 int main(const int argc, const char* const argv[])
@@ -56,7 +56,8 @@ int main(const int argc, const char* const argv[])
 		if (mainmenu)
 		{
 			widgetMenu* file_menu = createMenu();
-			file_menu->append("exit")->setEventProc(closeMainWindow);
+			widgetMenuItem* exit_menu = file_menu->append("exit");
+			exit_menu->setEventProc(closeMainWindow);
 			mainmenu->appendSubmenu(*file_menu, "file");
 		}
 
@@ -99,62 +100,65 @@ int main(const int argc, const char* const argv[])
 			source->update();
 		}
 
-		if (g_pMainWindow->getKeyboard())
+		if (g_pMainWindow->getWnd())
 		{
-			if (g_pMainWindow->getKeyboard()->isKeyDown(K_Q))
+			if (g_pMainWindow->getKeyboard())
 			{
-				g_bLooping = false;
-				break;
-			}
-			else if (g_pMainWindow->getKeyboard()->isKeyDown(K_ENTER))
-			{
-				if (source)
+				if (g_pMainWindow->getKeyboard()->isKeyDown(K_Q))
 				{
-					if (source->getState() == SourceState::Paused)
+					g_bLooping = false;
+					break;
+				}
+				else if (g_pMainWindow->getKeyboard()->isKeyDown(K_ENTER))
+				{
+					if (source)
 					{
-						source->resume();
+						if (source->getState() == SourceState::Paused)
+						{
+							source->resume();
+						}
+						else
+						{
+							source->pause();
+						}
+						std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					}
-					else
+				}
+				else if (g_pMainWindow->getKeyboard()->isKeyDown(K_S))
+				{
+					if (source)
 					{
-						source->pause();
+						source->stop();
+					}
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				}
+				else if (g_pMainWindow->getKeyboard()->isKeyDown(K_P))
+				{
+					if (source)
+					{
+						source->play();
 					}
 					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
-			else if (g_pMainWindow->getKeyboard()->isKeyDown(K_S))
-			{
-				if (source)
-				{
-					source->stop();
-				}
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
-			}
-			else if (g_pMainWindow->getKeyboard()->isKeyDown(K_P))
-			{
-				if (source)
-				{
-					source->play();
-				}
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
-			}
-		}
 
-		if (g_pMainWindow->getMouse())
-		{
-			if (g_pMainWindow->getMouse()->isButtonDown(mouse1))
+			if (g_pMainWindow->getMouse())
 			{
-				if (source)
+				if (g_pMainWindow->getMouse()->isButtonDown(mouse1))
 				{
-					if (source->getState() == SourceState::Paused)
+					if (source)
 					{
-						source->resume();
+						if (source->getState() == SourceState::Paused)
+						{
+							source->resume();
+						}
+						else
+						{
+							source->pause();
+						}
 					}
-					else
-					{
-						source->pause();
-					}
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 		}
 

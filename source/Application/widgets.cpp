@@ -7,7 +7,7 @@ EXTERN_C bool openWindowInput(void);
 // pointer to createWindow function 
 static PFNCREATEMENUPROC createMenuProc = nullptr;
 
-EXTERN_C widgetMenu* createMenu(const TCHAR* const title = nullptr)
+EXTERN_C widgetMenu* createMenu()
 {
 	if (createMenuProc == nullptr)
 	{
@@ -19,7 +19,7 @@ EXTERN_C widgetMenu* createMenu(const TCHAR* const title = nullptr)
 	}
 	if (createMenuProc != nullptr)
 	{
-		return createMenuProc(title);
+		return createMenuProc();
 	}
 
 	return nullptr;
