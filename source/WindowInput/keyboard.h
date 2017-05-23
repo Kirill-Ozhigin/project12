@@ -2,7 +2,7 @@
 #define __keyboard_H 1
 
 #include "input.h"
-
+//code keyy
 enum keys {
     K_ESCAPE     = 0x01,     K_1            = 0x02,     K_2           = 0x03,
     K_3          = 0x04,     K_4            = 0x05,     K_5           = 0x06,
