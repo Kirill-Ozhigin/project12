@@ -124,7 +124,7 @@ int main(const int argc, const char* const argv[])
 						std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					}
 				}
-				else if (g_pMainWindow->getKeyboard()->isKeyDown(K_S))
+				/*else if (g_pMainWindow->getKeyboard()->isKeyDown(K_S))
 				{
 					if (source)
 					{
@@ -139,9 +139,9 @@ int main(const int argc, const char* const argv[])
 						source->play();
 					}
 					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				}
+				}*/
 			}
-
+			/*
 			if (g_pMainWindow->getMouse())
 			{
 				if (g_pMainWindow->getMouse()->isButtonDown(mouse1))
@@ -159,12 +159,12 @@ int main(const int argc, const char* const argv[])
 					}
 					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
-			}
+			}*/
 		}
 
 		std::this_thread::sleep_for(std::chrono::nanoseconds(1));
 	}
-
+	
 	if (g_pMainWindow)
 	{
 		delete g_pMainWindow;
