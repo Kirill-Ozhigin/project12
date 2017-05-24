@@ -180,8 +180,8 @@ void al_source::play(long lStartPosition, bool bLoop) const
 {
 	if (m_handle)
 	{
-		ALfloat fStartPosition = static_cast<ALfloat>(lStartPosition);
-		if (fStartPosition < m_length)
+		ALfloat fStartPosition = static_cast<ALfloat>(lStartPosition) / 100.;
+		if (1 || fStartPosition < m_length)
 		{
 			alSourcef(m_handle, AL_SEC_OFFSET, fStartPosition);
 		}
@@ -198,7 +198,7 @@ void al_source::stop(void) const
 {
 	if (m_handle)
 	{
-		alSourceStop(m_handle);
+		alSourcePause(m_handle);
 		alSourcef(m_handle, AL_SEC_OFFSET, 0.f);
 
 		unconst(this)->_unqueueBuffers();

@@ -96,23 +96,32 @@ bool w_mouse::update(void)
 
 	if (::getWindowHandle(m_input.getWnd()) == WindowFromPoint(g_msStruct.pt))
 	{
-		m_state[0] = g_mouseState[0];
-		m_state[1] = g_mouseState[1];
-		m_state[2] = g_mouseState[2];
-		m_state[3] = g_mouseState[3];
-		m_state[4] = g_mouseState[4];
-		m_state[5] = g_mouseState[5];
-		m_state[6] = g_mouseState[6];
-		m_state[7] = g_mouseState[7];
-
-		m_wheel = g_mouseWheel;
-
 		if (!m_input.getWnd().isActive())
 		{
 			m_deltas[0] = pt.x - m_pos.x;
 			m_deltas[1] = pt.y - m_pos.y;
 			m_pos = pt;
 		}
+
+		RECT clienRect;
+		GetClientRect(::getWindowHandle(m_input.getWnd()), &clienRect);
+		if (PtInRect(&clienRect, m_pos))
+		{
+			m_state[0] = g_mouseState[0];
+			m_state[1] = g_mouseState[1];
+			m_state[2] = g_mouseState[2];
+			m_state[3] = g_mouseState[3];
+			m_state[4] = g_mouseState[4];
+			m_state[5] = g_mouseState[5];
+			m_state[6] = g_mouseState[6];
+			m_state[7] = g_mouseState[7];
+		}
+		else
+		{
+			memset(m_state, 0, mouseButtonsCount);
+		}
+
+		m_wheel = g_mouseWheel;
 
 		return true;
 	}

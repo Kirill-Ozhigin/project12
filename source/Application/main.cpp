@@ -121,7 +121,6 @@ int main(const int argc, const char* const argv[])
 						{
 							source->pause();
 						}
-						std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					}
 				}
 				else if (g_pMainWindow->getKeyboard()->isKeyDown(K_S))
@@ -130,7 +129,6 @@ int main(const int argc, const char* const argv[])
 					{
 						source->stop();
 					}
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 				else if (g_pMainWindow->getKeyboard()->isKeyDown(K_P))
 				{
@@ -138,7 +136,6 @@ int main(const int argc, const char* const argv[])
 					{
 						source->play();
 					}
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
 			
@@ -157,7 +154,6 @@ int main(const int argc, const char* const argv[])
 							source->pause();
 						}
 					}
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				}
 			}
 		}
