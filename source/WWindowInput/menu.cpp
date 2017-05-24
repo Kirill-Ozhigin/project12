@@ -40,7 +40,8 @@ public:
 private:
 	HMENU m_handle;
 
-#if 0
+#define VectorItemsP 0
+#if !VectorItemsP
 	vector<w_widgetMenuItem> m_vectorItems;
 #else
 	vector<w_widgetMenuItem*> m_vectorItems;
@@ -48,13 +49,15 @@ private:
 
 	friend w_widgetMenuItem;
 
-	friend void launchMenuEvent(size_t id);
+	friend void WINAPI launchMenuEvent(size_t id);
 
 };
 
 class w_widgetMenuItem : public widgetMenuItem
 {
 public:
+	w_widgetMenuItem(w_widgetMenu& parent);
+
 	w_widgetMenuItem(w_widgetMenu& parent, size_t id, int pos, widgetMenuItemType type);
 
 	w_widgetMenuItem(w_widgetMenu& parent, const char* const title, bool enabled, widgetMenuItemType type);
@@ -66,7 +69,7 @@ public:
 
 	virtual widgetMenu& getMenu(void) override { return *static_cast<widgetMenu*>(&m_parent); }
 
-	virtual unsigned getID(void) const override { return m_id; }
+	virtual size_t getID(void) const override { return m_id; }
 
 	virtual void setTitle(const char* const title) const override;
 
@@ -88,9 +91,18 @@ private:
 
 	friend w_widgetMenu;
 
-	friend void launchMenuEvent(size_t id);
+	friend void WINAPI launchMenuEvent(size_t id);
 
 };
+
+w_widgetMenuItem::w_widgetMenuItem(w_widgetMenu& parent)
+	: m_parent(parent)
+	, m_id(0)
+	, m_uPos(0)
+	, m_type(normal)
+	, m_pfnEvent(nullptr)
+{
+}
 
 w_widgetMenuItem::w_widgetMenuItem(w_widgetMenu& parent, size_t id, int pos, widgetMenuItemType type)
 	: m_parent(parent)
@@ -271,28 +283,124 @@ void w_widgetMenu::destroy(void)
 
 widgetMenuItem* w_widgetMenu::append(const char* const title, bool enabled, widgetMenuItemType type)
 {
-#if 0
-	m_vectorItems.push_back(w_widgetMenuItem(*this, title, enabled, type));
+	m_vectorItems.push_back(w_widgetMenuItem(*this));
 
-	return dynamic_cast<widgetMenuItem*>(&m_vectorItems.back());
-#else
-	m_vectorItems.push_back(new w_widgetMenuItem(*this, title, enabled, type));
+	w_widgetMenuItem* result = &m_vectorItems.back();
+	
+	size_t id = reinterpret_cast<size_t>(result);
+	unsigned uFlags = enabled ? MF_ENABLED : MF_GRAYED;
+	LPCSTR pData = nullptr;
 
-	return dynamic_cast<widgetMenuItem*>(m_vectorItems.back());
-#endif
+	switch (type)
+	{
+	case normal:
+		if (true)
+		{
+		}
+		break;
+
+	case chek:
+		if (true)
+		{
+			uFlags |= MF_CHECKED;
+		}
+		break;
+
+	case radio:
+		if (true)
+		{
+		}
+		break;
+
+	case dropdown:
+		if (true)
+		{
+		}
+		break;
+
+	case separator:
+		if (true)
+		{
+			id = -1;
+			uFlags |= MF_SEPARATOR;
+			break;
+		}
+	}
+
+	if (title && !pData)
+	{
+		uFlags |= MF_STRING;
+		pData = title;
+	}
+
+	result->m_id = id;
+	result->m_uPos = GetMenuItemCount(m_handle);
+	result->m_type = type;
+
+	AppendMenuA(m_handle, uFlags, id, pData);
+
+	return dynamic_cast<widgetMenuItem*>(result);
 }
 
 widgetMenuItem* w_widgetMenu::append(const wchar_t* const title, bool enabled, widgetMenuItemType type)
 {
-#if 0
-	m_vectorItems.push_back(w_widgetMenuItem(*this, title, enabled, type));
+	m_vectorItems.push_back(w_widgetMenuItem(*this));
 
-	return dynamic_cast<widgetMenuItem*>(&m_vectorItems.back());
-#else
-	m_vectorItems.push_back(new w_widgetMenuItem(*this, title, enabled, type));
+	w_widgetMenuItem* result = &m_vectorItems.back();
 
-	return dynamic_cast<widgetMenuItem*>(m_vectorItems.back());
-#endif
+	size_t id = reinterpret_cast<size_t>(result);
+	unsigned uFlags = enabled ? MF_ENABLED : MF_GRAYED;
+	LPCWSTR pData = nullptr;
+
+	switch (type)
+	{
+	case normal:
+		if (true)
+		{
+		}
+		break;
+
+	case chek:
+		if (true)
+		{
+			uFlags |= MF_CHECKED;
+		}
+		break;
+
+	case radio:
+		if (true)
+		{
+		}
+		break;
+
+	case dropdown:
+		if (true)
+		{
+		}
+		break;
+
+	case separator:
+		if (true)
+		{
+			id = -1;
+			uFlags |= MF_SEPARATOR;
+			break;
+		}
+	}
+
+	if (title && !pData)
+	{
+		uFlags |= MF_STRING;
+		pData = title;
+	}
+
+	result->m_id = id;
+	result->m_uPos = GetMenuItemCount(m_handle);
+	result->m_type = type;
+
+	AppendMenuW(m_handle, uFlags, id, pData);
+
+	return dynamic_cast<widgetMenuItem*>(result);
 }
 
 widgetMenuItem* w_widgetMenu::appendSubmenu(widgetMenu& submenu, const char* const title)
@@ -318,22 +426,14 @@ widgetMenuItem* w_widgetMenu::appendSubmenu(widgetMenu& submenu, const char* con
 
 	if (AppendMenuA(m_handle, uFlags, id, pData))
 	{
-#if 0
 		m_vectorItems.push_back(w_widgetMenuItem(*this, id, iPos, dropdown));
-#else
-		m_vectorItems.push_back(new w_widgetMenuItem(*this, id, iPos, dropdown));
-#endif
 	}
 	else
 	{
 		return nullptr;
 	}
 
-#if 0
 	return dynamic_cast<widgetMenuItem*>(&m_vectorItems.back());
-#else
-	return dynamic_cast<widgetMenuItem*>(m_vectorItems.back());
-#endif
 }
 
 widgetMenuItem* w_widgetMenu::appendSubmenu(widgetMenu& submenu, const wchar_t* const title)
@@ -359,22 +459,14 @@ widgetMenuItem* w_widgetMenu::appendSubmenu(widgetMenu& submenu, const wchar_t* 
 
 	if (AppendMenuW(m_handle, uFlags, id, pData))
 	{
-#if 0
 		m_vectorItems.push_back(w_widgetMenuItem(*this, id, iPos, dropdown));
-#else
-		m_vectorItems.push_back(new w_widgetMenuItem(*this, id, iPos, dropdown));
-#endif
 	}
 	else
 	{
 		return nullptr;
 	}
 
-#if 0
 	return dynamic_cast<widgetMenuItem*>(&m_vectorItems.back());
-#else
-	return dynamic_cast<widgetMenuItem*>(m_vectorItems.back());
-#endif 
 }
 
 void w_widgetMenu::append(widgetMenuItem& item)
@@ -415,12 +507,12 @@ void w_widgetMenu::destroy(widgetMenuItem& item)
 	}
 }
 
-void launchMenuEvent(size_t id)
+void WINAPI launchMenuEvent(size_t id)
 {
-	printf_s("launchMenuEvent(%d)\n", id);
-	w_widgetMenuItem* pMenuItem = static_cast<w_widgetMenuItem*>(reinterpret_cast<void*>(id));
-	if (pMenuItem)
+	//printf_s("launchMenuEvent(%d)\n", id);
+	if (id)
 	{
+		w_widgetMenuItem* pMenuItem = static_cast<w_widgetMenuItem*>(reinterpret_cast<void*>(id));
 		if (pMenuItem->m_pfnEvent)
 		{
 			pMenuItem->m_pfnEvent();

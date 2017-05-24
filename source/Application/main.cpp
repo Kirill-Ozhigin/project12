@@ -51,7 +51,7 @@ EXTERN_C widgetMenu* createMenu();
 int main(const int argc, const char* const argv[])
 {
 	{
-		widgetMenu* mainmenu = createMenu();
+		widgetMenu* mainmenu = nullptr;// createMenu();
 
 		if (mainmenu)
 		{

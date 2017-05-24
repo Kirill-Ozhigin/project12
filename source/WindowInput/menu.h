@@ -64,7 +64,7 @@ public:
 	virtual widgetMenu& getMenu(void) = 0;
 
 	// get id
-	virtual unsigned getID(void) const = 0;
+	virtual size_t getID(void) const = 0;
 
 	// set the title of a item (ASCII) 
 	// [in] title - the new title in ASCII 

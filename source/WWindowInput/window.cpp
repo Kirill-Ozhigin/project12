@@ -352,7 +352,7 @@ bool w_window::update(void) const
 	return result;
 }
 
-extern void launchMenuEvent(size_t id);
+extern void WINAPI launchMenuEvent(size_t id);
 
 static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
@@ -453,6 +453,11 @@ EXTERN_C DLL_EXPORT window* const createWindow(
 	w_window* result = new w_window(title, width, height, icon_dir, parent, menu);
 
 	return static_cast<window*>(result);
+}
+
+EXTERN_C DLL_EXPORT bool isWindowUnicode(const window& cwnd)
+{
+	return ::IsWindowUnicode(::getWindowHandle(cwnd));
 }
 
 
