@@ -70,7 +70,13 @@ public:
 	// set the window menu 
 	virtual void setMenu(const widgetMenu& menu) = 0;
 
-	
+	// get the title of a window (ASCII) 
+	// [out] title - the title in ASCII 
+	virtual void getTitle(char* & title) const = 0;
+
+	// get the title of a window (Unicode) 
+	// [out] title - the title in Unicode 
+	virtual void getTitle(wchar_t* & title) const = 0;
 
 };
 
@@ -86,6 +92,8 @@ typedef window* (*PFNCREATEWINDOWPROC)(
 	const long height /* = 480 */,
 	const TCHAR* const icon_path /* = nullptr */,
 	const window* const parent /* = nullptr */,
+	const long x, const long y,
+	const bool sysclass,
 	const widgetMenu* const menu /* = nullptr */
 );
 

@@ -22,6 +22,8 @@ EXTERN_C window* createWindow(
 	const long width = 640L, const long height = 480L, 
 	const TCHAR* const icon_path = nullptr, 
 	const window* const parent = nullptr,
+	const long x = -1L, const long y = -1L,
+	const bool sysclass = false,
 	const widgetMenu* const menu = nullptr)
 {
 	if (createWindowProc == nullptr)
@@ -34,7 +36,7 @@ EXTERN_C window* createWindow(
 	}
 	if (createWindowProc != nullptr)
 	{
-		return createWindowProc(title, width, height, icon_path, parent, menu);
+		return createWindowProc(title, width, height, icon_path, parent, x, y, sysclass, menu);
 	}
 
 	return nullptr;

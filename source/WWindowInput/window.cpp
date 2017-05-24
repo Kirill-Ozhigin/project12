@@ -11,8 +11,8 @@ window::~window() {}
 class w_window : public window
 {
 public:
-	w_window(const char* const title, const long width, const long height, const char* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
-	w_window(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window* const parent, const widgetMenu* const menu = nullptr);
+	w_window(const char* const title, const long width, const long height, const char* const icon_dir, const window* const parent, const long x, const long y, bool sysclass, const widgetMenu* const menu = nullptr);
+	w_window(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window* const parent, const long x, const long y, bool sysclass, const widgetMenu* const menu = nullptr);
 
 	virtual ~w_window() override { destroy(); }
 
@@ -37,6 +37,10 @@ public:
 
 	virtual void setTitle(const char* const title) const override;
 	virtual void setTitle(const wchar_t* const title) const override;
+
+	virtual void getTitle(char* & title) const override;
+	virtual void getTitle(wchar_t* & title) const override;
+
 
 	virtual void setMenu(const widgetMenu& menu) override;
 
@@ -66,7 +70,7 @@ private:
 };
 
 
-w_window::w_window(const char* const title, const long width, const long height, const char* const icon_dir, const window* const parent, const widgetMenu* const menu)
+w_window::w_window(const char* const title, const long width, const long height, const char* const icon_dir, const window* const parent, const long x, const long y, bool sysclass, const widgetMenu* const menu)
 	: m_handle(nullptr)
 	, m_visible(false)
 	, m_active(false)
@@ -99,20 +103,28 @@ w_window::w_window(const char* const title, const long width, const long height,
 			hInstance = GetModuleHandle(nullptr);
 		}
 
-		const TCHAR* const className = registerWndClass(hInstance,
-			(title == nullptr || *title == '\0') ? "My Window Class" : title,
-			WindowProc,
-			icon_dir);
+		const char* className = nullptr;
+		if (sysclass && title != nullptr && *title != '\0')
+		{
+			className = title;
+		}
+		if (!className)
+		{
+			className = registerWndClass(hInstance,
+				(title == nullptr || *title == '\0') ? "My Window Class" : title,
+				WindowProc,
+				icon_dir);
+		}
 
 		{
 			RECT windowRect = { 0, 0, width, height };
 
-			DWORD windowStyle = WS_SYSMENU | WS_MINIMIZEBOX;
-			DWORD windowExtendedStyle = WS_EX_APPWINDOW;
+			DWORD windowStyle = sysclass ? 0 : WS_SYSMENU | WS_MINIMIZEBOX;
+			DWORD windowExtendedStyle = sysclass ? 0 : WS_EX_APPWINDOW;
 
-			if (0)
+			if (hParent)
 			{
-				windowStyle |= WS_POPUP;
+				windowStyle |= WS_CHILD;
 			}
 			else
 			{
@@ -123,8 +135,8 @@ w_window::w_window(const char* const title, const long width, const long height,
 				className != nullptr ? className : "Static", // name of a window class 
 				title != nullptr ? title : "", // title of a window 
 				windowStyle, // window style 
-				CW_USEDEFAULT, // x-position of a window 
-				CW_USEDEFAULT, // y-position of a window 
+				x >= 0 ? x : CW_USEDEFAULT, // x-position of a window 
+				y >= 0 ? y : CW_USEDEFAULT, // y-position of a window 
 				windowRect.right - windowRect.left, // width of a window 
 				windowRect.bottom - windowRect.top, // height of a window 
 				hParent, // a parent window 
@@ -139,7 +151,7 @@ w_window::w_window(const char* const title, const long width, const long height,
 	}
 }
 
-w_window::w_window(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window* const parent, const widgetMenu* const menu)
+w_window::w_window(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window* const parent, const long x, const long y, bool sysclass, const widgetMenu* const menu)
 	: m_handle(nullptr)
 	, m_visible(false)
 	, m_active(false)
@@ -172,20 +184,28 @@ w_window::w_window(const wchar_t* const title, const long width, const long heig
 			hInstance = GetModuleHandle(nullptr);
 		}
 
-		const wchar_t* const className = registerWndClass(hInstance,
-			(title == nullptr || *title == '\0') ? L"My Window Class" : title,
-			WindowProc,
-			icon_dir);
+		const wchar_t* className = nullptr;
+		if (sysclass && title != nullptr && *title != '\0')
+		{
+			className = title;
+		}
+		if (!className)
+		{
+			className = registerWndClass(hInstance,
+				(title == nullptr || *title == '\0') ? L"My Window Class" : title,
+				WindowProc,
+				icon_dir);
+		}
 
 		{
 			RECT windowRect = { 0, 0, width, height };
 
-			DWORD windowStyle = WS_SYSMENU | WS_MINIMIZEBOX;
-			DWORD windowExtendedStyle = WS_EX_APPWINDOW;
+			DWORD windowStyle = sysclass ? 0 : WS_SYSMENU | WS_MINIMIZEBOX;
+			DWORD windowExtendedStyle = sysclass ? 0 : WS_EX_APPWINDOW;
 
-			if (0)
+			if (hParent)
 			{
-				windowStyle |= WS_POPUP;
+				windowStyle |= WS_CHILD;
 			}
 			else
 			{
@@ -298,6 +318,16 @@ void w_window::setTitle(const wchar_t* const newTitle) const
 	{
 		SetWindowTextW(m_handle, newTitle);
 	}
+}
+
+void w_window::getTitle(char* & title) const
+{
+	GetWindowTextA(m_handle, title, 2048);
+}
+
+void w_window::getTitle(wchar_t *  & title) const
+{
+	GetWindowTextW(m_handle, title, 2048);
 }
 
 void w_window::setMenu(const widgetMenu& menu)
@@ -448,9 +478,11 @@ EXTERN_C DLL_EXPORT window* const createWindow(
 	const long width = 640L, const long height = 480L,
 	const TCHAR* const icon_dir = nullptr,
 	const window* const parent = nullptr,
+	const long x = -1L, const long y = -1L,
+	const bool sysclass = false,
 	const widgetMenu* const menu = nullptr)
 {
-	w_window* result = new w_window(title, width, height, icon_dir, parent, menu);
+	w_window* result = new w_window(title, width, height, icon_dir, parent, x, y, sysclass, menu);
 
 	return static_cast<window*>(result);
 }
@@ -497,14 +529,14 @@ w_windowFactory::~w_windowFactory()
 
 window* const w_windowFactory::createWindow(const char* const title, const long width, const long height, const char* const icon_dir, const window * const parent, const widgetMenu * const menu) const
 {
-	w_window* result = new w_window(title, width, height, icon_dir, parent, menu);
+	w_window* result = new w_window(title, width, height, icon_dir, parent, 0, 0, false, menu);
 
 	return static_cast<window*>(result);
 }
 
 window* const w_windowFactory::createWindow(const wchar_t* const title, const long width, const long height, const wchar_t* const icon_dir, const window * const parent, const widgetMenu * const menu) const
 {
-	w_window* result = new w_window(title, width, height, icon_dir, parent, menu);
+	w_window* result = new w_window(title, width, height, icon_dir, parent, 0, 0, false, menu);
 
 	return static_cast<window*>(result);
 }

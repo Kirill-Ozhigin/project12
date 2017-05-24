@@ -512,7 +512,7 @@ void WINAPI launchMenuEvent(size_t id)
 	//printf_s("launchMenuEvent(%d)\n", id);
 	if (id)
 	{
-		w_widgetMenuItem* pMenuItem = static_cast<w_widgetMenuItem*>(reinterpret_cast<void*>(id));
+		w_widgetMenuItem* pMenuItem = reinterpret_cast<w_widgetMenuItem*>(id);
 		if (pMenuItem->m_pfnEvent)
 		{
 			pMenuItem->m_pfnEvent();

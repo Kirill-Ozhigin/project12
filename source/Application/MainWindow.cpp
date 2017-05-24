@@ -27,6 +27,8 @@ EXTERN_C window* createWindow(
 	const long width = 640L, const long height = 480L, 
 	const TCHAR* const icon_path = nullptr,
 	const window* const parent = nullptr,
+	const long x = 0, const long y = 0,
+	const bool sysclass = false,
 	const widgetMenu* const menu = nullptr
 );
 // get a input by the window
@@ -97,8 +99,7 @@ void MainWindow::mProc(widgetMenu* mainmenu)
 	const long cx = 640;
 	const long cy = 480;
 
-
-	m_pWindow = ::createWindow("test", cx, cy, "../source/icon.ico", nullptr, mainmenu);
+	m_pWindow = ::createWindow("test", cx, cy, "../source/icon.ico", nullptr, -1, -1, false, mainmenu);
 
 	if (m_pWindow == nullptr)
 	{
