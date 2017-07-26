@@ -1,4 +1,4 @@
-#include "..\include\Library.h"
+#include "../include/library.h"
 #include "opengl.h"
 
 
@@ -60,7 +60,7 @@ void APIENTRY glBufferData(GLenum target, GLsizeiptr size, const void* data, GLe
 	return void();
 }
 
-GLAPI void glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data)
+void APIENTRY glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data)
 {
 	static PFNGLBUFFERSUBDATAPROC proc = static_cast<PFNGLBUFFERSUBDATAPROC>(glGetProcAddress("glBufferSubData"));
 	if (proc != nullptr)
@@ -225,6 +225,21 @@ void APIENTRY glUseProgram(GLuint program)
 }
 
 #endif // GL_VERSION_2_0
+
+#ifdef GL_VERSION_3_0
+
+void* APIENTRY glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
+{
+	static PFNGLMAPBUFFERRANGEPROC proc = static_cast<PFNGLMAPBUFFERRANGEPROC>(glGetProcAddress("glMapBufferRange"));
+	if (proc != nullptr)
+	{
+		return proc(target, offset, length, access);
+	}
+	return nullptr;
+}
+
+#endif // GL_VERSION_3_0
+
 
 #ifdef GL_VERSION_4_1 
 

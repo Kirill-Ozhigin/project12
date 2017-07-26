@@ -1,0 +1,206 @@
+#include "../Sound/SoundContext.h"
+#include "../Sound/SoundSource.h"
+#include "../WindowInput/window.h"
+
+#include "../include/PlatformDefines.h"
+#include "../include/vector.h"
+#include <stdio.h>
+
+#include <alc.h>
+#include <al.h>
+
+#if _MSC_VER
+#pragma comment ( lib, "OpenAL32.lib" )
+#endif // _MSC_VER
+
+Sound::~Sound()
+{
+}
+
+class al_context : public Sound
+{
+public:
+	al_context(size_t hWindow);
+
+	virtual ~al_context() override { release(); }
+
+	virtual void release(void) override;
+
+	virtual void play(long lStartPosition = 0, bool bLoop = 0) override;
+
+	virtual void stop(void) override;
+
+	virtual void pause(void) override;
+
+	virtual void resume(void) override;
+
+	virtual SoundSource* createSound(WaveFileData& fileData) override;
+
+
+private:
+	float m_fVolume;
+
+	unsigned char m_bIsPaused;
+
+	ALCdevice* m_pDevice;
+
+	ALCcontext* m_pContext;
+
+	vector<AudioDevice> m_vectorDevices;
+
+	AudioDevice m_ActiveDevice;
+
+	vector<SoundSource*> m_vectorSources;
+
+};
+
+al_context::al_context(size_t hWindow)
+	: Sound()
+	, m_fVolume(1.f)
+	, m_bIsPaused(0)
+	, m_pDevice(nullptr)
+	, m_pContext(nullptr)
+{
+	{
+		const ALCchar* devices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
+
+		int n = 0;
+		while (n < 2048)
+		{
+			if (*devices == '\0')
+			{
+				if (n == 0)
+				{
+					break;
+				}
+
+				AudioDevice device;
+				device.name = static_cast<const char*>(devices - n);
+
+				m_vectorDevices.push_back(device);
+
+				devices++;
+				n = 0;
+			}
+			else
+			{
+				n++;
+				devices++;
+			}
+		} // end while (n < 2048) 
+	}
+
+	m_ActiveDevice.name = alcGetString(nullptr, ALC_DEFAULT_ALL_DEVICES_SPECIFIER);
+
+	m_pDevice = alcOpenDevice(m_ActiveDevice.name);
+
+	m_pContext = alcCreateContext(m_pDevice, nullptr);
+
+	alcMakeContextCurrent(m_pContext);
+}
+
+void al_context::release(void)
+{
+	m_vectorDevices.clear();
+
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->release();
+			delete source;
+			source = nullptr;
+		}
+	}
+	m_vectorSources.clear();
+
+	if (m_pContext)
+	{
+		alcMakeContextCurrent(nullptr);
+		alcDestroyContext(m_pContext);
+		m_pContext = nullptr;
+	}
+	if (m_pDevice)
+	{
+		alcCloseDevice(m_pDevice);
+		m_pDevice = nullptr;
+	}
+}
+
+void al_context::play(long lStartPosition, bool bLoop)
+{
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->play(lStartPosition, bLoop);
+		}
+	}
+}
+
+void al_context::stop(void)
+{
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->stop();
+		}
+	}
+
+}
+
+void al_context::pause(void)
+{
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->pause();
+		}
+	}
+}
+
+void al_context::resume(void)
+{
+	for (auto i = m_vectorSources.begin(); i != m_vectorSources.end(); ++i)
+	{
+		SoundSource* source = *i;
+		if (source)
+		{
+			source->resume();
+		}
+	}
+}
+
+EXTERN_C SoundSource* const createSoundSource(WaveFileData& fileData);
+
+SoundSource* al_context::createSound(WaveFileData& fileData)
+{
+	SoundSource* source = createSoundSource(fileData);
+
+	m_vectorSources.push_back(source);
+
+	return source;
+}
+
+
+
+EXTERN_C DLL_EXPORT Sound* const createSoundC(const window& cwnd)
+{
+	al_context* sound = new al_context(cwnd.getHandle());
+
+	return static_cast<Sound*>(sound);
+}
+
+EXTERN_C DLL_EXPORT Sound* const createSound(void)
+{
+	al_context* sound = new al_context(0);
+
+	return static_cast<Sound*>(sound);
+}
+

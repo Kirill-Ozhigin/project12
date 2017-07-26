@@ -1,6 +1,6 @@
-#include "..\Render\Textrure.h"
+#include "../Render/Textrure.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 Textrure::~Textrure()
@@ -27,7 +27,7 @@ gl_Textrure::~gl_Textrure()
 }
 
 
-EXTERN_C Textrure* createTextrure(const unsigned char versionGL[2])
+EXTERN_C DLL_EXPORT Textrure* createTextrure(const unsigned char versionGL[2])
 {
 	gl_Textrure* result = new gl_Textrure(versionGL);
 

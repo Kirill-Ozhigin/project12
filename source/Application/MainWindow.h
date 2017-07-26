@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef __MainWindow_H
 #define __MainWindow_H 1
 
@@ -8,21 +6,18 @@
 class window;
 class input;
 class keyboard;
-enum keys;
 class mouse;
 
 class RenderContext;
 
+class widgetMenu;
+
 class MainWindow
 {
 public:
-	MainWindow();
+	MainWindow(widgetMenu* mainmenu = nullptr);
 
 	virtual ~MainWindow();
-
-	bool isKeyDown(keys key) const;
-
-	void getMousePos(long& x, long& y) const;
 
 	const window* const getWnd(void) const;
 
@@ -42,9 +37,8 @@ private:
 
 	RenderContext* m_pRC;
 
-	long m_mouseX, m_mouseY;
+	void mProc(widgetMenu* mainmenu);
 
-	void mProc();
 
 };
 

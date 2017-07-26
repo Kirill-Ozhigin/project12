@@ -45,7 +45,7 @@ static HMODULE OpenLibrary(const char* libName, bool bLazy = false, bool bInModu
 {
 	if (bInModulePath)
 	{
-		char path[_MAX_PATH];
+		char path[2048];
 		const char* modulePath = GetModulePath();
 		sprintf(path, "%s/%s", modulePath ? modulePath : ".", libName);
 		libName = path;
@@ -57,7 +57,7 @@ static HMODULE OpenLibrary(const char* libName, bool bLazy = false, bool bInModu
 #endif
 }
 
-#define GetProcAddress(libHandle, procName) ::dlsym(libHandle, procName)
+#define GetProcAddress(libHandle, procName) static_cast<void*>(::dlsym(libHandle, procName))
 #define CloseLibrary(libHandle) ::dlclose(libHandle)
 
 #else

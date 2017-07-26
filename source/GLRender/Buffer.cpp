@@ -1,6 +1,6 @@
-#include "..\Render\Buffer.h"
+#include "../Render/Buffer.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 Buffer::~Buffer()
@@ -27,7 +27,7 @@ gl_Buffer::~gl_Buffer()
 }
 
 
-EXTERN_C Buffer* createBuffer(const unsigned char versionGL[2])
+EXTERN_C DLL_EXPORT Buffer* createBuffer(const unsigned char versionGL[2])
 {
 	gl_Buffer* result = new gl_Buffer(versionGL);
 

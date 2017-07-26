@@ -1,8 +1,8 @@
-#include "..\WindowInput\keyboard.h"
-#include "..\WindowInput\window.h"
-#include "..\include\windows.h"
-#include "..\include\cpputils.h"
-#include "..\include\map.h"
+#include "../WindowInput/keyboard.h"
+#include "../WindowInput/window.h"
+#include "../include/windows.h"
+#include "../include/cpputils.h"
+#include "../include/map.h"
 
 
 
@@ -57,7 +57,7 @@ bool w_keyboard::update(void)
 	}
 }
 
-EXTERN_C keyboard* const createKeyboard(const input& cinput)
+EXTERN_C __declspec(dllexport) keyboard* const createKeyboard(const input& cinput)
 {
 	w_keyboard* result = new w_keyboard(cinput);
 

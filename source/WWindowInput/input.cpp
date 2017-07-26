@@ -1,7 +1,7 @@
-#include "..\WindowInput\input.h"
-#include "..\WindowInput\window.h"
-#include "..\include\windows.h"
-#include "..\include\map.h"
+#include "../WindowInput/input.h"
+#include "../WindowInput/window.h"
+#include "../include/windows.h"
+#include "../include/map.h"
 
 
 input::~input()

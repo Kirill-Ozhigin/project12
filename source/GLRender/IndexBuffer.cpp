@@ -1,7 +1,7 @@
-#include "..\Render\IndexBuffer.h"
+#include "../Render/IndexBuffer.h"
 
 #include <stdlib.h>
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 IndexBuffer::~IndexBuffer()
 {
@@ -239,7 +239,7 @@ static void* glLock_45(unsigned long offset, unsigned long length, LockOptions o
 }
 
 
-EXTERN_C IndexBuffer* createIndexBuffer(const unsigned char versionGL[2])
+EXTERN_C DLL_EXPORT IndexBuffer* createIndexBuffer(const unsigned char versionGL[2])
 {
 	gl_IndexBuffer* result = new gl_IndexBuffer(versionGL);
 

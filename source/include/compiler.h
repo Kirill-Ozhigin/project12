@@ -9,6 +9,12 @@
 
 #if defined(_MSC_VER)
 
+#define ASM(asm_literal) \
+		__asm { \
+			asm_literal \
+		};
+
+
 #if defined(_CPPUNWIND)
 #define COMPILER_EXCEPTIONS 1
 #endif
@@ -33,12 +39,22 @@
 #define NO_INLINE_WEAK __declspec(noinline) inline
 #define FORCE_INLINE __forceinline
 
+#define FASTCALL __fastcall
+
 #define __PACKED
 
 #define DLL_EXPORT __declspec(dllexport)
 #define DLL_IMPORT __declspec(dllimport)
 
 #elif defined(__GNUC__)
+
+#define ASM(asm_literal) \
+		"__asm__(\".intel_syntax noprefix\");" \
+		"__asm__(\"" \
+			#asm_literal \
+		"\" : : );" \
+		"__asm__(\".att_syntax prefix\");"
+
 
 #if defined(__EXCEPTIONS)
 #define COMPILER_EXCEPTIONS 1
@@ -66,12 +82,22 @@
 #define NO_INLINE_WEAK __attribute__  ((noinline)) __attribute__((weak))
 #define FORCE_INLINE __attribute__ ((always_inline)) inline
 
+#define FASTCALL __attribute__((fastcall))
+
 #define __PACKED __attribute__ ((packed))
 
 #define DLL_EXPORT __attribute__ ((visibility("default")))
 #define DLL_IMPORT __attribute__ ((visibility("default")))
 
 #elif defined(__clang__)
+
+#define ASM(asm_literal) \
+		"__asm__(\".intel_syntax noprefix\");" \
+		"__asm__(\"" \
+			#asm_literal \
+		"\" : : );" \
+		"__asm__(\".att_syntax prefix\");"
+
 
 #if __has_feature(cxx_exceptions)
 #define COMPILER_EXCEPTIONS 1
@@ -99,6 +125,8 @@
 #define NO_INLINE_WEAK __attribute__ ((noinline)) __attribute__((weak))
 #define FORCE_INLINE __attribute__ ((always_inline)) inline
 
+#define FASTCALL __attribute__((fastcall))
+
 #define __PACKED __attribute__ ((packed))
 
 #define DLL_EXPORT __attribute__ ((visibility("default")))
@@ -106,6 +134,8 @@
 
 #else
 
+#define ASM(asm_literal)
+	
 #define __FUNC__ __FUNCTION__
 #define FUNC_HAS_SIGNATURE 0
 

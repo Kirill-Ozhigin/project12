@@ -1,8 +1,8 @@
-#include "..\Render\GPUProgram.h"
+#include "../Render/GPUProgram.h"
 
-#include "..\include\vector.h"
+#include "../include/vector.h"
 
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 
@@ -177,7 +177,7 @@ inline void gl_GPUProgram::clearShaders(void)
 
 
 
-EXTERN_C GPUProgram* createProgram(const unsigned char versionGL[2])
+EXTERN_C DLL_EXPORT GPUProgram* createProgram(const unsigned char versionGL[2])
 {
 	gl_GPUProgram* result = new gl_GPUProgram(versionGL);
 

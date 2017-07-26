@@ -2,7 +2,7 @@
 
 // GLRender lib
 
-#include "..\include\library.h"
+#include "../include/library.h"
 
 // pointer to GLRender lib
 void* GLRender = nullptr;

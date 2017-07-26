@@ -1,52 +1,57 @@
 #include "MainWindow.h"
 
-#include "..\include\PlatformDefines.h"
+#include "../include/PlatformDefines.h"
 
-#include "..\WindowInput\window.h"
-#include "..\WindowInput\keyboard.h"
-#include "..\WindowInput\mouse.h"
+#include "../WindowInput/window.h"
+#include "../WindowInput/keyboard.h"
+#include "../WindowInput/mouse.h"
 
-#include "..\Render\context.h"
+#include "../WindowInput/widgets.h"
+
+#include "../Render/context.h"
 
 #include <thread>
 #include <chrono>
 
+EXTERN_C void terminateApp(void);
+
 // close WindowInput lib
-EXTERN_C extern void closeWindowInput(void);
+EXTERN_C void closeWindowInput(void);
 // close GLRender lib
-EXTERN_C extern void closeGLRender(void);
+EXTERN_C void closeGLRender(void);
 
 
 // create a window
-EXTERN_C extern window* createWindow(
+EXTERN_C window* createWindow(
 	const TCHAR* const title = nullptr, 
 	const long width = 640L, const long height = 480L, 
 	const TCHAR* const icon_path = nullptr,
-	const window* const parent = nullptr
+	const window* const parent = nullptr,
+	const long x = 0, const long y = 0,
+	const bool sysclass = false,
+	const widgetMenu* const menu = nullptr
 );
 // get a input by the window
-EXTERN_C extern input* getInput(const window& cwnd);
+EXTERN_C input* getInput(const window& cwnd);
 // get a keyboard by the input
-EXTERN_C extern keyboard* getKeyboard(const input& cinput);
+EXTERN_C keyboard* const getKeyboard(const input& cinput);
 // get a mouse by the input
-EXTERN_C extern mouse* getMouse(const input& cinput);
+EXTERN_C mouse* const getMouse(const input& cinput);
 
 // create a render context
-EXTERN_C extern RenderContext* createRenderContextVer(const window& cwnd, int major_version, int minor_version);
+EXTERN_C RenderContext* createRenderContextVer(const window& cwnd, int major_version, int minor_version);
 
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(widgetMenu* mainmenu)
 	: m_pWindow(nullptr)
 	, m_pInput(nullptr)
 	, m_pKeyboard(nullptr)
 	, m_pMouse(nullptr)
-	, m_mouseX(0)
-	, m_mouseY(0)
 	, m_pRC(nullptr)
 {
-	m_thread = std::thread(&MainWindow::mProc, this);
+	m_thread = std::thread(&MainWindow::mProc, this, mainmenu);
 
-	while (!m_pWindow)
+	if (!m_pWindow)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}
@@ -62,21 +67,6 @@ MainWindow::~MainWindow()
 	{
 		m_thread.join();
 	}
-}
-
-bool MainWindow::isKeyDown(keys key) const
-{
-	if (m_pKeyboard)
-	{
-		return m_pKeyboard->isKeyDown(key);
-	}
-	return false;
-}
-
-void MainWindow::getMousePos(long& x, long& y) const
-{
-	x = m_mouseX;
-	y = m_mouseY;
 }
 
 const window* const MainWindow::getWnd(void) const
@@ -99,7 +89,7 @@ const mouse* const MainWindow::getMouse(void) const
 	return m_pMouse;
 }
 
-void MainWindow::mProc()
+void MainWindow::mProc(widgetMenu* mainmenu)
 {
 	m_pWindow = nullptr;
 	m_pInput = nullptr;
@@ -109,12 +99,12 @@ void MainWindow::mProc()
 	const long cx = 640;
 	const long cy = 480;
 
-	m_pWindow = ::createWindow("test", cx, cy, "..\\source\\icon.ico");
+	m_pWindow = ::createWindow("test", cx, cy, "../source/icon.ico", nullptr, -1, -1, false, mainmenu);
 
 	if (m_pWindow == nullptr)
 	{
-#if _DEBUG || 1
-		printf_s("error creating window (MainWindow.cpp : m_pWindow == nullptr)\n");
+#if _DEBUG
+		printf("error creating window (MainWindow.cpp : m_pWindow == nullptr)\n");
 #endif // _DEBUG
 		return;
 	}
@@ -131,13 +121,13 @@ void MainWindow::mProc()
 		m_pMouse = ::getMouse(*m_pInput);
 	}
 
-	m_pRC = ::createRenderContextVer(*m_pWindow, 4, 0);
+	//m_pRC = ::createRenderContextVer(*m_pWindow, 4, 0);
 
 	m_pWindow->show();
 
 	while (m_pWindow->update())
 	{
-		if (m_pInput)
+		if (1 || m_pInput)
 		{
 			if (m_pKeyboard)
 			{
@@ -177,5 +167,6 @@ void MainWindow::mProc()
 
 	closeWindowInput();
 	closeGLRender();
+	terminateApp();
 }
 

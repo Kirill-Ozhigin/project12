@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{332ae7d7-7122-4b76-88a9-6d928766e095}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\frame.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\header.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\id3v2lib.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\types.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\thirdparty\id3v2lib\util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\constants.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\frame.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\header.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\types.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\thirdparty\include\id3v2lib\util.h" />
+  </ItemGroup>
+</Project>

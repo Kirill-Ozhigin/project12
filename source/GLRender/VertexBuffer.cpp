@@ -1,7 +1,7 @@
-#include "..\Render\VertexBuffer.h"
+#include "../Render/VertexBuffer.h"
 
 #include <stdlib.h>
-#include "..\GLRender\opengl.h"
+#include "../GLRender/opengl.h"
 
 
 VertexBuffer::~VertexBuffer()
@@ -258,7 +258,7 @@ static void* glLock_45(unsigned long offset, unsigned long length, LockOptions o
 }
 
 
-EXTERN_C VertexBuffer* createVertexBuffer(const unsigned char versionGL[2])
+EXTERN_C DLL_EXPORT VertexBuffer* createVertexBuffer(const unsigned char versionGL[2])
 {
 	gl_VertexBuffer* result = new gl_VertexBuffer(versionGL);
 

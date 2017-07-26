@@ -5,6 +5,10 @@
     <ClCompile Include="..\source\WWindowInput\keyboard.cpp" />
     <ClCompile Include="..\source\WWindowInput\mouse.cpp" />
     <ClCompile Include="..\source\WWindowInput\window.cpp" />
+    <ClCompile Include="..\source\WWindowInput\widgets.cpp" />
+    <ClCompile Include="..\source\WWindowInput\menu.cpp" />
+    <ClCompile Include="..\source\WWindowInput\bitmap.cpp" />
+    <ClCompile Include="..\source\WWindowInput\label.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="test">

@@ -2,11 +2,11 @@
 
 // extern the function to create a render context from GLRender lib
 
-#include "..\Render\context.h"
-#include "..\include\library.h"
+#include "../Render/context.h"
+#include "../include/library.h"
 
 extern void* GLRender;
-EXTERN_C extern bool openGLRender(void);
+EXTERN_C bool openGLRender(void);
 
 // pointer to createRenderContext function 
 static PFNCREATERENDERCONTEXTPROC createRCProc = nullptr;
@@ -20,7 +20,7 @@ EXTERN_C RenderContext* createRenderContext(const window& cwnd)
 		if (openGLRender())
 		{
 			// get address createRenderContext function
-			createRCProc = static_cast<PFNCREATERENDERCONTEXTPROC>(GetProcAddress(GLRender, "createRenderContext"));
+			createRCProc = reinterpret_cast<PFNCREATERENDERCONTEXTPROC>(GetProcAddress(GLRender, "createRenderContext"));
 		}
 	}
 	if (createRCProc != nullptr)
@@ -38,7 +38,7 @@ EXTERN_C RenderContext* createRenderContextVer(const window& cwnd, int major_ver
 		if (openGLRender())
 		{
 			// get address createRenderContextVer function
-			createRCverProc = static_cast<PFNCREATERENDERCONTEXTVERPROC>(GetProcAddress(GLRender, "createRenderContextVer"));
+			createRCverProc = reinterpret_cast<PFNCREATERENDERCONTEXTVERPROC>(GetProcAddress(GLRender, "createRenderContextVer"));
 		}
 	}
 	if (createRCverProc != nullptr)
